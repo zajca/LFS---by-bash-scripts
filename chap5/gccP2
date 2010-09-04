@@ -96,12 +96,13 @@ mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
-
 NAME=gcc
 PROGRAM=$NAME-$gcc_VER
 FILE=$NAME-$gcc_VER$gcc_PRIP
 
 source $SCRIPTS_DIR/include/unpack_sep_bzip
+
+cp -rv $BUILD_DIR/gmp $BUILD_DIR/mpc $BUILD_DIR/mpfr $BUILD_DIR/$PROGRAM
 
 cd $BUILD_DIR/$PROGRAM
 #{
@@ -133,8 +134,6 @@ done
 
 
 echo -e "$Y Spoustim Build $DEF"
-
-cp -rv $BUILD_DIR/gmp $BUILD_DIR/mpc $BUILD_DIR/mpfr $BUILD_DIR/$PROGRAM
 
 cd $BUILD_DIR/$PROGRAM-BUILD
 echo -e "$G ../$PROGRAM/configure $DEF" 
