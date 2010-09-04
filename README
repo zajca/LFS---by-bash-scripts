@@ -36,3 +36,4 @@ resolve adjust toolchain issue
 change chap5/gcc chap5/gccP2 file (no copy mpfr,..) 
 write MD5 check for packages
 do better stage between chapter 5 and 6 (less starting scripts between logins)
+write chapter 6 and more.
