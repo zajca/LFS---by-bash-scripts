@@ -1,0 +1,45 @@
+#!/bin/bash
+
+NAME=linux
+PROGRAM=$NAME-$linux_VER
+FILE=$NAME-$linux_VER$linux_PRIP
+
+source $SCRIPTS_DIR/include/unpack_bzip
+
+echo -e "$Y Spoustim Build $DEF"
+
+cd $BUILD_DIR/$PROGRAM
+	echo -e "$G make mrproper $DEF" 
+    make mrproper
+    if [ $? -ne 0 ]
+		then
+			echo -e "$R make mrproper selhalo $DEF"
+			exit 1
+	fi
+    echo -e "$G make headers_check $DEF"
+    make headers_check
+    if [ $? -ne 0 ]
+		then
+			echo -e "$R make headers_check selhalo $DEF"
+			exit 1
+	fi
+    echo -e "$G make INSTALL_HDR_PATH=dest headers_install $DEF"
+    make INSTALL_HDR_PATH=dest headers_install
+	if [ $? -ne 0 ]
+		then
+			echo -e "$R mmake INSTALL_HDR_PATH=dest headers_install selhalo $DEF"
+			exit 1
+	fi
+	echo -e "$C Kopiruju potrebne soubory do tools $DEF" 
+	echo -e "$G cp -r dest/include/* /tools/include $DEF" 
+	cp -r dest/include/* /tools/include
+
+if [ $BUILD_RM == 1 ];
+	then
+                echo -e "$C Mazu slozku se zdrojaky $DEF"
+                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+                rm -rf $BUILD_DIR/$PROGRAM
+	else
+		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
+fi
+cd $ROOT

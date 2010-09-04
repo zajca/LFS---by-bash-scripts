@@ -1,0 +1,25 @@
+#!/bin/bash
+source $SCRIPTS_DIR/colors	#nastavi barvy
+BUILD_TEST=0
+
+	if [ $BUILD_TEST == 1 ] || [ $BUILD_TEST == 3 ];
+		then
+	    echo -e "$G test 1 $DEF"
+	fi
+
+	if [ $BUILD_TEST == 2 ] || [ $BUILD_TEST == 3 ];
+		then
+	    echo -e "$G test 2 $DEF"
+	fi
+
+echo -e "$G nic $DEF"
+
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$R Pozor zkontrolujte soubor /build/glibc-check-log $DEF"
+	echo -e "$R ************ Informace najdete v README ************ $DEF"
+	echo -e "$R ********** !! Nepreskakujte tentok krok !! ********* $DEF"
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$G pokracujte stiskem <ENTER> $DEF"
+	read > /dev/null

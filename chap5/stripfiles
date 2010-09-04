@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo -e "$Y Snizovani velikosti zabrane LFS $DEF"
+
+echo -e "$C Mazu prebytecne debugovaci symboly $DEF"
+echo -e "$G strip --strip-debug /tools/lib/* $DEF"
+strip --strip-debug /tools/lib/*
+
+echo -e "$C Mazu prebytecne debugovaci symboly $DEF"
+echo -e "$G strip --strip-unneeded /tools/{,s}bin/* $DEF"
+strip --strip-unneeded /tools/{,s}bin/*
+
+echo -e "$C Mazu prebytecne knihovny a dokumenty $DEF"
+echo -e "$G rm -rf /tools/{,share}/{info,man} $DEF"
+rm -rf /tools/{,share}/{info,man}

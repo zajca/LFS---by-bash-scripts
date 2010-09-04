@@ -1,0 +1,64 @@
+#!/bin/bash
+
+NAME=expect
+PROGRAM=$NAME-$expect_VER
+FILE=$NAME-$expect_VER$expect_PRIP
+
+source $SCRIPTS_DIR/include/unpack_bzip
+
+echo -e "$Y Spoustim Build $DEF"
+
+cd $BUILD_DIR/$PROGRAM
+	echo -e "$C Aplikuji patch $DEF"
+	echo -e "$G patch -Np1 -i $SOURCES_DIR/expect-5.44.1.15-no_tk-1.patch $DEF"
+	patch -Np1 -i $SOURCES_DIR/expect-5.44.1.15-no_tk-1.patch
+
+	cp -v configure{,.orig}
+	sed 's:/usr/local/bin:/bin:' configure.orig > configure
+
+	
+	echo -e "$G ./$PROGRAM/configure $DEF" 
+	./configure --prefix=/tools --with-tcl=/tools/lib --with-tclinclude=/tools/include --with-tk=no
+	if [ $? -ne 0 ]
+		then
+			echo -e "$R Configure selhalo $DEF"
+			exit 1
+	fi
+
+	echo -e "$G make $DEF"
+	make
+	if [ $? -ne 0 ]
+		then
+			echo -e "$R make selhalo $DEF"
+			exit 1
+	fi
+	
+	if [ $BUILD_TEST == 1 ] || [ $BUILD_TEST == 3 ];
+	    then
+	    echo -e "$G make test $DEF"
+	    make test
+	    if [ $? -ne 0 ]
+			then
+				echo -e "$R make selhalo $DEF"
+				exit 1
+		fi
+	fi
+	    
+	echo -e "$G make SCRIPTS="" install $DEF"
+	make SCRIPTS="" install
+	if [ $? -ne 0 ]
+		then
+			echo -e "$R make SCRIPTS="" install selhalo $DEF"
+			exit 1
+	fi
+
+    	if [ $BUILD_RM == 1 ];
+		then
+			echo -e "$C Mazu slozku se zdrojaky $DEF"
+			echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM
+
+		else
+			echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
+	fi
+cd $ROOT

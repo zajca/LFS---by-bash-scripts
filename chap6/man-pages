@@ -1,0 +1,25 @@
+#!/bin/bash
+
+NAME=man-pages
+PROGRAM=$NAME-$man_VER
+FILE=$NAME-$man_VER$man_PRIP
+
+echo -e "$Y Spoustim build script programu $PROGRAM $DEF"
+
+source $SCRIPTS_DIR/include/unpack_bzip
+
+echo -e "$Y Spoustim Build $DEF"
+
+cd $BUILD_DIR/$PROGRAM
+	echo -e "$G make install $DEF" 
+    make install
+	
+if [ $BUILD_RM == 1 ];
+	then
+                echo -e "$C Mazu slozku se zdrojaky $DEF"
+                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+                rm -rf $BUILD_DIR/$PROGRAM
+	else
+		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
+fi
+cd $ROOT

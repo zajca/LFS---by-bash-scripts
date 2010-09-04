@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo -e "$Y Priprava systemu pro chapter 6 $DEF"
+
+#su root
+
+echo -e "$C Vytvarim potrebne systemove slozky $DEF"
+echo -e "$G mkdir -v $LFS/{dev,proc,sys} $DEF"
+mkdir -v $LFS/{dev,proc,sys}
+
+echo -e "$C Creating device nodes $DEF"
+echo -e "$G mknod -m 600 $LFS/dev/console c 5 1 $DEF"
+echo -e "$G mknod -m 666 $LFS/dev/null c 1 3 $DEF"
+mknod -m 600 $LFS/dev/console c 5 1
+mknod -m 666 $LFS/dev/null c 1 3
+
+echo -e "$C Pripojuji systemove$G /dev$C pro potrebu LFS $DEF"
+echo -e "$G mount -v --bind /dev $LFS/dev $DEF"
+mount -v --bind /dev $LFS/dev
+
+echo -e "$C Pripojuji virtualni souborove systemy kernelu $DEF"
+echo -e "$G mount -vt devpts devpts $LFS/dev/pts $DEF"
+mount -vt devpts devpts $LFS/dev/pts
+echo -e "$G mount -vt tmpfs shm $LFS/dev/shm $DEF"
+mount -vt tmpfs shm $LFS/dev/shm
+echo -e "$G mount -vt proc proc $LFS/proc $DEF"
+mount -vt proc proc $LFS/proc
+echo -e "$G mount -vt sysfs sysfs $LFS/sys $DEF"
+mount -vt sysfs sysfs $LFS/sys
+
+echo -e "$C spousti se chroot do systemu $DEF"
+chroot "$LFS" /tools/bin/env -i \
+HOME=/root TERM="$TERM" PS1='\u:\w\$ ' \
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin SCRIPTS_DIR=/scripts \
+/tools/bin/bash --login +h

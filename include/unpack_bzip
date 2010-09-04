@@ -1,0 +1,16 @@
+#!/bin/bash
+echo -e "$Y Spoustim build script programu $PROGRAM $DEF"
+
+if [ -d $BUILD_DIR/$PROGRAM ];
+	then
+		echo -e "$C Slozka se zdrojaky existuje $G [mazu] $DEF"
+		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+		rm -rf $BUILD_DIR/$PROGRAM
+		echo -e "$C Slozka se zdrojaky neexistuje $G [rozbaluji] $DEF"
+		echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+		tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	else
+		echo -e "$C Slozka se zdrojaky neexistuje $G [rozbaluji] $DEF"
+		echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+		tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+fi

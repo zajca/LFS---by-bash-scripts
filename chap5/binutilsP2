@@ -1,0 +1,54 @@
+#!/bin/bash
+
+NAME=binutils
+PROGRAM=$NAME-$binutils_VER
+FILE=$NAME-$binutils_VER$binutils_PRIP
+
+source $SCRIPTS_DIR/include/unpack_sep_bzip
+
+echo -e "$Y Spoustim Build $DEF"
+
+cd $BUILD_DIR/$PROGRAM-BUILD
+echo -e "$G ../$PROGRAM/configure $DEF" 
+
+CC="$LFS_TGT-gcc -B/tools/lib/" AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib
+    if [ $? -ne 0 ]
+		then
+			echo -e "$R Configure selhalo $DEF"
+			exit 1
+	fi
+    echo -e "$G make $DEF"
+    make 
+    if [ $? -ne 0 ]
+		then
+			echo -e "$R make selhalo $DEF"
+			exit 1
+	fi
+    echo -e "$G make-install $DEF"
+    make install
+    if [ $? -ne 0 ]
+		then
+			echo -e "$R make install selhalo $DEF"
+			exit 1
+	fi 
+    echo -e "$C Priprava linkeru pro dalsi oddeleni v dalsim scriptu $DEF"
+    echo -e "$G make -C ld clean $DEF"
+    make -C ld clean
+    echo -e "$G make -C ld LIB_PATH=/usr/lib:/lib $DEF"
+    make -C ld LIB_PATH=/usr/lib:/lib
+    echo -e "$G cp -v ld/ld-new /tools/bin $DEF"
+    cp -v ld/ld-new /tools/bin
+    sleep 10
+
+if [ $BUILD_RM == 1 ];
+	then
+                echo -e "$C Mazu slozku s buildem $DEF"
+                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
+                rm -rf $BUILD_DIR/$PROGRAM-BUILD
+                echo -e "$C Mazu slozku se zdrojaky $DEF"
+                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+                rm -rf $BUILD_DIR/$PROGRAM
+	else
+		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
+fi
+cd $ROOT

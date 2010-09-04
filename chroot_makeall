@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source $SCRIPTS_DIR/colors	#nastavi barvy
+source $SCRIPTS_DIR/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/ver #ulozi do promenych verze programu
+
+####### Start buildu jednotlivych aplikaci (Balicku) #######
+source $SCRIPTS_DIR/chap6/linux
+# source $SCRIPTS_DIR/chap6/man-pages
+# source $SCRIPTS_DIR/chap6/glibc
+# source $SCRIPTS_DIR/chap6/linux

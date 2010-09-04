@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#su root
+
+echo -e "$C Pripojuji systemove$G /dev$C pro potrebu LFS $DEF"
+echo -e "$G mount -v --bind /dev $LFS/dev $DEF"
+mount -v --bind /dev $LFS/dev
+
+echo -e "$C Pripojuji virtualni souborove systemy kernelu $DEF"
+echo -e "$G mount -vt devpts devpts $LFS/dev/pts $DEF"
+mount -vt devpts devpts $LFS/dev/pts
+echo -e "$G mount -vt tmpfs shm $LFS/dev/shm $DEF"
+mount -vt tmpfs shm $LFS/dev/shm
+echo -e "$G mount -vt proc proc $LFS/proc $DEF"
+mount -vt proc proc $LFS/proc
+echo -e "$G mount -vt sysfs sysfs $LFS/sys $DEF"
+mount -vt sysfs sysfs $LFS/sys
+
+echo -e "$C spousti se chroot do systemu $DEF"
+chroot "$LFS" /tools/bin/env -i \
+HOME=/root TERM="$TERM" PS1='\u:\w\$ ' \
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin SCRIPTS_DIR=/scripts \
+/tools/bin/bash --login +h
+

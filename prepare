@@ -1,0 +1,70 @@
+#!/bin/bash
+
+BUILD_RM=1 #URCUJE ZDA SE MA SMAZAT SLOZKA S BUIDEM 1=ANO
+BUILD_TEST=0 #1=chapter5 tests
+TOOLS_STRIP=0 # 1=Pro malou partition smaže nepotřebné soubory a dokumenty
+
+ROOT=/mnt/lfs	#složka připojeného obrazu
+LFS=$ROOT
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+export LFS LC_ALL LFS_TGT PATH
+
+export SOURCES_DIR=$ROOT/sources
+export BUILD_DIR=$ROOT/build
+export TOOLS_DIR=$ROOT/tools
+export SCRIPTS_DIR=$ROOT/scripts
+
+#export MAKEFLAGS='-j 2' #vice procesoru
+
+
+echo -e "$Y Kontrola složek pro build $DEF"
+
+if [ -d $SOURCES_DIR ];
+	then
+		echo -e "$C Slozka $SOURCES_DIR existuje $DEF"
+	else
+		echo -e "$C Slozka $SOURCES_DIR neexistuje $DEF"
+		echo -e "$G mkdir -p $SOURCES_DIR $DEF"
+		mkdir -p $SOURCES_DIR
+fi
+
+if [ -d $BUILD_DIR ];
+	then
+		echo -e "$C Slozka $BUILD_DIR existuje $DEF"
+	else
+		echo -e "$C Slozka $BUILD_DIR neexistuje $DEF"
+		echo -e "$G mkdir -p $BUILD_DIR $DEF"
+		mkdir -p $BUILD_DIR
+fi
+
+if [ -d $TOOLS_DIR ];
+	then
+		echo -e "$C Slozka $TOOLS_DIR existuje $DEF"
+	else
+		echo -e "$C Slozka $TOOLS_DIR neexistuje $DEF"
+		echo -e "$G mkdir -p $TOOLS_DIR $DEF"
+		mkdir -p $TOOLS_DIR
+fi
+
+if [ -d $SCRIPTS_DIR ];
+	then
+		echo -e "$C Slozka $SCRIPTS_DIR existuje $DEF"
+	else
+		echo -e "$C Slozka $SCRIPTS_DIR neexistuje $DEF"
+		echo -e "$G mkdir -p $SCRIPTS_DIR $DEF"
+		mkdir -p $TOOLS_DIR
+fi
+
+if [ -L /tools ];
+	then
+		echo -e "$C Symbolicky odkaz /tools existuje $DEF"
+	else
+		echo -e "$C Symbolicky odkaz $G /tools $C nexistuje nebo není symbolickým odkazem $DEF"
+		echo -e "$C Vytvarim symbolicky odkaz $G /tools $DEF"
+		echo -e "$G ln -s $LFS/tools / $DEF"
+		ln -s $LFS/tools /
+fi
+
+cd $ROOT
