@@ -5,34 +5,34 @@ source $SCRIPTS_DIR/prepare	#nastavi promene a kontroluje existenci dulezitych s
 source $SCRIPTS_DIR/ver #ulozi do promenych verze programu
 
 ####### Start buildu jednotlivych aplikaci (Balicku) #######
-# source $SCRIPTS_DIR/chap5/binutils
-# source $SCRIPTS_DIR/chap5/gcc
-# source $SCRIPTS_DIR/chap5/linux
-# source $SCRIPTS_DIR/chap5/glibc
-# source $SCRIPTS_DIR/chap5/linker
-# source $SCRIPTS_DIR/chap5/binutilsP2
-# source $SCRIPTS_DIR/chap5/gccP2
-# source $SCRIPTS_DIR/chap5/linkerP2
-#source $SCRIPTS_DIR/chap5/tcl
-#source $SCRIPTS_DIR/chap5/expect
-#source $SCRIPTS_DIR/chap5/dejagnu
-#source $SCRIPTS_DIR/chap5/ncurses
-#source $SCRIPTS_DIR/chap5/bash
-#source $SCRIPTS_DIR/chap5/bzip
-#source $SCRIPTS_DIR/chap5/coreutils
-#source $SCRIPTS_DIR/chap5/diffutils
-#source $SCRIPTS_DIR/chap5/findutils
-#source $SCRIPTS_DIR/chap5/gawk
-#source $SCRIPTS_DIR/chap5/gettext
-#source $SCRIPTS_DIR/chap5/grep
-#source $SCRIPTS_DIR/chap5/gzip
-#source $SCRIPTS_DIR/chap5/M4
-#source $SCRIPTS_DIR/chap5/make
-#source $SCRIPTS_DIR/chap5/patch
-# source $SCRIPTS_DIR/chap5/perl
-# source $SCRIPTS_DIR/chap5/sed
-# source $SCRIPTS_DIR/chap5/tar
-# source $SCRIPTS_DIR/chap5/texinfo
+source $SCRIPTS_DIR/chap5/binutils
+source $SCRIPTS_DIR/chap5/gcc
+source $SCRIPTS_DIR/chap5/linux
+source $SCRIPTS_DIR/chap5/glibc
+source $SCRIPTS_DIR/chap5/linker #5.8. adjusting toolchain
+source $SCRIPTS_DIR/chap5/binutilsP2
+source $SCRIPTS_DIR/chap5/gccP2
+source $SCRIPTS_DIR/chap5/linkerP2
+source $SCRIPTS_DIR/chap5/tcl
+source $SCRIPTS_DIR/chap5/expect
+source $SCRIPTS_DIR/chap5/dejagnu
+source $SCRIPTS_DIR/chap5/ncurses
+source $SCRIPTS_DIR/chap5/bash
+source $SCRIPTS_DIR/chap5/bzip
+source $SCRIPTS_DIR/chap5/coreutils
+source $SCRIPTS_DIR/chap5/diffutils
+source $SCRIPTS_DIR/chap5/findutils
+source $SCRIPTS_DIR/chap5/gawk
+source $SCRIPTS_DIR/chap5/gettext
+source $SCRIPTS_DIR/chap5/grep
+source $SCRIPTS_DIR/chap5/gzip
+source $SCRIPTS_DIR/chap5/M4
+source $SCRIPTS_DIR/chap5/make
+source $SCRIPTS_DIR/chap5/patch
+source $SCRIPTS_DIR/chap5/perl
+source $SCRIPTS_DIR/chap5/sed
+source $SCRIPTS_DIR/chap5/tar
+source $SCRIPTS_DIR/chap5/texinfo
 source $SCRIPTS_DIR/chap5/finish5
 ###### Chapter 6 #######
 #source $SCRIPTS_DIR/chap6/start6
