@@ -21,6 +21,7 @@ source $SCRIPTS_DIR/chap5/bash
 source $SCRIPTS_DIR/chap5/bzip
 source $SCRIPTS_DIR/chap5/coreutils
 source $SCRIPTS_DIR/chap5/diffutils
+source $SCRIPTS_DIR/chap5/file
 source $SCRIPTS_DIR/chap5/findutils
 source $SCRIPTS_DIR/chap5/gawk
 source $SCRIPTS_DIR/chap5/gettext
