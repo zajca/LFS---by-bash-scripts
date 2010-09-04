@@ -1,0 +1,293 @@
+#!/bin/bash
+
+#• Autoconf (2.67) - 1,338 KB:
+#Home page: http://www.gnu.org/software/autoconf/
+wget http://people.redhat.com/eblake/autoconf/autoconf-2.67.tar.bz2
+#MD5 sum: 3fbf92eb8eaca1e0d33dff9710edb5f0
+#• Automake (1.11.1) - 1,042 KB:
+#Home page: http://www.gnu.org/software/automake/
+wget http://ftp.gnu.org/gnu/automake/automake-1.11.1.tar.bz2
+#MD5 sum: c2972c4d9b3e29c03d5f2af86249876f
+#• Bash (4.1) - 6,444 KB:
+#Home page: http://www.gnu.org/software/bash/
+wget http://ftp.gnu.org/gnu/bash/bash-4.1.tar.gz
+#MD5 sum: 9800d8724815fd84994d9be65ab5e7b8
+#• Binutils (2.20.1) - 17,091 KB:
+#Home page: http://sources.redhat.com/binutils/
+wget http://ftp.gnu.org/gnu/binutils/binutils-2.20.1.tar.bz2
+#MD5 sum: 9cdfb9d6ec0578c166d3beae5e15c4e5
+#• Bison (2.4.3) - 1,614 KB:
+#Home page: http://www.gnu.org/software/bison/
+wget http://ftp.gnu.org/gnu/bison/bison-2.4.3.tar.bz2
+#MD5 sum: c1d3ea81bc370dbd43b6f0b2cd21287e
+#• Bzip2 (1.0.5) - 822 KB:
+#Home page: http://www.bzip.org/
+wget http://www.bzip.org/1.0.5/bzip2-1.0.5.tar.gz
+#MD5 sum: 3c15a0c8d1d3ee1c46a1634d00617b1a
+#• Coreutils (8.5) - 10,489 KB:
+#Home page: http://www.gnu.org/software/coreutils/
+wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.5.tar.gz
+#MD5 sum: c1ffe586d001e87d66cd80c4536ee823
+#• DejaGNU (1.4.4) - 1,055 KB:
+#Home page: http://www.gnu.org/software/dejagnu/
+wget http://ftp.gnu.org/gnu/dejagnu/dejagnu-1.4.4.tar.gz
+#MD5 sum: 053f18fd5d00873de365413cab17a666
+#• Diffutils (3.0) - 1,781 KB:
+#Home page: http://www.gnu.org/software/diffutils/
+wget http://ftp.gnu.org/gnu/diffutils/diffutils-3.0.tar.gz
+#MD5 sum: 684aaba1baab743a2a90e52162ff07da
+#• E2fsprogs (1.41.12) - 4,391 KB:
+#Home page: http://e2fsprogs.sourceforge.net/
+wget http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-1.41.12.tar.gz
+#MD5 sum: 1b24a21fc0c2381ef420961cbfec733f
+#• Expect (5.44.1.15) - 534 KB:
+#Home page: http://expect.sourceforge.net/
+wget http://prdownloads.sourceforge.net/expect/expect-5.44.1.15.tar.bz2
+#MD5 sum: 9307bbf67e19125036ce34544a78dadf
+#• File (5.04) - 607 KB:
+#Home page: http://www.darwinsys.com/file/
+wget ftp://ftp.astron.com/pub/file/file-5.04.tar.gz
+#MD5 sum: accade81ff1cc774904b47c72c8aeea0
+#• Findutils (4.4.2) - 2,100 KB:
+#Home page: http://www.gnu.org/software/findutils/
+wget http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz
+#MD5 sum: 351cc4adb07d54877fa15f75fb77d39f
+#• Flex (2.5.35) - 1,227 KB:
+#Home page: http://flex.sourceforge.net
+wget http://prdownloads.sourceforge.net/flex/flex-2.5.35.tar.bz2
+#MD5 sum: 10714e50cea54dc7a227e3eddcd44d57
+#• Gawk (3.1.8) - 1,938 KB:
+#Home page: http://www.gnu.org/software/gawk/
+wget http://ftp.gnu.org/gnu/gawk/gawk-3.1.8.tar.bz2
+#MD5 sum: 52b41c6c4418b3226dfb8f82076193bb
+#• GCC (4.5.1) - 64,572 KB:
+#Home page: http://gcc.gnu.org/
+wget http://ftp.gnu.org/gnu/gcc/gcc-4.5.1/gcc-4.5.1.tar.bz2
+#MD5 sum: 48231a8e33ed6e058a341c53b819de1a
+#• GDBM (1.8.3) - 223 KB:
+#Home page: http://www.gnu.org/software/gdbm/
+wget http://ftp.gnu.org/gnu/gdbm/gdbm-1.8.3.tar.gz
+#MD5 sum: 1d1b1d5c0245b1c00aff92da751e9aa1
+#• Gettext (0.18.1.1) - 14,785 KB:
+#Home page: http://www.gnu.org/software/gettext/
+wget http://ftp.gnu.org/gnu/gettext/gettext-0.18.1.1.tar.gz
+#MD5 sum: 3dd55b952826d2b32f51308f2f91aa89
+#• Glibc (2.12.1) - 15,300 KB:
+#Home page: http://www.gnu.org/software/libc/
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.12.1.tar.bz2
+#MD5 sum: be0ea9e587f08c87604fe10a91f72afd
+#• GMP (5.0.1) - 1,959 KB:
+#Home page: http://www.gnu.org/software/gmp/
+wget http://ftp.gnu.org/gnu/gmp/gmp-5.0.1.tar.bz2
+#MD5 sum: 6bac6df75c192a13419dfd71d19240a7
+#• Grep (2.6.3) - 1,280 KB:
+#Home page: http://www.gnu.org/software/grep/
+wget http://ftp.gnu.org/gnu/grep/grep-2.6.3.tar.gz
+#MD5 sum: 3095b57837b312f087c0680559de7f13
+#• Groff (1.20.1) - 3,510 KB:
+#Home page: http://www.gnu.org/software/groff/
+wget http://ftp.gnu.org/gnu/groff/groff-1.20.1.tar.gz
+#MD5 sum: 48fa768dd6fdeb7968041dd5ae8e2b02
+#• GRUB (1.98) - 2,392 KB:
+#Home page: http://www.gnu.org/software/grub/
+wget ftp://alpha.gnu.org/gnu/grub/grub-1.98.tar.gz
+#MD5 sum: c0bcf60e524739bb64e3a2d4e3732a59
+#• Gzip (1.4) - 886 KB:
+#Home page: http://www.gzip.org/
+wget http://ftp.gnu.org/gnu/gzip/gzip-1.4.tar.gz
+#MD5 sum: e381b8506210c794278f5527cba0e765
+#• Iana-Etc (2.30) - 201 KB:
+#Home page: http://sethwklein.net/iana-etc
+wget http://sethwklein.net/iana-etc-2.30.tar.bz2
+#MD5 sum: 3ba3afb1d1b261383d247f46cb135ee8
+#• Inetutils (1.8) - 1,810 KB:
+#Home page: http://www.gnu.org/software/inetutils/
+wget http://ftp.gnu.org/gnu/inetutils/inetutils-1.8.tar.gz
+#MD5 sum: ad8fdcdf1797b9ca258264a6b04e48fd
+#• IPRoute2 (2.6.35) - 378 KB:
+#Home page: http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2
+wget http://devresources.linuxfoundation.org/dev/iproute2/download/iproute2-2.6.35.tar.bz2
+#MD5 sum: b0f281b3124bf04669e18f5fe16d4934
+#• Kbd (1.15.2) - 1,520 KB:
+wget http://ftp.altlinux.com/pub/people/legion/kbd/kbd-1.15.2.tar.gz
+#MD5 sum: 77d0b51454522bc6c170bbdc6e31202a
+#• Less (436) - 297 KB:
+#Home page: http://www.greenwoodsoftware.com/less/
+wget http://www.greenwoodsoftware.com/less/less-436.tar.gz
+#MD5 sum: 817bf051953ad2dea825a1cdf460caa4
+#• LFS-Bootscripts (20100627) - 42 KB:
+wget http://www.linuxfromscratch.org/lfs/downloads/development/lfs-bootscripts-20100627.tar.bz2
+#MD5 sum: 4889d26b51a20595e14d6b902a6154fe
+#• Libtool (2.2.10) - 2,383 KB:
+#Home page: http://www.gnu.org/software/libtool/
+wget http://ftp.gnu.org/gnu/libtool/libtool-2.2.10.tar.gz
+#MD5 sum: b745d220e88163fcd9eea0a90ccf21b0
+#• Linux (2.6.35.4) - 67,636 KB:
+#Home page: http://www.kernel.org/
+wget http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.35.4.tar.bz2
+#MD5 sum: 0bb2cd59c13d7412f813c8fbc0769eec
+#• M4 (1.4.14) - 1,099 KB:
+#Home page: http://www.gnu.org/software/m4/
+wget http://ftp.gnu.org/gnu/m4/m4-1.4.14.tar.bz2
+#MD5 sum: e6fb7d08d50d87e796069cff12a52a93
+#• Make (3.82) - 1,213 KB:
+#Home page: http://www.gnu.org/software/make/
+wget http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
+#MD5 sum: 1a11100f3c63fcf5753818e59d63088f
+#• Man-DB (2.5.7) - 2,123 KB:
+#Home page: http://www.nongnu.org/man-db/
+wget http://download.savannah.gnu.org/releases/man-db/man-db-2.5.7.tar.gz
+#MD5 sum: eef0d8c8e54894e4e050e2176bb1d88d
+#• Man-pages (3.25) - 1,083 KB:
+#Home page: http://www.kernel.org/doc/man-pages/
+wget http://www.kernel.org/pub/linux/docs/manpages/Archive/man-pages-3.25.tar.bz2
+#MD5 sum: 3c1fbd5b8905e471827daa0ad937f6b1
+#• Module-Init-Tools (3.12) - 917 KB:
+#Home page: https://modules.wiki.kernel.org/index.php/Module_init_tools_3_12
+wget http://www.kernel.org/pub/linux/utils/kernel/module-init-tools/module-init-tools-3.12.tar.bz2
+#MD5 sum: 8b2257ce9abef74c4a44d825d23140f3
+#• MPC (0.8.2) - 536 KB:
+#Home page: http://www.multiprecision.org/
+wget http://www.multiprecision.org/mpc/download/mpc-0.8.2.tar.gz
+#MD5 sum: e98267ebd5648a39f881d66797122fb6
+#• MPFR (3.0.0) - 1,112 KB:
+#Home page: http://www.mpfr.org/
+wget http://www.mpfr.org/mpfr-3.0.0/mpfr-3.0.0.tar.bz2
+#MD5 sum: f45bac3584922c8004a10060ab1a8f9f
+#• Ncurses (5.7) - 2,388 KB:
+#Home page: http://www.gnu.org/software/ncurses/
+wget ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.7.tar.gz
+#MD5 sum: cce05daf61a64501ef6cd8da1f727ec6
+#• Patch (2.6.1) - 248 KB:
+#Home page: http://directory.fsf.org/project/patch/
+wget http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2
+#MD5 sum: 0818d1763ae0c4281bcdc63cdac0b2c0
+#• Perl (5.12.1) - 12,008 KB:
+#Home page: http://cpan.org/
+wget http://cpan.org/src/5.0/perl-5.12.1.tar.bz2
+#MD5 sum: f7f2d7f5aaac15a75028381b159a560f
+#• Pkg-config (0.25) - 966 KB:
+#Home page: http://pkg-config.freedesktop.org/
+wget http://pkgconfig.freedesktop.org/releases/pkg-config-0.25.tar.gz
+#MD5 sum: a3270bab3f4b69b7dc6dbdacbcae9745
+#• Procps (3.2.8) - 279 KB:
+#Home page: http://procps.sourceforge.net/
+wget http://procps.sourceforge.net/procps-3.2.8.tar.gz
+#MD5 sum: 9532714b6846013ca9898984ba4cd7e0
+#• Psmisc (22.12) - 366 KB:
+#Home page: http://psmisc.sourceforge.net/
+wget http://prdownloads.sourceforge.net/psmisc/psmisc-22.12.tar.gz
+#MD5 sum: 16c83a351c292cfc845b27d6395e05fb
+#• Readline (6.1) - 2,209 KB:
+#Home page: http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html
+wget http://ftp.gnu.org/gnu/readline/readline-6.1.tar.gz
+#MD5 sum: fc2f7e714fe792db1ce6ddc4c9fb4ef3
+#• Sed (4.2.1) - 878 KB:
+#Home page: http://www.gnu.org/software/sed/
+wget http://ftp.gnu.org/gnu/sed/sed-4.2.1.tar.bz2
+#MD5 sum: 7d310fbd76e01a01115075c1fd3f455a
+#• Shadow (4.1.4.2) - 1,748 KB:
+#Home page: http://pkg-shadow.alioth.debian.org/
+wget ftp://pkg-shadow.alioth.debian.org/pub/pkg-shadow/shadow-4.1.4.2.tar.bz2
+#MD5 sum: d593a9cab93c48ee0a6ba056db8c1997
+#• Sysklogd (1.5) - 85 KB:
+#Home page: http://www.infodrom.org/projects/sysklogd/
+wget http://www.infodrom.org/projects/sysklogd/download/sysklogd-1.5.tar.gz
+#MD5 sum: e053094e8103165f98ddafe828f6ae4b
+#• Sysvinit (2.88dsf) - 108 KB:
+#Home page: http://savannah.nongnu.org/projects/sysvinit
+wget http://ftp.twaren.net/Unix/NonGNU/sysvinit/sysvinit-2.88dsf.tar.bz2
+#MD5 sum: 6eda8a97b86e0a6f59dabbf25202aa6f
+#• Tar (1.23) - 2,138 KB:
+#Home page: http://www.gnu.org/software/tar/
+wget http://ftp.gnu.org/gnu/tar/tar-1.23.tar.bz2
+#MD5 sum: 41e2ca4b924ec7860e51b43ad06cdb7e
+#• Tcl (8.5.8) - 4,348 KB:
+#Home page: http://tcl.sourceforge.net/
+wget http://prdownloads.sourceforge.net/tcl/tcl8.5.8-src.tar.gz
+#MD5 sum: 7f123e53b3daaaba2478d3af5a0752e3
+#• Texinfo (4.13a) - 2,687 KB:
+#Home page: http://www.gnu.org/software/texinfo/
+wget http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz
+#MD5 sum: 71ba711519209b5fb583fed2b3d86fcb
+#• Udev (161) - 532 KB:
+#Home page: http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html
+wget http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-161.tar.bz2
+#MD5 sum: 95b6a0ffc9913f3e8021c65f51eb4f88
+#• Udev Test Tarball (161) - 147 KB:
+wget http://anduin.linuxfromscratch.org/sources/other/udev-161-testfiles.tar.bz2
+#MD5 sum: 8dc84014d4425784313fbbe3d0930e68
+#• Udev Configuration Tarball - 7 KB:
+wget http://www.linuxfromscratch.org/lfs/downloads/development/udev-config-20100128.tar.bz2
+#MD5 sum: af8a1d79fe77c6e6a2c1512651e0e6b8
+#• Util-linux-ng (2.18) - 7,490 KB:
+#Home page: http://userweb.kernel.org/~kzak/util-linux-ng/
+wget http://www.kernel.org/pub/linux/utils/util-linux-ng/v2.18/util-linux-ng-2.18.tar.bz2
+#MD5 sum: 2f5f71e6af969d041d73ab778c141a77
+#• Vim (7.3) - 8,675 KB:
+#Home page: http://www.vim.org
+wget ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2
+#MD5 sum: 5b9510a17074e2b37d8bb38ae09edbf2
+#• Zlib (1.2.5) - 532 KB:
+#Home page: http://www.zlib.net/
+wget http://www.zlib.net/zlib-1.2.5.tar.bz2
+#MD5 sum: be1e89810e66150f5b0327984d8625a0
+
+
+#############PATCHE##############
+
+#• Bash Upstream Fixes Patch - 5.1 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/bash-4.1-fixes-2.patch
+#MD5 sum: 7813f0e42d41dc4443dc3d161ad24987
+#• Bzip2 Documentation Patch - 1.6 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.5-install_docs-1.patch
+#MD5 sum: 6a5ac7e89b791aae556de0f745916f7f
+#• Bzip2 Version Fixes Patch - 5.3 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/bzip2-1.0.5-version_fixes-1.patch
+#MD5 sum: 5ef00b9da463b399f3d67ecfa276e7ea
+#• Coreutils Internationalization Fixes Patch - 121 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.5-i18n-1.patch
+#MD5 sum: e806ba5734411d1384f1e56169f31b22
+#• Coreutils Uname Patch - 1.6 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/coreutils-8.5-uname-2.patch
+#MD5 sum: 500481b75892e5c07e19e9953a690e54
+#• Dejagnu Consolidated Patch - 6 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/dejagnu-1.4.4-consolidated-1.patch
+#MD5 sum: b9949a8abcc210d1dc9cdda06821c199
+#• Expect Tk Configure Patch - 4.4 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/expect-5.44.1.15-no_tk-1.patch
+#MD5 sum: ba1b2c5841eea6c62b7522dfde412e65
+#• Flex GCC-4.4.x Patch - 1 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/flex-2.5.35-gcc44-1.patch
+#MD5 sum: ad9109820534278c6dd0898178c0788f
+#• GCC Startfiles Fix Patch - 1.5 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/gcc-4.5.1-startfiles_fix-1.patch
+#MD5 sum: 799ef1971350d2e3c794f2123f247cc6
+#• Glibc GCC Build Fix Patch - 2.5 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.12.1-gcc_fix-1.patch
+#MD5 sum: d1f28cb98acb9417fe52596908bbb9fd
+#• Glibc Makefile Fix Patch - 1 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/glibc-2.12.1-makefile_fix-1.patch
+#MD5 sum: 0ef634ac78e582f45d0e7643bfda7505
+#• Kbd Backspace/Delete Fix Patch - 12 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/kbd-1.15.2-backspace-1.patch
+#MD5 sum: f75cca16a38da6caa7d52151f7136895
+#• Man-DB Upstream Fix Assertion Patch - 3.9 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/man-db-2.5.7-fix_man_assertion-1.patch
+#MD5 sum: a2d7e211160564c13296476cb5f05574
+#• Patch Testsuite Fix Patch - 1 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/patch-2.6.1-test_fix-1.patch
+#MD5 sum: c51e1a95bfc5310635d05081472c3534
+#• Perl Libc Patch - 1 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/perl-5.12.1-libc-1.patch
+#MD5 sum: 800dfd3c9618731ee5cf57f77a7942b4
+#• Procps Watch Patch - 3.5 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/procps-3.2.8-watch_unicode-1.patch
+#MD5 sum: cd1a757e532d93662a7ed71da80e6b58
+#• Tar Overflow Patch - 1.7 KB:
+wget http://www.linuxfromscratch.org/patches/lfs/development/tar-1.23-overflow_fix-1.patch
+#MD5 sum: 1912ec36d2a0e2b96678651cf583ce6f
+
+
+
+
