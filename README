@@ -28,3 +28,11 @@ for you might have  this in your /mnt/lfs/
 8. check sources/prepare script for changing variables and paths (not necessary if you're doing all step same as in LFS book)
 
 9. start makeall script "sh sources/makeall"
+
+
+TODO:
+
+resolve adjust toolchain issue
+change chap5/gcc chap5/gccP2 file (no copy mpfr,..) 
+write MD5 check for packages
+do better stage between chapter 5 and 6 (less starting scripts between logins)
