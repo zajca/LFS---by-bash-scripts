@@ -1,5 +1,6 @@
 This set of bash scripts for build Linux From Scratch distribution.
 
+
 Prepare:
 
 1. You must firts read LFS book 6.7 http://www.linuxfromscratch.org/lfs/download.html
@@ -32,7 +33,7 @@ for you might have  this in your /mnt/lfs/
 
 TODO:
 
-resolve adjust toolchain issue
+write changes to README prepare
 change chap5/gcc chap5/gccP2 file (no copy mpfr,..) 
 write MD5 check for packages
 do better stage between chapter 5 and 6 (less starting scripts between logins)
