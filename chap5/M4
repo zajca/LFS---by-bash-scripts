@@ -7,7 +7,7 @@ FILE=$NAME-$m4_VER$m4_PRIP
 source $SCRIPTS_DIR/include/unpack_bzip
 
 echo -e "$Y Spoustim Build $DEF"
-
+{
 cd $BUILD_DIR/$PROGRAM
 
 	sed -i -e '/"m4.h"/a #include <sys/stat.h>' src/path.c
@@ -47,15 +47,19 @@ cd $BUILD_DIR/$PROGRAM
 			echo -e "$R make install selhalo $DEF"
 			exit 1
 	fi
-
-	if [ $BUILD_RM == 1 ];
-		then
-			echo -e "$C Mazu slozku se zdrojaky $DEF"
-			echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM
-
-		else
-			echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-	fi
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$R build selhal $DEF"
+		exit 1
+fi  
+if [ $BUILD_RM == 1 ];
+	then
+		echo -e "$C Mazu slozku se zdrojaky $DEF"
+		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+		rm -rf $BUILD_DIR/$PROGRAM
+	else
+		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
+fi
 
 cd $ROOT

@@ -9,20 +9,20 @@ echo -e "$Y Spoustim build script programu $PROGRAM $DEF"
 source $SCRIPTS_DIR/include/unpack_bzip
 
 echo -e "$Y Spoustim Build $DEF"
-
+{
 cd $BUILD_DIR/$PROGRAM
 	echo -e "$G make mrproper $DEF" 
-    make mrproper
+	make mrproper
 
-    echo -e "$G make headers_check $DEF"
-    make headers_check
-    if [ $? -ne 0 ]
+	echo -e "$G make headers_check $DEF"
+	make headers_check
+	if [ $? -ne 0 ]
 		then
 			echo -e "$R make headers_check selhalo $DEF"
 			exit 1
 	fi
-    echo -e "$G make INSTALL_HDR_PATH=dest headers_install $DEF"
-    make INSTALL_HDR_PATH=dest headers_install
+	echo -e "$G make INSTALL_HDR_PATH=dest headers_install $DEF"
+	make INSTALL_HDR_PATH=dest headers_install
 	if [ $? -ne 0 ]
 		then
 			echo -e "$R mmake INSTALL_HDR_PATH=dest headers_install selhalo $DEF"
@@ -34,7 +34,12 @@ cd $BUILD_DIR/$PROGRAM
 	echo -e "$C kopiruji potrebne soubory $DEF" 
 	echo -e "$G cp -rv dest/include/* /usr/include $DEF" 
 	cp -rv dest/include/* /usr/include
-	
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$R build selhal $DEF"
+		exit 1
+fi  
 if [ $BUILD_RM == 1 ];
 	then
                 echo -e "$C Mazu slozku se zdrojaky $DEF"

@@ -4,6 +4,7 @@ echo -e "$Y Test kompilatoru $DEF"
 
 echo -e "$C Testuju spravnost $DEF"
 cd $TOOLS_DIR
+{
 echo 'main(){}' > dummy.c
 cc dummy.c
 
@@ -17,9 +18,16 @@ if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.2 &> /dev/null
 		echo -e "$R Je treba uzivatelske interakce [Prerusuji] $DEF"
 		exit 1
 fi
+} 2>&1 | tee $BUILD_DIR/LOG_LINKER-P2.log
+
+if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.2 &> /dev/null
+	then
+		echo -e "$C . $DEF"
+	else
+		exit 1
+fi
 echo -e "$C Mazu docasne soubory $DEF $G /tools/dummy.c, /tools/a.out $DEF"
 rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
 echo -e "$C Pro kontrolu je nechan soubor $DEF $G $TOOLS_DIR/testlink.2 $DEF"
-sleep 10
 
 cd $ROOT

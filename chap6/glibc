@@ -9,41 +9,51 @@ source $SCRIPTS_DIR/include/unpack_sep_bzip
 echo -e "$Y Spoustim Build $DEF"
 
 cd $BUILD_DIR/$PROGRAM
-DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
-sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
-scripts/test-installation.pl
-unset DL
+{
+	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
+	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
+		scripts/test-installation.pl
+	unset DL
 
-sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
+	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
+
+	echo -e "$C Aplikuji patch $DEF"
+	echo -e "$G patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-gcc_fix-1.patch $DEF"
+	patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-gcc_fix-1.patch
+
+	echo -e "$C Aplikuji patch $DEF"
+	echo -e "$G patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-makefile_fix-1.patch $DEF"
+	patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-makefile_fix-1.patch
+
 
 cd $BUILD_DIR/$PROGRAM-BUILD
 
 case `uname -m` in
-i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" > configparms ;;
+  i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" > configparms ;;
 esac
 
 	echo -e "$G ../$PROGRAM/configure $DEF" 
-    ../$PROGRAM/configure --prefix=/usr \
---disable-profile --enable-add-ons \
---enable-kernel=2.6.18 --libexecdir=/usr/lib/glibc
-    if [ $? -ne 0 ]
+	../$PROGRAM/configure --prefix=/usr \
+    --disable-profile --enable-add-ons \
+    --enable-kernel=2.6.22.5 --libexecdir=/usr/lib/glibc
+	if [ $? -ne 0 ]
 		then
 			echo -e "$R Configure selhalo $DEF"
 			exit 1
 	fi
-    echo -e "$G make $DEF"
-    make
-    if [ $? -ne 0 ]
+	echo -e "$G make $DEF"
+	make
+	if [ $? -ne 0 ]
 		then
 			echo -e "$R make selhalo $DEF"
 			exit 1
 	fi
 	
-	cp -v ../$PROGRAM/iconvdata/gconv-modules iconvdata
+	cp -v ../glibc-2.12.1/iconvdata/gconv-modules iconvdata
 
-    echo -e "$G make check $DEF"
-    make -k check 2>&1 | tee $BUILD_DIR/glibc-check-log
-	grep Error glibc-check-log
+	echo -e "$G make check $DEF"
+	make -k check 2>&1 | tee $BUILD_DIR/glibc-check-log
+	grep Error $BUILD_DIR/glibc-check-log
 
 	echo -e "$R **************************************************** $DEF"
 	echo -e "$R **************************************************** $DEF"
@@ -59,9 +69,9 @@ esac
 	echo -e "$C Vytvarim soubor $G touch /etc/ld.so.conf $DEF"
 	touch /etc/ld.so.conf
 			
-    echo -e "$G make-install $DEF"
-    make install
-    if [ $? -ne 0 ]
+	echo -e "$G make-install $DEF"
+	make install
+	if [ $? -ne 0 ]
 		then
 			echo -e "$R make install selhalo $DEF"
 			exit 1
@@ -75,32 +85,56 @@ esac
 	localedef -i en_US -f UTF-8 en_US.UTF-8
 	
 	echo -e "$C Vytvarim soubor $G /etc/nsswitch.conf $C pro qlibc $DEF"
-		cat > /etc/nsswitch.conf << "EOF"
+	cat > /etc/nsswitch.conf << "EOF"
 # Begin /etc/nsswitch.conf
+
 passwd: files
 group: files
 shadow: files
+
 hosts: files dns
 networks: files
+
 protocols: files
 services: files
 ethers: files
 rpc: files
+
 # End /etc/nsswitch.conf
 EOF
+
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$R ***Nyni si otevrete novy terminal a spuste script*** $DEF"
+	echo -e "$R **********$SCRIPTS_DIR/only_chroot*********** $DEF"
+	echo -e "$R *****************a spustte************************** $DEF"
+	echo -e "$R ******************tzselect************************** $DEF"
+	echo -e "$R *program se zepta na par otazek a muzete pokracovat $DEF"
+	echo -e "$R **************************************************** $DEF"
+	echo -e "$G pote pokracujte stiskem <ENTER> $DEF"
+	read > /dev/null
 	
 	echo -e "$C Nastaveni timezone $DEF"
-	cp -v --remove-destination /usr/share/zoneinfo/CET /etc/localtime
+	echo -e "$G Nastavte vaši timezone: napr. Europe/Prague $DEF"
+	read > $TIME_ZONE_TEMP
+	cp -v --remove-destination /usr/share/zoneinfo/$TIME_ZONE_TEMP \
+    /etc/localtime
 	
 	echo -e "$C Vytvarim soubor $G /etc/ld.so.conf $C pro qlibc $DEF"
 	cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf
+
 /usr/local/lib
 /opt/lib
+
 # End /etc/ld.so.conf
 EOF
 	
-	
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$R build selhal $DEF"
+		exit 1
+fi  
 if [ $BUILD_RM == 1 ];
 	then
                 echo -e "$C Mazu slozku s buildem $DEF"

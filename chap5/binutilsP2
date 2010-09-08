@@ -10,7 +10,7 @@ echo -e "$Y Spoustim Build $DEF"
 
 cd $BUILD_DIR/$PROGRAM-BUILD
 echo -e "$G ../$PROGRAM/configure $DEF" 
-
+{
 CC="$LFS_TGT-gcc -B/tools/lib/" AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib
     if [ $? -ne 0 ]
 		then
@@ -39,7 +39,12 @@ CC="$LFS_TGT-gcc -B/tools/lib/" AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib ../$PROGRA
     echo -e "$G cp -v ld/ld-new /tools/bin $DEF"
     cp -v ld/ld-new /tools/bin
     sleep 10
-
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-P2.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$R build selhal $DEF"
+			exit 1
+	fi  	  
 if [ $BUILD_RM == 1 ];
 	then
                 echo -e "$C Mazu slozku s buildem $DEF"
