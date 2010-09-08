@@ -674,7 +674,7 @@ if [ -L /bin/echo ];
 		ln -sv /tools/bin/echo /bin/
 fi
 
-if [ -L /bin/echo ];
+if [ -L /bin/pwd ];
 	then
 		echo -e "$C Symbolicky odkaz /bin/pwd existuje $DEF"
 	else
@@ -685,10 +685,10 @@ fi
 
 if [ -L /bin/stty ];
 	then
-		echo -e "$C Symbolicky odkaz /bin/pwd existuje $DEF"
+		echo -e "$C Symbolicky odkaz /bin/stty existuje $DEF"
 	else
-		echo -e "$C Symbolicky odkaz $G /bin/pwd $C nexistuje nebo není symbolickým odkazem $DEF"
-		echo -e "$C Vytvarim symbolicky odkaz $G /bin/pwd $DEF"
+		echo -e "$C Symbolicky odkaz $G /bin/stty $C nexistuje nebo není symbolickým odkazem $DEF"
+		echo -e "$C Vytvarim symbolicky odkaz $G /bin/stty $DEF"
 		ln -sv /tools/bin/stty /bin/
 fi
 
