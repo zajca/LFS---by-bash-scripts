@@ -1,0 +1,271 @@
+#!/bin/bash
+
+startBuild (){
+	echo "$Y Starting Build $DEF"
+}
+export -f startBuild
+
+#Function unpacking archive
+unpackBzip (){
+	echo "$Y Starting build script $PROGRAM $DEF";
+
+	if [ -d $BUILD_DIR/$PROGRAM ];
+		then
+			echo "$C Directory with source already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM
+			echo "$C Source directory $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		else
+			echo "$C Source directory $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	fi
+}
+export -f unpackBzip
+
+#Function unpacking archive
+unpackGzip (){
+	echo "$Y Starting build script $PROGRAM $DEF";
+
+	if [ -d $BUILD_DIR/$PROGRAM ];
+		then
+			echo "$C Directory with source already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM
+			echo "$C Source directory $G [UNPACKING] $DEF"
+			echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		else
+			echo "$C Source directory $G [UNPACKING] $DEF"
+			echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	fi
+}
+export -f unpackGzip
+
+#Function unpacking archive and make directory for separete build
+unpackGzipSep (){
+	echo "$Y Starting build script $PROGRAM $DEF";
+
+	if [ -d $BUILD_DIR/$PROGRAM ];
+		then
+			echo "$C Directory with source already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM
+			echo "$C Source direcotry $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		else
+			echo "$C Source direcotry $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	fi
+
+	if [ -d $BUILD_DIR/$PROGRAM-BUILD ];
+		then
+			echo "$C Build directory already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM-BUILD
+		else
+			echo "$M.$DEF"
+	fi
+
+	echo "$C Making directory for separate build $DEF"
+	echo "$G mkdir $BUILD_DIR/$PROGRAM-BUILD $DEF"
+	mkdir $BUILD_DIR/$PROGRAM-BUILD
+}
+export -f unpackGzipSep
+
+#Function unpacking archive and make directory for separete build
+unpackBzipSep (){
+	echo "$Y Starting build script $PROGRAM $DEF";
+
+	if [ -d $BUILD_DIR/$PROGRAM ];
+		then
+			echo "$C Directory with source already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM
+			echo "$C Source direcotry $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		else
+			echo "$C Source direcotry $G [UNPACKING] $DEF"
+			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	fi
+
+	if [ -d $BUILD_DIR/$PROGRAM-BUILD ];
+		then
+			echo "$C Build directory already exist $G [REMOVING] $DEF"
+			echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
+			rm -rf $BUILD_DIR/$PROGRAM-BUILD
+		else
+			echo "$M.$DEF"
+	fi
+
+	echo "$C Making directory for separate build $DEF"
+	echo "$G mkdir $BUILD_DIR/$PROGRAM-BUILD $DEF"
+	mkdir $BUILD_DIR/$PROGRAM-BUILD
+}
+export -f unpackBzipSep
+
+#function testing if directory exist if not make directory
+#parameter= directory
+testExDir (){
+	if [ -d $1 ];
+		then
+			echo "$C Directory $1 exist"
+		else
+			echo "$C Directory $1 not exist $DEF"
+			echo "$G mkdir -p $1 $DEF"
+			mkdir -p $1
+	fi
+}
+export -f testExDir
+
+#function testing simlink
+#parameters first=symbolic link for test
+#second=source file\dir
+#third=destination dir
+#example: testSimLink /home/user/LFS /home/user/test/LFS /home/user/
+testSimLink (){ 
+	if [ -L $1 ];
+		then
+			echo "$C Symbolic link $1 exist $DEF"
+		else
+			echo "$C Symbolic link $G $1 $C not exist $DEF"
+			echo "Making symbolic link $G $1 $DEF"
+			echo "$G ln -s $2 $3 $DEF"
+			ln -s $2 $3
+	fi
+}
+export -f testSimLink
+
+#function create simlink
+#firts: source file\dir
+#second:destination dir
+#example: testSimLink /tools/bin/bash /tools/bin/sh
+createSimLink (){
+	echo -e "$C Making symbolic link $G $1 $DEF"
+	echo -e "$G ln -vs $1 $2 $DEF"
+	ln -vs $1 $2
+}
+export -f createSimLink
+
+#function appling patch
+#parameter= full patch name
+addPatch (){
+	echo "$C Adding patch $DEF"
+	echo "$G patch -Np1 -i $SOURCES_DIR/$1 $DEF"
+	patch -Np1 -i $SOURCES_DIR/$1
+}
+export -f addPatch
+
+#function start configure
+#parameters are configure options
+c_Configure (){
+	echo "$G $PROGRAM/configure $@ $DEF" 
+	./configure $@
+}
+export -f c_Configure
+
+#function start configure with separate build
+#parameters are configure options
+c_ConfigureSep (){
+	echo "$G $PROGRAM/configure $@ $DEF" 
+	../$PROGRAM/configure $@
+}
+export -f c_Configure
+
+
+#function start make
+#parameters are make options
+c_Make (){
+	echo "$G make $@ $DEF"
+	make $@
+}
+export -f c_Make
+
+#function start make tests
+#parameters are make tests options
+c_MakeTest (){
+	echo "for start make $@ pres 1 and enter"
+	read var
+		if [ $var == 1 ];
+	    	then
+				echo -e "$G make $@ $DEF"
+				make $@
+		fi
+}
+export -f c_MakeTest
+
+#function start make-install
+#parameters are make-install options
+c_MakeInstall (){
+	echo "$G make install $@ $DEF"
+	make install $@
+}
+export -f c_MakeInstall
+
+#function remove source directory
+RMsource (){
+	echo "$C Script directory [REMOVING] $DEF"
+	echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+	rm -rf $BUILD_DIR/$PROGRAM
+}
+export -f RMsource
+
+#function remove source directory and build directory
+RMbuild (){
+	echo "$C Build directory [REMOVING] $DEF"
+	echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
+	rm -rf $BUILD_DIR/$PROGRAM-BUILD
+	echo "$C Script directory [REMOVING] $DEF"
+	echo "$R rm -rf $BUILD_DIR/$PROGRAM $DEF"
+	rm -rf $BUILD_DIR/$PROGRAM
+}
+export -f RMbuild
+
+#function copy files
+#parameter 1:  source
+#parameter 2:  destination
+copyFiles (){
+	echo "$C Coping files $DEF"
+	echo "$G cp -v $1 $2 $DEF"
+	cp -v $1 $2
+}
+export -f copyFiles
+
+copyFilesRec (){
+	echo "$C Coping files $DEF"
+	echo "$G cp -v $1 $2 $DEF"
+	cp -vr $1 $2
+}
+export -f copyFilesRec
+
+#function compare files
+#parameter 1:  first file
+#parameter 2:  second file
+#compareFiles $SCRIPTS_DIR/linker.1.test64 $TOOLS_DIR/testlink.1
+compareFiles (){
+if cmp $1 $2 &> /dev/null
+	then
+		echo "$C . $DEF"
+	else
+		echo "$R Linker test [FAIL] $DEF"
+		exit 1
+    fi
+}
+export -f compareFiles
+
+#function wait for user interaction
+waitUser (){
+	if [ $WAIT == 1 ];
+    	then
+		echo "for continue pres enter"
+		read > /dev/null
+	fi
+}
+export -f waitUser
