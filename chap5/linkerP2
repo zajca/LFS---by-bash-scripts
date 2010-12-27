@@ -1,8 +1,6 @@
 #!/bin/bash
 
-echo -e "$Y Test kompilatoru $DEF"
-
-echo -e "$C Testuju spravnost $DEF"
+echo -e "$L_TEST_SPR"
 cd $TOOLS_DIR
 {
 echo 'main(){}' > dummy.c
@@ -10,24 +8,18 @@ cc dummy.c
 
 readelf -l a.out | grep ': /tools' > testlink.2
 
-if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.2 &> /dev/null
+case $(uname -m) in
+    x86_64) compareFiles $SCRIPTS_DIR/linker.1.test64 $TOOLS_DIR/testlink.2 ;;
+    i?86) compareFiles $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.2 ;; 
+esac
+if [ $PIPESTATUS -ne 0 ]
 	then
-		echo -e "$C Linker test $G [OK] $DEF"
-	else
-		echo -e "$C Linker test $R [FAIL] $DEF"
-		echo -e "$R Je treba uzivatelske interakce [Prerusuji] $DEF"
+		echo -e "$L_FAIL_BUIL"
 		exit 1
-fi
-} 2>&1 | tee $BUILD_DIR/LOG_LINKER-P2.log
+fi  
 
-if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.2 &> /dev/null
-	then
-		echo -e "$C . $DEF"
-	else
-		exit 1
-fi
-echo -e "$C Mazu docasne soubory $DEF $G /tools/dummy.c, /tools/a.out $DEF"
+echo -e "$L_RM_TFIL $DEF $G /tools/dummy.c, /tools/a.out $DEF"
 rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
-echo -e "$C Pro kontrolu je nechan soubor $DEF $G $TOOLS_DIR/testlink.2 $DEF"
+echo -e "$G $TOOLS_DIR/testlink.2 $DEF $L_SET_KEEP"
 
 cd $ROOT

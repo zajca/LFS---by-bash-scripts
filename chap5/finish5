@@ -4,21 +4,21 @@ if [ $TOOLS_STRIP == 1 ];
 		source $SCRIPTS_DIR/chap5/stripfiles
 fi
 
-echo -e "$Y Zmena prav ve slozce$G /tools $DEF"
+echo -e "$L_CH_PRI $G /tools $DEF"
 if [ "$UID" == 0 ]; 
 	then
-		echo -e "$C Jste root menim prava ve slozce$G /tools $DEF"
+		echo -e "$L_CH_PRI $G /tools $DEF"
 		chown -R root:root $TOOLS_DIR
 	else
-		echo -e "$C Prihlaste se jako root a spustte script $SCRIPTS_DIR/finish5 $DEF"
+		echo -e "$L_CH_USRR $SCRIPTS_DIR/finish5 $DEF"
 		exit 1
 fi
 
 echo -e "*******************************************************************"
 echo -e "*******************************************************************"
 echo -e "*******************************************************************"
-echo -e "*******Gratuluji dokoncili jste druhou fazi budovani systemu*******"
-echo -e "********************** Pokracujeme scriptem ***********************"
+echo -e "*********************** $L_DONE_CH5 *************************"
+echo -e "********************** $L_DONE_CON ***********************"
 echo -e "*************$SCRIPTS_DIR/chroot**************"
 echo -e "*******************************************************************"
 echo -e "*******************************************************************"

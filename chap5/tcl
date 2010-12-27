@@ -4,71 +4,62 @@ NAME=tcl
 PROGRAM=$NAME$tcl_VER2
 FILE=$NAME$tcl_VER$tcl_PRIP
 
-source $SCRIPTS_DIR/include/unpack_gzip
+unpackGzip
 
-echo -e "$Y Spoustim Build $DEF"
+waitUser
+
+startBuild
 {
 cd $BUILD_DIR/$PROGRAM/unix
-	echo -e "$G $PROGRAM/configure $DEF" 
-    ./configure --prefix=/tools
+    
+    c_Configure --prefix=/tools
     if [ $? -ne 0 ]
 		then
-			echo -e "$R Configure selhalo $DEF"
+			echo -e "$L_FAIL_CONF"
 			exit 1
 	fi
-
-    echo -e "$G make $DEF"
-    make
+    waitUser
+    c_Make
     if [ $? -ne 0 ]
 		then
-			echo -e "$R make selhalo $DEF"
+			echo -e "$L_FAIL_MAKE"
 			exit 1
 	fi
-	
-	if [ $BUILD_TEST == 1 ] || [ $BUILD_TEST == 3 ];
-		then
-	    echo -e "$G make test $DEF"
-	    TZ=UTC make test
-	    if [ $? -ne 0 ]
-			then
-				echo -e "$R make selhalo $DEF"
-				exit 1
-		fi
+	waitUser
+	TZ=UTC
+	c_Make test
+	if [ $? -ne 0 ]
+	  then
+	      echo -e "$L_FAIL_MAKT"
+	      exit 1
 	fi
-	
-    echo -e "$G make-install $DEF"
-    make install
-    if [ $? -ne 0 ]
+	waitUser
+	c_MakeInstall
+	if [ $? -ne 0 ]
 		then
-			echo -e "$R make install selhalo $DEF"
+			echo -e "$L_FAIL_MAKA"
 			exit 1
 	fi
-	echo -e "$C menim prava $G /tools/lib/libtcl8.5.so $DEF"
+	waitUser
+	echo -e "$L_CH_PRI $G /tools/lib/libtcl8.5.so $DEF"
 	echo -e "$G chmod -v u+w /tools/lib/libtcl8.5.so $DEF"
 	chmod -v u+w /tools/lib/libtcl8.5.so
-	
-	echo -e "$G make install-private-headers $DEF"
-    make install-private-headers
-    if [ $? -ne 0 ]
+	waitUser
+	c_Make install-private-headers
+	if [ $? -ne 0 ]
 		then
-			echo -e "$R make install selhalo $DEF"
+			echo -e "$L_FAIL_MAKT $R install-private-headers $DEF"
 			exit 1
 	fi
-	echo -e "$C Vytvarim potrebny symbolicky odkaz $DEF"
+	echo -e "$L_MK_LNS"
 	echo -e "$G ln -sv tclsh8.5 /tools/bin/tclsh $DEF"
 	ln -sv tclsh8.5 /tools/bin/tclsh
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then
-		echo -e "$R build selhal $DEF"
+		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  
-if [ $BUILD_RM == 1 ];
-	then
-		echo -e "$C Mazu slozku se zdrojaky $DEF"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+waitUser
+RMsource
 cd $ROOT

@@ -4,52 +4,42 @@ NAME=gettext
 PROGRAM=$NAME-$gettext_VER
 FILE=$NAME-$gettext_VER$gettext_PRIP
 
-source $SCRIPTS_DIR/include/unpack_gzip
+unpackGzip
 
-echo -e "$Y Spoustim Build $DEF"
+waitUser
+
+startBuild
 {
 cd $BUILD_DIR/$PROGRAM/gettext-tools
-	echo -e "$G $PROGRAM/configure $DEF" 
-   ./configure --prefix=/tools --disable-shared
+	c_Configure --prefix=/tools --disable-shared
 	if [ $? -ne 0 ]
 		then
-			echo -e "$R Configure selhalo $DEF"
+			echo -e "$L_FAIL_CONF"
 			exit 1
 	fi
-
-    echo -e "$G make -C gnulib-lib $DEF"
-    make -C gnulib-lib
+	waitUser
+    c_Make -C gnulib-lib
 	if [ $? -ne 0 ]
 		then
-			echo -e "$R make -C gnulib-lib selhalo $DEF"
+			echo -e "$R make -C gnulib-lib [FAIL] $DEF"
 			exit 1
 	fi
-
-    echo -e "$G make -C src msgfmt $DEF"
-    make -C src msgfmt
+	waitUser
+    c_Make -C src msgfmt
 	if [ $? -ne 0 ]
 		then
-			echo -e "$R make -C src msgfmt $DEF"
+			echo -e "$R make -C src msgfmt [FAIL] $DEF"
 			exit 1
 	fi
-
-	echo -e "$C Kpoiruji potrebne soubory $DEF"
-	echo -e "$G cp -v src/msgfmt /tools/bin $DEF"
-	cp -v src/msgfmt /tools/bin
+	waitUser
+	copyFiles src/msgfmt /tools/bin
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then
-		echo -e "$R build selhal $DEF"
+		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  
-if [ $BUILD_RM == 1 ];
-	then
-		echo -e "$C Mazu slozku se zdrojaky $DEF"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+waitUser
+RMsource
 
 cd $ROOT

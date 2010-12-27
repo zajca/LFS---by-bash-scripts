@@ -3,52 +3,56 @@
 NAME=binutils
 PROGRAM=$NAME-$binutils_VER
 FILE=$NAME-$binutils_VER$binutils_PRIP
-TIMEFORMAT="%1R Uplynuly cas - $PROGRAM"
+TIMEFORMAT="%1R = 1 SBU - $PROGRAM"
 
-source $SCRIPTS_DIR/include/unpack_sep_bzip
+unpackBzipSep
 
-echo -e "$Y Spoustim Build $DEF"
+waitUser
+
+startBuild
 
 cd $BUILD_DIR/$PROGRAM-BUILD
+
 { time \
   {
-	echo -e "$G ../$PROGRAM/configure $DEF" 
-    ../$PROGRAM/configure --target=$LFS_TGT --prefix=/tools --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror
+
+    c_ConfigureSep --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror
     if [ $? -ne 0 ]
 		then
-			echo -e "$R Configure selhalo $DEF"
+			echo -e "$L_FAIL_CONF"
 			exit 1
 	fi
-    echo -e "$G make $DEF"
-    make
+
+    waitUser
+
+    c_Make
     if [ $? -ne 0 ]
 		then
-			echo -e "$R make selhalo $DEF"
+			echo -e "$L_FAIL_MAKE"
 			exit 1
-	fi  	  
-    echo -e "$G make-install $DEF"
-    make install
+	fi
+
+    waitUser
+
+    case $(uname -m) in
+    x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
+    esac
+    
+    waitUser
+
+    c_MakeInstall
     if [ $? -ne 0 ]
 		then
-			echo -e "$R make install selhalo $DEF"
+			echo -e "$L_FAIL_MAKA"
 			exit 1
 	fi
   }
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
-			echo -e "$R build selhal $DEF"
+			echo -e "$L_FAIL_BUIL"
 			exit 1
 	fi  	  
-if [ $BUILD_RM == 1 ];
-	then
-		echo -e "$C Mazu slozku s buildem $DEF"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM-BUILD
-		echo -e "$C Mazu slozku se zdojaky $DEF"
-		echo -e "$R rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+waitUser
+RMbuild
 cd $ROOT

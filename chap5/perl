@@ -4,53 +4,47 @@ NAME=perl
 PROGRAM=$NAME-$perl_VER
 FILE=$NAME-$perl_VER$perl_PRIP
 
-source $SCRIPTS_DIR/include/unpack_bzip
+unpackBzip
 
-echo -e "$Y Spoustim Build $DEF"
+waitUser
+
+startBuild
 {
 cd $BUILD_DIR/$PROGRAM
-	echo -e "$C Aplikuji patch $DEF"
-	echo -e "$G patch -Np1 -i $SOURCES_DIR/perl-5.12.1-libc-1.patch $DEF"
-	patch -Np1 -i $SOURCES_DIR/perl-5.12.1-libc-1.patch
-	
+	addPatch perl-5.12.1-libc-1.patch
+	waitUser
 	echo -e "$G $PROGRAM/Configure $DEF"
 	$BUILD_DIR/$PROGRAM/Configure -des -Dprefix=/tools -Dstatic_ext='Data/Dumper Fcntl IO'
-
     if [ $? -ne 0 ]
 		then
-			echo -e "$R Configure selhalo $DEF"
+			echo -e "$L_FAIL_CONF"
 			exit 1
 	fi
-
-    echo -e "$G make $DEF"
-    make perl utilities ext/Errno/pm_to_blib
+    waitUser
+    c_Make perl utilities ext/Errno/pm_to_blib
     if [ $? -ne 0 ]
 		then
-			echo -e "$R make perl utilities ext/Errno/pm_to_blib selhalo $DEF"
+			echo -e "$R make perl utilities ext/Errno/pm_to_blib $L_FAIL $DEF"
 			exit 1
 	fi
-	echo -e "$C kopiruji potrebne soubory $DEF"
+    waitUser
+	echo -e "$L_COP_FILES"
 	echo -e "$G cp -v perl pod/pod2man /tools/bin $DEF"
 	cp -v perl pod/pod2man /tools/bin
+    waitUser
 	echo -e "$C Vytvarim slozku $G /tools/lib/perl5/5.12.1 $DEF"
 	mkdir -pv /tools/lib/perl5/5.12.1
-	echo -e "$C kopiruji potrebne soubory $DEF"
+    waitUser
+	echo -e "$L_COP_FILES"
 	echo -e "$G cp -Rv lib/* /tools/lib/perl5/5.12.1 $DEF"
 	cp -Rv lib/* /tools/lib/perl5/5.12.1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then
-		echo -e "$R build selhal $DEF"
+		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  
-
-if [ $BUILD_RM == 1 ];
-	then
-		echo -e "$C Mazu slozku se zdrojaky $DEF"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+waitUser
+RMsource
 cd $ROOT

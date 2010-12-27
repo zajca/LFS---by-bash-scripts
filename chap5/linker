@@ -1,39 +1,35 @@
 #!/bin/bash
 
-echo -e "$Y Oddeleni Toolchainu $DEF"
+echo -e "$L_START_TOOLCH"
 
-echo -e "$C Nastavuji linker $DEF"
+echo -e "$L_SET_LINK"
 cd $TOOLS_DIR
 {
 SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs
 $LFS_TGT-gcc -dumpspecs | sed -e 's@/lib\(64\)\?/ld@/tools&@g' -e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS
-echo "Nový specs soubor je: $SPECS"
+echo "New specs: $SPECS"
 unset SPECS
 
 
-echo -e "$Y Testuju spravnost $DEF"
+echo -e "$L_TEST_SPR"
 
 echo 'main(){}' > dummy.c
 $LFS_TGT-gcc -B/tools/lib dummy.c
 
 readelf -l a.out | grep ': /tools' > testlink.1
 
-if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.1 &> /dev/null
-	then
-		echo -e "$C Linker test $G [OK] $DEF"
-	else
-		echo -e "$C Linker test $R [FAIL] $DEF"
-		echo -e "$R Je treba uzivatelske interakce [Prerusuji] $DEF"
-		exit 1
-fi
+case $(uname -m) in
+    x86_64) compareFiles $SCRIPTS_DIR/linker.1.test64 $TOOLS_DIR/testlink.1 ;;
+    i?86) compareFiles cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.1 ;; 
+esac
 } 2>&1 | tee $BUILD_DIR/LOG_LINKER.log
-if cmp $SCRIPTS_DIR/linker.1.test $TOOLS_DIR/testlink.1 &> /dev/null
+if [ $PIPESTATUS -ne 0 ]
 	then
-		echo -e "$C . $DEF"
-	else
+		echo -e "$L_FAIL_BUIL"
 		exit 1
-fi
-echo -e "$C Mazu docasne soubory $DEF $G /tools/dummy.c, /tools/a.out $DEF"
+fi  
+
+echo -e "$L_RM_TFIL $G /tools/dummy.c, /tools/a.out $DEF"
 rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
-echo -e "$C Pro kontrolu je nechan soubor $DEF $G $TOOLS_DIR/testlink.1 $DEF"
+echo -e "$DEF $G $TOOLS_DIR/testlink.1 $DEF $L_SET_KEEP"
 cd $ROOT
