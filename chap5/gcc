@@ -110,26 +110,11 @@ startBuild
 {
 
 cd $BUILD_DIR/$PROGRAM-BUILD
-    c_ConfigureSep --target=$LFS_TGT --prefix=/tools --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libmudflap --disable-libssp --disable-libgomp --enable-languages=c --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs --without-ppl --without-cloog
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
+    c_ConfigureSep --target=$LFS_TGT --prefix=/tools --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libmudflap --disable-libssp --disable-libgomp --enable-languages=c --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs --without-ppl --without-cloog  || exit 1
     waitUser
-    c_Make
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKE"
-			exit 1
-	fi
+    c_Make || exit 1
     waitUser
-    c_MakeInstall
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
+    c_MakeInstall || exit 1
 
 ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

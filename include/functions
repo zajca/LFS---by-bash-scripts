@@ -1,5 +1,14 @@
 #!/bin/bash
 
+DEF="$(tput sgr0)"
+BOLD="$(tput bold)"
+B="${BOLD}$(tput setaf 4)"
+G="${BOLD}$(tput setaf 2)"
+R="${BOLD}$(tput setaf 1)"
+Y="${BOLD}$(tput setaf 3)"
+C="${BOLD}$(tput setaf 6)"
+M="${BOLD}$(tput setaf 5)"
+
 startBuild (){
 	echo "$Y Starting Build $DEF"
 }

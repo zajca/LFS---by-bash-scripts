@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source $SCRIPTS_DIR/include/colors	#nastavi barvy
 source $SCRIPTS_DIR/include/functions
 source $SCRIPTS_DIR/prepare	#nastavi promene a kontroluje existenci dulezitych slozek
 source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu

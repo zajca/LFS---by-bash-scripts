@@ -16,39 +16,20 @@ cd $BUILD_DIR/$PROGRAM
 	
 	waitUser
 
-	c_Configure --prefix=/tools --without-bash-malloc
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
+	c_Configure --prefix=/tools --without-bash-malloc || exit 1
 
 	waitUser
 
-	c_Make
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKE"
-			exit 1
+	c_Make || exit 1
+
+	waitUser
+	
+	c_MakeTest tests || exit 1	exit 1
 	fi
 
 	waitUser
 	
-	c_MakeTest tests
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKT"
-			exit 1
-	fi
-
-	waitUser
-	
-	c_MakeInstall
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
+	c_MakeInstall || exit 1
 	
 	waitUser
 	

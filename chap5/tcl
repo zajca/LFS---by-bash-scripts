@@ -12,45 +12,20 @@ startBuild
 {
 cd $BUILD_DIR/$PROGRAM/unix
     
-    c_Configure --prefix=/tools
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
-    waitUser
-    c_Make
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKE"
-			exit 1
-	fi
+	c_Configure --prefix=/tools || exit 1
+	waitUser
+	c_Make || exit 1
 	waitUser
 	TZ=UTC
-	c_Make test
-	if [ $? -ne 0 ]
-	  then
-	      echo -e "$L_FAIL_MAKT"
-	      exit 1
-	fi
+	c_Make test || exit 1
 	waitUser
-	c_MakeInstall
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
+	c_MakeInstall || exit 1
 	waitUser
 	echo -e "$L_CH_PRI $G /tools/lib/libtcl8.5.so $DEF"
 	echo -e "$G chmod -v u+w /tools/lib/libtcl8.5.so $DEF"
 	chmod -v u+w /tools/lib/libtcl8.5.so
 	waitUser
-	c_Make install-private-headers
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKT $R install-private-headers $DEF"
-			exit 1
-	fi
+	c_Make install-private-headers || exit 1
 	echo -e "$L_MK_LNS"
 	echo -e "$G ln -sv tclsh8.5 /tools/bin/tclsh $DEF"
 	ln -sv tclsh8.5 /tools/bin/tclsh

@@ -14,27 +14,17 @@ cd $BUILD_DIR/$PROGRAM
 	addPatch perl-5.12.1-libc-1.patch
 	waitUser
 	echo -e "$G $PROGRAM/Configure $DEF"
-	$BUILD_DIR/$PROGRAM/Configure -des -Dprefix=/tools -Dstatic_ext='Data/Dumper Fcntl IO'
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
-    waitUser
-    c_Make perl utilities ext/Errno/pm_to_blib
-    if [ $? -ne 0 ]
-		then
-			echo -e "$R make perl utilities ext/Errno/pm_to_blib $L_FAIL $DEF"
-			exit 1
-	fi
-    waitUser
+	$BUILD_DIR/$PROGRAM/Configure -des -Dprefix=/tools -Dstatic_ext='Data/Dumper Fcntl IO' || exit 1
+	waitUser
+	c_Make perl utilities ext/Errno/pm_to_blib || exit 1
+	waitUser
 	echo -e "$L_COP_FILES"
 	echo -e "$G cp -v perl pod/pod2man /tools/bin $DEF"
 	cp -v perl pod/pod2man /tools/bin
-    waitUser
+	waitUser
 	echo -e "$C Vytvarim slozku $G /tools/lib/perl5/5.12.1 $DEF"
 	mkdir -pv /tools/lib/perl5/5.12.1
-    waitUser
+	waitUser
 	echo -e "$L_COP_FILES"
 	echo -e "$G cp -Rv lib/* /tools/lib/perl5/5.12.1 $DEF"
 	cp -Rv lib/* /tools/lib/perl5/5.12.1

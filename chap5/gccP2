@@ -109,63 +109,48 @@ startBuild
 {
 cd $BUILD_DIR/$PROGRAM
 
-addPatch gcc-4.5.1-startfiles_fix-1.patch
+  addPatch gcc-4.5.1-startfiles_fix-1.patch
 
-cp -v gcc/Makefile.in{,.orig}
-sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
-waitUser
-cp -v gcc/Makefile.in{,.tmp}
-sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp > gcc/Makefile.in
-waitUser
-for file in \
- $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
-do
-  cp -uv $file{,.orig}
-  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
-  -e 's@/usr@/tools@g' $file.orig > $file
-  echo '
-#undef STANDARD_INCLUDE_DIR
-#define STANDARD_INCLUDE_DIR 0
-#define STANDARD_STARTFILE_PREFIX_1 ""
-#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
-  touch $file.orig
-done
-waitUser
-case $(uname -m) in
-  x86_64)
-    for file in $(find gcc/config -name t-linux64) ; do \
-      cp -v $file{,.orig}
-      sed '/MULTILIB_OSDIRNAMES/d' $file.orig > $file
-    done
-    waitUser
-  ;;
-esac
+  cp -v gcc/Makefile.in{,.orig}
+  sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
+  waitUser
+  cp -v gcc/Makefile.in{,.tmp}
+  sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp > gcc/Makefile.in
+  waitUser
+  for file in \
+  $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+  do
+    cp -uv $file{,.orig}
+    sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+    -e 's@/usr@/tools@g' $file.orig > $file
+    echo '
+  #undef STANDARD_INCLUDE_DIR
+  #define STANDARD_INCLUDE_DIR 0
+  #define STANDARD_STARTFILE_PREFIX_1 ""
+  #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+    touch $file.orig
+  done
+  waitUser
+  case $(uname -m) in
+    x86_64)
+      for file in $(find gcc/config -name t-linux64) ; do \
+	cp -v $file{,.orig}
+	sed '/MULTILIB_OSDIRNAMES/d' $file.orig > $file
+      done
+      waitUser
+    ;;
+  esac
 
-CC="$LFS_TGT-gcc -B/tools/lib/" 
-AR=$LFS_TGT-ar 
-RANLIB=$LFS_TGT-ranlib 
-    c_ConfigureSep --prefix=/tools --with-local-prefix=/tools --enable-clocale=gnu --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-languages=c,c++ --disable-libstdcxx-pch --disable-multilib --disable-bootstrap --disable-libgomp --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs --without-ppl --without-cloog
-    if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
-	waitUser
-	c_Make
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKE"
-			exit 1
-	fi
-	waitUser
-	c_MakeInstall
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
-	waitUser
-	ln -vs gcc /tools/bin/cc
+  CC="$LFS_TGT-gcc -B/tools/lib/" 
+  AR=$LFS_TGT-ar 
+  RANLIB=$LFS_TGT-ranlib 
+  c_ConfigureSep --prefix=/tools --with-local-prefix=/tools --enable-clocale=gnu --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-languages=c,c++ --disable-libstdcxx-pch --disable-multilib --disable-bootstrap --disable-libgomp --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs --without-ppl --without-cloog || exit 1
+  waitUser
+  c_Make || exit 1
+  waitUser
+  c_MakeInstall || exit 1
+  waitUser
+  ln -vs gcc /tools/bin/cc
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-P2.log
 if [ $PIPESTATUS -ne 0 ]
