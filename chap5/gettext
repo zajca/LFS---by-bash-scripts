@@ -1,21 +1,32 @@
 #!/bin/bash
 
-NAME=gettext
-PROGRAM=$NAME-$gettext_VER
-FILE=$NAME-$gettext_VER$gettext_PRIP
+NAME=${gettext[0]}
+PROGRAM=${gettext[3]}
+FILE=${gettext[2]}
+EXT=${gettext[4]}
+DLINK=${gettext[1]}
+MD5=${gettext[5]}
 
-unpackGzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
 {
 cd $BUILD_DIR/$PROGRAM/gettext-tools
-	c_Configure --prefix=/tools --disable-shared || exit 1
+	./configure --prefix=/tools --disable-shared || exit 1
 	waitUser
-	c_Make -C gnulib-lib || exit 1
+	make -C gnulib-lib || exit 1
 	waitUser
-	c_Make -C src msgfmt || exit 1
+	make -C src msgfmt || exit 1
 	waitUser
 	copyFiles src/msgfmt /tools/bin
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

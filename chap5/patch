@@ -1,17 +1,29 @@
 #!/bin/bash
 
-NAME=patch
-PROGRAM=$NAME-$patch_VER
-FILE=$NAME-$patch_VER$patch_PRIP
+NAME=${patch[0]}
+PROGRAM=${patch[3]}
+FILE=${patch[2]}
+EXT=${patch[4]}
+DLINK=${patch[1]}
+MD5=${patch[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
-{
+
 cd $BUILD_DIR/$PROGRAM
-	c_Configure --prefix=/tools || exit 1
+{
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

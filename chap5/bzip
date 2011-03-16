@@ -1,10 +1,21 @@
 #!/bin/bash
 
-NAME=bzip2
-PROGRAM=$NAME-$bzip2_VER
-FILE=$NAME-$bzip2_VER$bzip2_PRIP
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
 
-unpackGzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -16,7 +27,8 @@ cd $BUILD_DIR/$PROGRAM
 
 	waitUser
 
-	c_Make PREFIX=/tools install || exit 1
+	make PREFIX=/tools install
+
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

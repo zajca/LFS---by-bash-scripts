@@ -2,7 +2,7 @@
 
 
 export TOOLS_STRIP=0 # 1=Pro malou partition smaže nepotřebné soubory a dokumenty
-export WAIT=1
+export WAIT=0
 
 export ROOT=/mnt/LFS	#složka připojeného obrazu
 export LFS=$ROOT

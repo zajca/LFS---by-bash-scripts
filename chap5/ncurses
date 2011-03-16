@@ -1,17 +1,28 @@
 #!/bin/bash
 
-NAME=ncurses
-PROGRAM=$NAME-$ncurses_VER
-FILE=$NAME-$ncurses_VER$ncurses_PRIP
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
 
-unpackGzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
 {
 cd $BUILD_DIR/$PROGRAM
-	c_Configure --prefix=/tools --with-shared --without-debug --without-ada --enable-overwrite || exit 1
+	./configure ./configure --prefix=/tools --with-shared --without-debug --without-ada --enable-overwrite || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

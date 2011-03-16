@@ -1,10 +1,26 @@
 #!/bin/bash
 
-NAME=dejagnu
-PROGRAM=$NAME-$dejagnu_VER
-FILE=$NAME-$dejagnu_VER$dejagnu_PRIP
+NAME=${dejagnu[0]}
+PROGRAM=${dejagnu[3]}
+FILE=${dejagnu[2]}
+EXT=${dejagnu[4]}
+DLINK=${dejagnu[1]}
+MD5=${dejagnu[5]}
+pFILE=${pdejagnu[1]}
+pDLINK=${pdejagnu[0]}
+pMD5=${pdejagnu[2]}
 
-unpackGzip
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -12,9 +28,9 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	addPatch dejagnu-1.4.4-consolidated-1.patch
+	addPatch ${pFILE}
 
-	c_Configure --prefix=/tools || exit 1
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_MakeInstall || exit 1
 	waitUser

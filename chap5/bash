@@ -1,10 +1,21 @@
 #!/bin/bash
 
-NAME=bash
-PROGRAM=$NAME-$bash_VER
-FILE=$NAME-$bash_VER$bash_PRIP
+NAME=${bash[0]}
+PROGRAM=${bash[3]}
+FILE=${bash[2]}
+EXT=${bash[4]}
+DLINK=${bash[1]}
+MD5=${bash[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -12,20 +23,15 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	addPatch bash-4.1-fixes-2.patch
-	
-	waitUser
-
-	c_Configure --prefix=/tools --without-bash-malloc || exit 1
+	echo "$G $PROGRAM/configure --prefix=/tools --without-bash-malloc  $DEF" 
+	./configure --prefix=/tools --without-bash-malloc || exit 1
 
 	waitUser
-
 	c_Make || exit 1
 
 	waitUser
 	
-	c_MakeTest tests || exit 1	exit 1
-	fi
+	c_MakeTest tests || exit 1
 
 	waitUser
 	
@@ -33,7 +39,7 @@ cd $BUILD_DIR/$PROGRAM
 	
 	waitUser
 	
-	createSimLink /tools/bin/bash /tools/bin/sh
+	ln -vs bash /tools/bin/sh
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

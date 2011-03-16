@@ -1,27 +1,24 @@
 #!/bin/bash
 
-NAME=mpfr
-PROGRAM=$NAME-$mpfr_VER
-FILE=$NAME-$mpfr_VER$mpfr_PRIP
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
 echo -e "$L_START_UNPACK $PROGRAM $DEF"
 
-if [ -d $BUILD_DIR/$PROGRAM ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$M.$DEF"
-fi
+waitUser
 
-if [ -d $BUILD_DIR/$NAME ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$NAME $DEF"
-		rm -rf $BUILD_DIR/$NAME
-	else
-		echo -e "$M.$DEF"
-fi
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+gccSupProgTest
 
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
@@ -32,28 +29,25 @@ mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
-NAME=gmp
-PROGRAM=$NAME-$gmp_VER
-FILE=$NAME-$gmp_VER$gmp_PRIP
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
 echo -e "$L_START_UNPACK $PROGRAM $DEF"
 
-if [ -d $BUILD_DIR/$PROGRAM ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$M.$DEF"
-fi
+waitUser
 
-if [ -d $BUILD_DIR/$NAME ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$NAME $DEF"
-		rm -rf $BUILD_DIR/$NAME
-	else
-		echo -e "$M.$DEF"
-fi
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+gccSupProgTest
 
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
@@ -64,28 +58,25 @@ mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
-NAME=mpc
-PROGRAM=$NAME-$mpc_VER
-FILE=$NAME-$mpc_VER$mpc_PRIP
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
 echo -e "$L_START_UNPACK $PROGRAM $DEF"
 
-if [ -d $BUILD_DIR/$PROGRAM ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-		rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$M.$DEF"
-fi
+waitUser
 
-if [ -d $BUILD_DIR/$NAME ];
-	then
-		echo -e "$L_RM_ASDIR"
-		echo -e "$G rm -rf $BUILD_DIR/$NAME $DEF"
-		rm -rf $BUILD_DIR/$NAME
-	else
-		echo -e "$M.$DEF"
-fi
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+gccSupProgTest
 
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
@@ -96,11 +87,32 @@ mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
-NAME=gcc
-PROGRAM=$NAME-$gcc_VER
-FILE=$NAME-$gcc_VER$gcc_PRIP
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+pFILE=${pgcc[1]}
+pDLINK=${pgcc[0]}
+pMD5=${pgcc[2]}
+waitUser
 
-unpackBzipSep
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
 
 waitUser
 
@@ -109,42 +121,51 @@ startBuild
 {
 cd $BUILD_DIR/$PROGRAM
 
-  addPatch gcc-4.5.1-startfiles_fix-1.patch
+  addPatch ${pFILE}
 
   cp -v gcc/Makefile.in{,.orig}
-  sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
+sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
   waitUser
-  cp -v gcc/Makefile.in{,.tmp}
-  sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp > gcc/Makefile.in
+cp -v gcc/Makefile.in{,.tmp}
+sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp \
+  > gcc/Makefile.in
   waitUser
-  for file in \
-  $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
-  do
-    cp -uv $file{,.orig}
-    sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
-    -e 's@/usr@/tools@g' $file.orig > $file
-    echo '
-  #undef STANDARD_INCLUDE_DIR
-  #define STANDARD_INCLUDE_DIR 0
-  #define STANDARD_STARTFILE_PREFIX_1 ""
-  #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
-    touch $file.orig
-  done
+for file in \
+ $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+do
+  cp -uv $file{,.orig}
+  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+  -e 's@/usr@/tools@g' $file.orig > $file
+  echo '
+#undef STANDARD_INCLUDE_DIR
+#define STANDARD_INCLUDE_DIR 0
+#define STANDARD_STARTFILE_PREFIX_1 ""
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+  touch $file.orig
+done
   waitUser
-  case $(uname -m) in
-    x86_64)
-      for file in $(find gcc/config -name t-linux64) ; do \
-	cp -v $file{,.orig}
-	sed '/MULTILIB_OSDIRNAMES/d' $file.orig > $file
-      done
-      waitUser
-    ;;
-  esac
+case $(uname -m) in
+  x86_64)
+    for file in $(find gcc/config -name t-linux64) ; do \
+      cp -v $file{,.orig}
+      sed '/MULTILIB_OSDIRNAMES/d' $file.orig > $file
+    done
+  ;;
+esac
 
-  CC="$LFS_TGT-gcc -B/tools/lib/" 
-  AR=$LFS_TGT-ar 
-  RANLIB=$LFS_TGT-ranlib 
-  c_ConfigureSep --prefix=/tools --with-local-prefix=/tools --enable-clocale=gnu --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-languages=c,c++ --disable-libstdcxx-pch --disable-multilib --disable-bootstrap --disable-libgomp --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs --without-ppl --without-cloog || exit 1
+cd $BUILD_DIR/$PROGRAM-BUILD
+
+CC="$LFS_TGT-gcc -B/tools/lib/" \
+    AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
+    ../gcc-4.5.2/configure --prefix=/tools \
+    --with-local-prefix=/tools --enable-clocale=gnu \
+    --enable-shared --enable-threads=posix \
+    --enable-__cxa_atexit --enable-languages=c,c++ \
+    --disable-libstdcxx-pch --disable-multilib \
+    --disable-bootstrap --disable-libgomp \
+    --with-gmp-include=$BUILD_DIR/gmp --with-gmp-lib=$BUILD_DIR/gmp/.libs --with-mpc=$BUILD_DIR/mpc --with-gmp=$BUILD_DIR/gmp --with-mpfr=$BUILD_DIR/mpfr \
+    --without-ppl --without-cloog || exit 1
+
   waitUser
   c_Make || exit 1
   waitUser

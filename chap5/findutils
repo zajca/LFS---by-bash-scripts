@@ -1,17 +1,28 @@
 #!/bin/bash
 
-NAME=findutils
-PROGRAM=$NAME-$findutils_VER
-FILE=$NAME-$findutils_VER$findutils_PRIP
+NAME=${findutils[0]}
+PROGRAM=${findutils[3]}
+FILE=${findutils[2]}
+EXT=${findutils[4]}
+DLINK=${findutils[1]}
+MD5=${findutils[5]}
 
-unpackGzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
 cd $BUILD_DIR/$PROGRAM
 {
-  c_Configure --prefix=/tools || exit 1
+  ./configure --prefix=/tools || exit 1
   waitUser
   c_Make || exit 1
   waitUser

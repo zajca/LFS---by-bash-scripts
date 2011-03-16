@@ -1,17 +1,29 @@
 #!/bin/bash
 
-NAME=sed
-PROGRAM=$NAME-$sed_VER
-FILE=$NAME-$sed_VER$sed_PRIP
+NAME=${sed[0]}
+PROGRAM=${sed[3]}
+FILE=${sed[2]}
+EXT=${sed[4]}
+DLINK=${sed[1]}
+MD5=${sed[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
-{
+
 cd $BUILD_DIR/$PROGRAM
-	c_Configure --prefix=/tools || exit 1
+{
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

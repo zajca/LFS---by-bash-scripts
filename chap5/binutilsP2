@@ -1,31 +1,53 @@
 #!/bin/bash
 
-NAME=binutils
-PROGRAM=$NAME-$binutils_VER
-FILE=$NAME-$binutils_VER$binutils_PRIP
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
 
-unpackBzipSep
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
 
 waitUser
 
 startBuild
 
 cd $BUILD_DIR/$PROGRAM-BUILD
-echo -e "$G ../$PROGRAM/configure $DEF" 
 {
-CC="$LFS_TGT-gcc -B/tools/lib/" 
-AR=$LFS_TGT-ar 
-RANLIB=$LFS_TGT-ranlib 
 
-    c_ConfigureSep --prefix=/tools --disable-nls --with-lib-path=/tools/lib || exit 1
+echo "$G ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib $DEF" 
+CC="$LFS_TGT-gcc -B/tools/lib/" AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib
+    if [ $? -ne 0 ]
+		then
+			echo -e "$L_FAIL_MAKE"
+			exit 1
+    fi
+
     waitUser
-    c_Make || exit 1
+    echo "$G make $DEF" 
+    make || exit 1
     waitUser
-    c_MakeInstall || exit 1
+    echo "$G make install $DEF" 
+    make install || exit 1
     waitUser
-    c_Make -C ld clean || exit 1
+    echo "$G make -C ld clean $DEF" 
+    make -C ld clean || exit 1
     waitUser
-    c_Make -C ld LIB_PATH=/usr/lib:/lib
+    echo "$G make -C ld LIB_PATH=/usr/lib:/lib $DEF"
+    make -C ld LIB_PATH=/usr/lib:/lib
     if [ $? -ne 0 ]
 		then
 			echo -e "$L_FAIL_MAKE"

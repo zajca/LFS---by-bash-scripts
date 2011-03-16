@@ -14,22 +14,35 @@ startBuild (){
 }
 export -f startBuild
 
+# function chose what to be done with archive
+# parametr 1 file extension bzip or gzip
+# ordionary use unpack ${EXT}
+unpack(){
+if [ $1 == bzip ]; then
+      unpackBzip
+  elif [ $1 == gzip ]; then
+      unpackGzip
+  else
+    echo "$R somethink went wrong with archive unpack $DEF";
+fi
+}
+export -f unpack
+
 #Function unpacking archive
 unpackBzip (){
 	echo "$Y Starting build script $PROGRAM $DEF";
 
-	if [ -d $BUILD_DIR/$PROGRAM ];
-		then
-			echo "$C Directory with source already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM
-			echo "$C Source directory $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-		else
-			echo "$C Source directory $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	if [ -d $BUILD_DIR/$PROGRAM ]; then
+	  echo "$C Directory with source already exist $G [REMOVING] $DEF"
+	  echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+	  rm -rf $BUILD_DIR/$PROGRAM
+	  echo "$C Source directory $G [UNPACKING] $DEF"
+	  echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+	  tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	else
+	  echo "$C Source directory $G [UNPACKING] $DEF"
+	  echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+	  tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
 	fi
 }
 export -f unpackBzip
@@ -38,98 +51,67 @@ export -f unpackBzip
 unpackGzip (){
 	echo "$Y Starting build script $PROGRAM $DEF";
 
-	if [ -d $BUILD_DIR/$PROGRAM ];
-		then
-			echo "$C Directory with source already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM
-			echo "$C Source directory $G [UNPACKING] $DEF"
-			echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-		else
-			echo "$C Source directory $G [UNPACKING] $DEF"
-			echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	if [ -d $BUILD_DIR/$PROGRAM ]; then
+	  echo "$C Directory with source already exist $G [REMOVING] $DEF"
+	  echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+	  rm -rf $BUILD_DIR/$PROGRAM
+	  echo "$C Source directory $G [UNPACKING] $DEF"
+	  echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+	  tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+	else
+	  echo "$C Source directory $G [UNPACKING] $DEF"
+	  echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+	  tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
 	fi
 }
 export -f unpackGzip
 
-#Function unpacking archive and make directory for separete build
-unpackGzipSep (){
-	echo "$Y Starting build script $PROGRAM $DEF";
+#Function for prepare to separate build
+SepBuild (){
+	echo "$Y Preparing for separate build $PROGRAM $DEF";
 
-	if [ -d $BUILD_DIR/$PROGRAM ];
-		then
-			echo "$C Directory with source already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM
-			echo "$C Source direcotry $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-		else
-			echo "$C Source direcotry $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-	fi
-
-	if [ -d $BUILD_DIR/$PROGRAM-BUILD ];
-		then
-			echo "$C Build directory already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM-BUILD
-		else
-			echo "$M.$DEF"
+	if [ -d $BUILD_DIR/$PROGRAM-BUILD ]; then
+	  echo "$C Build directory already exist $G [REMOVING] $DEF"
+	  echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
+	  rm -rf $BUILD_DIR/$PROGRAM-BUILD
+	else
+	  echo "$M.$DEF"
 	fi
 
 	echo "$C Making directory for separate build $DEF"
 	echo "$G mkdir $BUILD_DIR/$PROGRAM-BUILD $DEF"
 	mkdir $BUILD_DIR/$PROGRAM-BUILD
 }
-export -f unpackGzipSep
+export -f SepBuild
 
-#Function unpacking archive and make directory for separete build
-unpackBzipSep (){
-	echo "$Y Starting build script $PROGRAM $DEF";
-
-	if [ -d $BUILD_DIR/$PROGRAM ];
-		then
-			echo "$C Directory with source already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM
-			echo "$C Source direcotry $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-		else
-			echo "$C Source direcotry $G [UNPACKING] $DEF"
-			echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
-			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-	fi
-
-	if [ -d $BUILD_DIR/$PROGRAM-BUILD ];
-		then
-			echo "$C Build directory already exist $G [REMOVING] $DEF"
-			echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-			rm -rf $BUILD_DIR/$PROGRAM-BUILD
-		else
-			echo "$M.$DEF"
-	fi
-
-	echo "$C Making directory for separate build $DEF"
-	echo "$G mkdir $BUILD_DIR/$PROGRAM-BUILD $DEF"
-	mkdir $BUILD_DIR/$PROGRAM-BUILD
+#test if existing directory for mpfr gmp mpc
+gccSupProgTest(){
+  if [ -d $BUILD_DIR/$PROGRAM ]; then
+    echo -e "$C Directory with source already exist $G [REMOVING] $DEF"
+    echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+    rm -rf $BUILD_DIR/$PROGRAM
+  else
+    echo -e "$M.$DEF"
+  fi
+  if [ -d $BUILD_DIR/$NAME ]; then
+      echo -e "$C Directory with source already exist $G [REMOVING] $DEF"
+      echo -e "$G rm -rf $BUILD_DIR/$NAME $DEF"
+      rm -rf $BUILD_DIR/$NAME
+    else
+      echo -e "$M.$DEF"
+  fi
 }
-export -f unpackBzipSep
+export -f gccSupProgTest
 
 #function testing if directory exist if not make directory
 #parameter= directory
 testExDir (){
-	if [ -d $1 ];
-		then
-			echo "$C Directory $1 exist"
-		else
-			echo "$C Directory $1 not exist $DEF"
-			echo "$G mkdir -p $1 $DEF"
-			mkdir -p $1
+	if [ -d $1 ]; then
+	  echo "$C Directory $1 exist"
+	else
+	  echo "$C Directory $1 not exist $DEF"
+	  echo "$G mkdir -p $1 $DEF"
+	  mkdir -p $1
 	fi
 }
 export -f testExDir
@@ -140,14 +122,13 @@ export -f testExDir
 #third=destination dir
 #example: testSimLink /home/user/LFS /home/user/test/LFS /home/user/
 testSimLink (){ 
-	if [ -L $1 ];
-		then
-			echo "$C Symbolic link $1 exist $DEF"
-		else
-			echo "$C Symbolic link $G $1 $C not exist $DEF"
-			echo "Making symbolic link $G $1 $DEF"
-			echo "$G ln -s $2 $3 $DEF"
-			ln -s $2 $3
+	if [ -L $1 ]; then
+	  echo "$C Symbolic link $1 exist $DEF"
+	else
+	  echo "$C Symbolic link $G $1 $C not exist $DEF"
+	  echo "Making symbolic link $G $1 $DEF"
+	  echo "$G ln -s $2 $3 $DEF"
+	  ln -s $2 $3
 	fi
 }
 export -f testSimLink
@@ -202,11 +183,10 @@ export -f c_Make
 c_MakeTest (){
 	echo "for start make $@ pres 1 and enter"
 	read var
-		if [ $var == 1 ];
-	    	then
-				echo -e "$G make $@ $DEF"
-				make $@
-		fi
+	if [ $var == 1 ]; then
+	  echo -e "$G make $@ $DEF"
+	  make $@
+	fi
 }
 export -f c_MakeTest
 
@@ -261,20 +241,39 @@ export -f copyFilesRec
 compareFiles (){
 if cmp $1 $2 &> /dev/null
 	then
-		echo "$C . $DEF"
+	  echo "$C Files are matching [OK] $DEF"
 	else
-		echo "$R Linker test [FAIL] $DEF"
-		exit 1
+	  echo "$R Linker test [FAIL] $DEF"
+	  exit 1
     fi
 }
 export -f compareFiles
 
 #function wait for user interaction
 waitUser (){
-	if [ $WAIT == 1 ];
-    	then
-		echo "for continue pres enter"
-		read > /dev/null
-	fi
+  if [ $WAIT == 1 ]; then
+    echo "for continue pres enter"
+    read > /dev/null
+  fi
 }
 export -f waitUser
+
+#function downloaded file given in first parametr
+download (){
+ wget -c ${1} -P ${SOURCES_DIR}/
+}
+
+export -f download
+
+#function compare md5 sums
+#it checked file given in first variable
+#then compare with md5sum given in second variable
+check(){
+  echo "$C Checking md5 checksum for file ${1} $DEF"
+  md5test=$(md5sum $SOURCES_DIR/${1} | awk '{ print $1 }')
+  if [ ${2} == ${md5test} ]; then
+    echo "$G [OK] $DEF";
+  else
+    echo "$R [FAIL] $DEF";
+  fi
+}

@@ -1,20 +1,29 @@
 #!/bin/bash
 
-NAME=m4
-PROGRAM=$NAME-$m4_VER
-FILE=$NAME-$m4_VER$m4_PRIP
+NAME=${M4[0]}
+PROGRAM=${M4[3]}
+FILE=${M4[2]}
+EXT=${M4[4]}
+DLINK=${M4[1]}
+MD5=${M4[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
-{
-	cd $BUILD_DIR/$PROGRAM
 
-	sed -i -e '/"m4.h"/a #include <sys/stat.h>' src/path.c
-	waitUser
-	c_Configure --prefix=/tools || exit 1
+cd $BUILD_DIR/$PROGRAM
+{
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

@@ -1,10 +1,22 @@
 #!/bin/bash
 
-NAME=linux
-PROGRAM=$NAME-$linux_VER
-FILE=$NAME-$linux_VER$linux_PRIP
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
 
-unpackBzip
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -12,13 +24,14 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	c_Make mrproper || exit 1
+	make mrproper || exit 1
 	waitUser
-	c_Make headers_check || exit 1
+	make headers_check || exit 1
 	waitUser
-	c_Make INSTALL_HDR_PATH=dest headers_install || exit 1
+	make INSTALL_HDR_PATH=dest headers_install || exit 1
 	waitUser
-	copyFilesRec dest/include/* /tools/include
+	cp -rv dest/include/* /tools/include
+
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

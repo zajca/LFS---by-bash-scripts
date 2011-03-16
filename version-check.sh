@@ -34,4 +34,3 @@ echo 'main(){}' > dummy.c && gcc -o dummy dummy.c
 if [ -x dummy ]; then echo "Compilation OK";
   else echo "Compilation failed"; fi
 rm -f dummy.c dummy
-

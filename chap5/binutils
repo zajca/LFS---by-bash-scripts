@@ -1,11 +1,26 @@
 #!/bin/bash
 
-NAME=binutils
-PROGRAM=$NAME-$binutils_VER
-FILE=$NAME-$binutils_VER$binutils_PRIP
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
 TIMEFORMAT="%1R = 1 SBU - $PROGRAM"
 
-unpackBzipSep
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
 
 waitUser
 
@@ -15,21 +30,21 @@ cd $BUILD_DIR/$PROGRAM-BUILD
 
 { time \
   {
-
-    c_ConfigureSep --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror || exit 1
+	echo "$G ../$PROGRAM/configure --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror $DEF" 
+    ../$PROGRAM/configure --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror || exit 1
 
     waitUser
-
+    echo "$G make $DEF"
     c_Make || exit 1
 
     waitUser
 
     case $(uname -m) in
-    x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
+      x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
     esac
-    
-    waitUser
 
+    waitUser
+    echo "$G make isntall $DEF"
     c_MakeInstall || exit 1
   }
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

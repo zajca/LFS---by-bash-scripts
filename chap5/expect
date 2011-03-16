@@ -1,10 +1,21 @@
 #!/bin/bash
 
-NAME=expect
-PROGRAM=$NAME-$expect_VER
-FILE=$NAME-$expect_VER$expect_PRIP
+NAME=${expect[0]}
+PROGRAM=${expect[3]}
+FILE=${expect[2]}
+EXT=${expect[4]}
+DLINK=${expect[1]}
+MD5=${expect[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -12,19 +23,17 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	addPatch expect-5.44.1.15-no_tk-1.patch
-
 	cp -v configure{,.orig}
 	sed 's:/usr/local/bin:/bin:' configure.orig > configure
 
 	waitUser
-	c_Configure --prefix=/tools --with-tcl=/tools/lib --with-tclinclude=/tools/include --with-tk=no || exit 1
+	./configure --prefix=/tools --with-tcl=/tools/lib --with-tclinclude=/tools/include || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser
 	c_MakeTest test || exit 1
 	waitUser    
-	c_Make SCRIPTS="" install || exit 1
+	make SCRIPTS="" install || exit 1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

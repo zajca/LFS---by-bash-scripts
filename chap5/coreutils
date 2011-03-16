@@ -1,10 +1,21 @@
 #!/bin/bash
 
-NAME=coreutils
-PROGRAM=$NAME-$coreutils_VER
-FILE=$NAME-$coreutils_VER$coreutils_PRIP
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
 
-unpackGzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
@@ -12,7 +23,7 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	c_Configure --prefix=/tools --enable-install-program=hostname || exit 1
+	./configure --prefix=/tools --enable-install-program=hostname || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

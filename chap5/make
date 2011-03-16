@@ -1,17 +1,29 @@
 #!/bin/bash
 
-NAME=make
-PROGRAM=$NAME-$make_VER
-FILE=$NAME-$make_VER$make_PRIP
+NAME=${make[0]}
+PROGRAM=${make[3]}
+FILE=${make[2]}
+EXT=${make[4]}
+DLINK=${make[1]}
+MD5=${make[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
-{
+
 cd $BUILD_DIR/$PROGRAM
-	c_Configure --prefix=/tools || exit 1
+{
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

@@ -1,36 +1,54 @@
 #!/bin/bash
 
-NAME=glibc
-PROGRAM=$NAME-$glibc_VER
-FILE=$NAME-$glibc_VER$glibc_PRIP
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pPatch=${pglibc[1]}
 
-unpackBzipSep
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pPatch} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
 
 waitUser
 
 startBuild
-
 cd $BUILD_DIR/$PROGRAM
-
 {
-	addPatch glibc-2.12.1-gcc_fix-1.patch
+	addPatch ${pPatch}
 
-	addPatch glibc-2.12.1-makefile_fix-1.patch
 	waitUser
 	cd $BUILD_DIR/$PROGRAM-BUILD
 
 	echo -e "$L_SET_CGLAG"
 	case `uname -m` in
-	  i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms 
-	  waitUser ;;
+	  i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms ;;
 	esac
-	SHELL=/bin/bash
-	CONFIG_SHELL=/bin/bash
-	c_ConfigureSep --prefix=/tools --host=$LFS_TGT --build=$(../glibc-2.12.1/scripts/config.guess) --disable-profile --enable-add-ons --enable-kernel=2.6.22.5 --with-headers=/tools/include libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes || exit 1
+
+	#SHELL=/bin/bash
+	#CONFIG_SHELL=/bin/bash
+	../$PROGRAM/configure --prefix=/tools --host=$LFS_TGT --build=$(../glibc-2.13/scripts/config.guess) --disable-profile --enable-add-ons --enable-kernel=2.6.22.5 --with-headers=/tools/include libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes || exit 1
 	waitUser
-	c_Make SHELL=/bin/bash || exit 1
+	c_Make || exit 1
 	waitUser
 	c_MakeInstall || exit 1
+
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

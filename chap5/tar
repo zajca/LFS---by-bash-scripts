@@ -1,26 +1,35 @@
 #!/bin/bash
 
-NAME=tar
-PROGRAM=$NAME-$tar_VER
-FILE=$NAME-$tar_VER$tar_PRIP
+NAME=${tar[0]}
+PROGRAM=${tar[3]}
+FILE=${tar[2]}
+EXT=${tar[4]}
+DLINK=${tar[1]}
+MD5=${tar[5]}
 
-unpackBzip
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
-{
-cd $BUILD_DIR/$PROGRAM
 
-	sed -i /SIGPIPE/d src/tar.c
-	waitUser
-	c_Configure --prefix=/tools || exit 1
+cd $BUILD_DIR/$PROGRAM
+{
+	./configure --prefix=/tools || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser
 	c_MakeTest check || exit 1
 	waitUser
-	c_MakeTest || exit 1
+	c_MakeInstall || exit 1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

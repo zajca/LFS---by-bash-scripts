@@ -35,7 +35,8 @@ source $SCRIPTS_DIR/chap5/perl
 source $SCRIPTS_DIR/chap5/sed
 source $SCRIPTS_DIR/chap5/tar
 source $SCRIPTS_DIR/chap5/texinfo
+source $SCRIPTS_DIR/chap5/xzutils
 source $SCRIPTS_DIR/chap5/finish5
-###### Chapter 6 #######
-source $SCRIPTS_DIR/chap6/start6
+# ###### Chapter 6 #######
+# source $SCRIPTS_DIR/chap6/start6
 #source $SCRIPTS_DIR/chap6/restart

@@ -1,22 +1,38 @@
 #!/bin/bash
 
-NAME=perl
-PROGRAM=$NAME-$perl_VER
-FILE=$NAME-$perl_VER$perl_PRIP
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
 
-unpackBzip
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
 {
 cd $BUILD_DIR/$PROGRAM
-	addPatch perl-5.12.1-libc-1.patch
+	addPatch ${pFILE}
 	waitUser
 	echo -e "$G $PROGRAM/Configure $DEF"
 	$BUILD_DIR/$PROGRAM/Configure -des -Dprefix=/tools -Dstatic_ext='Data/Dumper Fcntl IO' || exit 1
 	waitUser
-	c_Make perl utilities ext/Errno/pm_to_blib || exit 1
+	make perl utilities ext/Errno/pm_to_blib || exit 1
 	waitUser
 	echo -e "$L_COP_FILES"
 	echo -e "$G cp -v perl pod/pod2man /tools/bin $DEF"

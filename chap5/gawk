@@ -1,17 +1,27 @@
 #!/bin/bash
 
-NAME=gawk
-PROGRAM=$NAME-$gawk_VER
-FILE=$NAME-$gawk_VER$gawk_PRIP
+NAME=${gawk[0]}
+PROGRAM=${gawk[3]}
+FILE=${gawk[2]}
+EXT=${gawk[4]}
+DLINK=${gawk[1]}
+MD5=${gawk[5]}
+download ${DLINK}
 
-unpackBzip
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
 
 waitUser
 
 startBuild
 {
 cd $BUILD_DIR/$PROGRAM
-  c_Configure --prefix=/tools || exit 1
+  ./configure --prefix=/tools || exit 1
   waitUser
   c_Make || exit 1
   waitUser
