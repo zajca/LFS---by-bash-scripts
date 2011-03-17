@@ -84,6 +84,24 @@ SepBuild (){
 }
 export -f SepBuild
 
+#Function for prepare to separate build e2fsprogs
+SepBuilde2 (){
+	echo "$Y Preparing for separate build $PROGRAM $DEF";
+
+	if [ -d $BUILD_DIR/$PROGRAM/build ]; then
+	  echo "$C Build directory already exist $G [REMOVING] $DEF"
+	  echo "$G rm -rf $BUILD_DIR/$PROGRAM/build $DEF"
+	  rm -rf $BUILD_DIR/$PROGRAM/build
+	else
+	  echo "$M.$DEF"
+	fi
+
+	echo "$C Making directory for separate build $DEF"
+	echo "$G mkdir $BUILD_DIR/$PROGRAM/build $DEF"
+	mkdir $BUILD_DIR/$PROGRAM/build
+}
+export -f SepBuilde2
+
 #test if existing directory for mpfr gmp mpc
 gccSupProgTest(){
   if [ -d $BUILD_DIR/$PROGRAM ]; then
@@ -229,7 +247,7 @@ export -f copyFiles
 
 copyFilesRec (){
 	echo "$C Coping files $DEF"
-	echo "$G cp -v $1 $2 $DEF"
+	echo "$G cp -rv $1 $2 $DEF"
 	cp -vr $1 $2
 }
 export -f copyFilesRec
@@ -257,6 +275,14 @@ waitUser (){
   fi
 }
 export -f waitUser
+
+#function wait for user interaction
+waitUserAl (){
+    echo "Check text on top or LOG"
+    echo "for continue pres enter"
+    read > /dev/null
+}
+export -f waitUserAl
 
 #function downloaded file given in first parametr
 download (){
