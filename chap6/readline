@@ -1,0 +1,54 @@
+#!/bin/bash
+
+NAME=${readline[0]}
+PROGRAM=${readline[3]}
+FILE=${readline[2]}
+EXT=${readline[4]}
+DLINK=${readline[1]}
+MD5=${readline[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	sed -i '/MV.*old/d' Makefile.in
+sed -i '/{OLDSUFF}/c:' support/shlib-install
+
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr --libdir=/lib || exit 1
+
+	echo -e "$G make $DEF"
+	make SHLIB_LIBS=-lncurses || exit 1
+
+	c_MakeInstall || exit 1
+
+	mv -v /lib/lib{readline,history}.a /usr/lib
+	rm -v /lib/lib{readline,history}.so
+	ln -sfv ../../lib/libreadline.so.6 /usr/lib/libreadline.so
+	ln -sfv ../../lib/libhistory.so.6 /usr/lib/libhistory.so
+	
+	mkdir   -v       /usr/share/doc/readline-6.2
+	install -v -m644 doc/*.{ps,pdf,html,dvi} \
+			/usr/share/doc/readline-6.2
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

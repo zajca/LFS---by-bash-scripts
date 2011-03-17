@@ -1,0 +1,44 @@
+#!/bin/bash
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr || exit 1
+
+	c_Make
+	
+	c_MakeTest check || exit 1
+
+	c_MakeInstall
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

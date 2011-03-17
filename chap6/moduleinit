@@ -1,0 +1,49 @@
+#!/bin/bash
+
+NAME=${moduleit[0]}
+PROGRAM=${moduleit[3]}
+FILE=${moduleit[2]}
+EXT=${moduleit[4]}
+DLINK=${moduleit[1]}
+MD5=${moduleit[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+      echo '.so man5/modprobe.conf.5' > modprobe.d.5
+
+	./configure
+	make check
+	./tests/runtests
+	make clean
+
+
+	./configure --prefix=/ --enable-zlib-dynamic --mandir=/usr/share/man || exit 1
+
+	c_Make || exit 1
+	
+	make INSTALL=install install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

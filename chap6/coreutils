@@ -1,0 +1,71 @@
+#!/bin/bash
+
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
+pFILE=${pcoreutils[1]}
+pDLINK=${pcoreutils[0]}
+pMD5=${pcoreutils[2]}
+
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+cd $BUILD_DIR/$PROGRAM
+{
+	case `uname -m` in
+	i?86 | x86_64) patch -Np1 -i ../coreutils-8.10-uname-1.patch ;;
+	esac
+
+	addPatch ${pFILE}
+
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr \
+    --enable-no-install-program=kill,uptime || exit 1
+
+	c_Make || exit 1
+	c_MakeTest NON_ROOT_USERNAME=nobody check-root || exit 1
+
+	echo -e "$L_MK_TG"
+	echo "dummy:x:1000:nobody" >> /etc/group
+	echo -e "$L_CH_PRI"
+	chown -Rv nobody . 
+	echo -e "$G su-tools nobody -s /bin/bash -c make RUN_EXPENSIVE_TESTS=yes check $DEF"
+	su-tools nobody -s /bin/bash -c "make RUN_EXPENSIVE_TESTS=yes check"
+	echo -e "$L_RM_TU"
+	sed -i '/dummy/d' /etc/group
+	
+	c_MakeInstall || exit 1
+
+	mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
+mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin
+mv -v /usr/bin/{rmdir,stty,sync,true,uname} /bin
+mv -v /usr/bin/chroot /usr/sbin
+mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
+sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
+mv -v /usr/bin/{head,sleep,nice} /bin
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+echo -e "$L_START_TOOLCH"
+
+echo -e "$L_SET_LINK"
+cd $TOOLS_DIR
+
+{
+
+mv -v /tools/bin/{ld,ld-old}
+mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}
+mv -v /tools/bin/{ld-new,ld}
+ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld
+
+gcc -dumpspecs | sed -e 's@/tools@@g' \
+    -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
+    -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' > \
+    `dirname $(gcc --print-libgcc-file-name)`/specs
+
+
+echo -e "$L_TEST_SPR"
+
+echo 'main(){}' > dummy.c
+cc dummy.c -v -Wl,--verbose &> dummy.log
+readelf -l a.out | grep ': /lib'
+
+case $(uname -m) in
+    x86_64) compareFiles $SCRIPTS_DIR/linker.ch6.1.test64 $TOOLS_DIR/testlink.ch6.1 ;;
+    i?86) compareFiles $SCRIPTS_DIR/linker.ch6.1.test $TOOLS_DIR/testlink.ch6.1 ;; 
+esac
+
+grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log > pathtest.ch6.1
+  compareFiles $SCRIPTS_DIR/pathtest.ch6.1.test $TOOLS_DIR/pathtest.ch6.1
+
+grep -B1 '^ /usr/include' dummy.log > corhead.ch6.1
+  compareFiles $SCRIPTS_DIR/corhead.ch6.1.test $TOOLS_DIR/corhead.ch6.1
+
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g' > testlink.ch6.2
+  compareFiles $SCRIPTS_DIR/corhead.ch6.2.test $TOOLS_DIR/corhead.ch6.2
+
+grep "/lib.*/libc.so.6 " dummy.log > libctest.ch6.1
+  compareFiles $SCRIPTS_DIR/libctest.ch6.1.test $TOOLS_DIR/libctest.ch6.1
+
+grep found dummy.log > dynlink.ch6.1
+  compareFiles $SCRIPTS_DIR/dynlink.ch6.1.test $TOOLS_DIR/dynlink.ch6.1
+
+} 2>&1 | tee $BUILD_DIR/LOG_LINKER_CH6.log
+
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_LINK"
+		exit 1
+fi  
+
+read > /dev/null
+
+echo -e "$L_RM_TFIL $G rm -v dummy.c a.out dummy.log $DEF"
+rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out $TOOLS_DIR/dummy.log
+echo -e "$DEF $G $TOOLS_DIR/testlink.ch6.1 $TOOLS_DIR/pathtest.ch6.1 $TOOLS_DIR/corhead.ch6.1 $TOOLS_DIR/testlink.ch6.2 $TOOLS_DIR/libctest.ch6.1 $TOOLS_DIR/dynlink.ch6.1 $DEF $L_SET_KEEP"
+cd $ROOT

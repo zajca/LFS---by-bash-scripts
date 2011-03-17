@@ -1,0 +1,42 @@
+#!/bin/bash
+
+NAME=${autoconf[0]}
+PROGRAM=${autoconf[3]}
+FILE=${autoconf[2]}
+EXT=${autoconf[4]}
+DLINK=${autoconf[1]}
+MD5=${autoconf[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+cd $BUILD_DIR/$PROGRAM
+{
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr || exit 1
+
+	c_Make || exit 1
+	
+	c_MakeTest check || exit 1
+	
+	c_MakeInstall || exit 1
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

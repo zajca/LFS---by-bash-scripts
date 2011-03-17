@@ -1,0 +1,39 @@
+#!/bin/bash
+
+NAME=${ianaetc[0]}
+PROGRAM=${ianaetc[3]}
+FILE=${ianaetc[2]}
+EXT=${ianaetc[4]}
+DLINK=${ianaetc[1]}
+MD5=${ianaetc[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	c_Make
+	
+	c_MakeInstall
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

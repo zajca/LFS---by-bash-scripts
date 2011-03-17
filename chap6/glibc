@@ -1,91 +1,104 @@
 #!/bin/bash
 
-NAME=glibc
-PROGRAM=$NAME-$glibc_VER
-FILE=$NAME-$glibc_VER$glibc_PRIP
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pPatch=${pglibc[1]}
 
-source $SCRIPTS_DIR/include/unpack_sep_bzip
+download ${DLINK}
+download ${pDLINK}
 
-echo -e "$Y Spoustim Build $DEF"
+waitUser
 
+check ${FILE} ${MD5}
+check ${pPatch} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
+
+waitUser
+
+startBuild
 cd $BUILD_DIR/$PROGRAM
 {
 	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
 	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
-		scripts/test-installation.pl
+        scripts/test-installation.pl
 	unset DL
+
+	sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
 
 	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
 
-	echo -e "$C Aplikuji patch $DEF"
-	echo -e "$G patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-gcc_fix-1.patch $DEF"
-	patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-gcc_fix-1.patch
-
-	echo -e "$C Aplikuji patch $DEF"
-	echo -e "$G patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-makefile_fix-1.patch $DEF"
-	patch -Np1 -i $SOURCES_DIR/glibc-2.12.1-makefile_fix-1.patch
-
+	addPatch ${pPatch}
+	
+	sed -i '195,213 s/PRIVATE_FUTEX/FUTEX_CLOCK_REALTIME/' \
+nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timed{rd,wr}lock.S
 
 cd $BUILD_DIR/$PROGRAM-BUILD
 
 case `uname -m` in
   i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" > configparms ;;
 esac
-
 	echo -e "$G ../$PROGRAM/configure $DEF" 
 	../$PROGRAM/configure --prefix=/usr \
     --disable-profile --enable-add-ons \
-    --enable-kernel=2.6.22.5 --libexecdir=/usr/lib/glibc
-	if [ $? -ne 0 ]
-		then
-			echo -e "$R Configure selhalo $DEF"
-			exit 1
-	fi
-	echo -e "$G make $DEF"
-	make
-	if [ $? -ne 0 ]
-		then
-			echo -e "$R make selhalo $DEF"
-			exit 1
-	fi
+    --enable-kernel=2.6.22.5 --libexecdir=/usr/lib/glibc || exit 1
+
+	c_Make || exit 1
 	
-	cp -v ../glibc-2.12.1/iconvdata/gconv-modules iconvdata
+	copyFiles ../glibc-2.12.1/iconvdata/gconv-modules iconvdata
 
 	echo -e "$G make check $DEF"
-	make -k check 2>&1 | tee $BUILD_DIR/glibc-check-log
+	make -k check 2>&1 | tee glibc-check-log
 	grep Error $BUILD_DIR/glibc-check-log
 
 	echo -e "$R **************************************************** $DEF"
+	echo -e "$R Check tect on top for erors and file ${BUILD_DIR}/glibc-check-log $DEF"
 	echo -e "$R **************************************************** $DEF"
-	echo -e "$R ************ Pozor zkontrolujte soubor ************* $DEF"
-	echo -e "$R ************** $BUILD_DIR/glibc-check-log ************** $DEF" 
-	echo -e "$R ************ Informace najdete v README ************ $DEF"
-	echo -e "$R ********** !! Nepreskakujte tentok krok !! ********* $DEF"
-	echo -e "$R **************************************************** $DEF"
-	echo -e "$R **************************************************** $DEF"
-	echo -e "$G pokracujte stiskem <ENTER> $DEF"
+	echo -e "$G pres <ENTER> for continue $DEF"
 	read > /dev/null
 
-	echo -e "$C Vytvarim soubor $G touch /etc/ld.so.conf $DEF"
+	echo -e "$C $L_VAR_MF $G touch /etc/ld.so.conf $DEF"
 	touch /etc/ld.so.conf
 			
-	echo -e "$G make-install $DEF"
-	make install
-	if [ $? -ne 0 ]
-		then
-			echo -e "$R make install selhalo $DEF"
-			exit 1
-	fi
+	c_MakeInstall || exit 1
 	
-	echo -e "$C Vytvarim slozku $G mkdir -pv /usr/lib/locale $C pro locale $DEF"
+	echo -e "$C $L_VAR_MD $G mkdir -pv /usr/lib/locale $DEF"
 	mkdir -pv /usr/lib/locale
-	echo -e "$C Nastavuju locale $DEF"
+	echo -e "$L_SET_LOC"
 	localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
+	localedef -i de_DE -f ISO-8859-1 de_DE
+	localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro
+	localedef -i de_DE -f UTF-8 de_DE.UTF-8
+	localedef -i en_HK -f ISO-8859-1 en_HK
+	localedef -i en_PH -f ISO-8859-1 en_PH
 	localedef -i en_US -f ISO-8859-1 en_US
 	localedef -i en_US -f UTF-8 en_US.UTF-8
+	localedef -i es_MX -f ISO-8859-1 es_MX
+	localedef -i fa_IR -f UTF-8 fa_IR
+	localedef -i fr_FR -f ISO-8859-1 fr_FR
+	localedef -i fr_FR@euro -f ISO-8859-15 fr_FR@euro
+	localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
+	localedef -i it_IT -f ISO-8859-1 it_IT
+	localedef -i ja_JP -f EUC-JP ja_JP
+	localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
+	localedef -i zh_CN -f GB18030 zh_CN.GB18030
+
+	make localedata/install-locales || exit 1
 	
-	echo -e "$C Vytvarim soubor $G /etc/nsswitch.conf $C pro qlibc $DEF"
-	cat > /etc/nsswitch.conf << "EOF"
+	echo -e "$L_VAR_MF $G /etc/nsswitch.conf $DEF"
+cat > /etc/nsswitch.conf << "EOF"
 # Begin /etc/nsswitch.conf
 
 passwd: files
@@ -104,13 +117,10 @@ rpc: files
 EOF
 
 	echo -e "$R **************************************************** $DEF"
-	echo -e "$R ***Nyni si otevrete novy terminal a spuste script*** $DEF"
+	echo -e "$R *** Now open new trminal and run script *** $DEF"
 	echo -e "$R **********$SCRIPTS_DIR/only_chroot*********** $DEF"
-	echo -e "$R *****************a spustte************************** $DEF"
-	echo -e "$R ******************tzselect************************** $DEF"
-	echo -e "$R *program se zepta na par otazek a muzete pokracovat $DEF"
-	echo -e "$R **************************************************** $DEF"
-	echo -e "$G pote pokracujte stiskem <ENTER> $DEF"
+	echo -e "$R ***************Than run tzselect******************* $DEF"
+	echo -e "$G after all press <ENTER> to continue $DEF"
 	read > /dev/null
 	
 	echo -e "$C Nastaveni timezone $DEF"
@@ -120,7 +130,7 @@ EOF
     /etc/localtime
 	
 	echo -e "$C Vytvarim soubor $G /etc/ld.so.conf $C pro qlibc $DEF"
-	cat > /etc/ld.so.conf << "EOF"
+cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf
 
 /usr/local/lib
@@ -129,21 +139,12 @@ EOF
 # End /etc/ld.so.conf
 EOF
 	
-} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
-if [ $PIPESTATUS -ne 0 ]
-	then
-		echo -e "$R build selhal $DEF"
-		exit 1
-fi  
-if [ $BUILD_RM == 1 ];
-	then
-                echo -e "$C Mazu slozku s buildem $DEF"
-                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-                rm -rf $BUILD_DIR/$PROGRAM-BUILD
-                echo -e "$C Mazu slozku se zdrojaky $DEF"
-                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-                rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
 cd $ROOT

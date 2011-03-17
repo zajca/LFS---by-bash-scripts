@@ -1,0 +1,59 @@
+#!/bin/bash
+
+NAME=${bzip2[0]}
+PROGRAM=${bzip2[3]}
+FILE=${bzip2[2]}
+EXT=${bzip2[4]}
+DLINK=${bzip2[1]}
+MD5=${bzip2[5]}
+pFILE=${pbzip2[1]}
+pDLINK=${pbzip2[0]}
+pMD5=${pbzip2[2]}
+
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	addPatch ${pFILE}
+	
+	sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+
+	make -f Makefile-libbz2_so || exit 1
+	make clean || exit 1
+
+	c_Make || exit 1
+	
+	echo -e "$G make PREFIX=/usr install $DEF"
+	make PREFIX=/usr install || exit 1
+
+	cp -v bzip2-shared /bin/bzip2
+	cp -av libbz2.so* /lib
+	ln -sv ../../lib/libbz2.so.1.0 /usr/lib/libbz2.so
+	rm -v /usr/bin/{bunzip2,bzcat,bzip2}
+	ln -sv bzip2 /bin/bunzip2
+	ln -sv bzip2 /bin/bzcat
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

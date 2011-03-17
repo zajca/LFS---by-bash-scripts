@@ -1,0 +1,61 @@
+#!/bin/bash
+
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
+
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+{
+cd $BUILD_DIR/$PROGRAM
+
+	echo "127.0.0.1 localhost $(hostname)" > /etc/hosts
+	
+	sed -i -e "s|BUILD_ZLIB\s*= True|BUILD_ZLIB = False|"           \
+       -e "s|INCLUDE\s*= ./zlib-src|INCLUDE    = /usr/include|" \
+       -e "s|LIB\s*= ./zlib-src|LIB        = /usr/lib|"         \
+    cpan/Compress-Raw-Zlib/config.in
+
+	echo -e "$G $PROGRAM/Configure $DEF"
+	$BUILD_DIR/$PROGRAM/Configure -des -Dprefix=/usr \
+                  -Dvendorprefix=/usr           \
+                  -Dman1dir=/usr/share/man/man1 \
+                  -Dman3dir=/usr/share/man/man3 \
+                  -Dpager="/usr/bin/less -isR"  \
+                  -Duseshrplib || exit 1
+
+    c_Make || exit 1
+
+    c_MakeTest test || exit 1
+    
+    c_MakeInstall || exit 1
+
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

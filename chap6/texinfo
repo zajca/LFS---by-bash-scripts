@@ -1,0 +1,52 @@
+#!/bin/bash
+
+NAME=${texinfo[0]}
+PROGRAM=${texinfo[3]}
+FILE=${texinfo[2]}
+EXT=${texinfo[4]}
+DLINK=${texinfo[1]}
+MD5=${texinfo[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr || exit 1
+
+	c_Make || exit 1
+	
+	c_MakeTest check || exit 1
+	
+	c_MakeInstall || exit 1
+
+	make TEXMF=/usr/share/texmf install-tex || exit 1
+
+	cd /usr/share/info
+rm -v dir
+for f in *
+do install-info $f dir 2>/dev/null
+done
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

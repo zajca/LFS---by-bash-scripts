@@ -1,51 +1,57 @@
 #!/bin/bash
 
-NAME=linux
-PROGRAM=$NAME-$linux_VER
-FILE=$NAME-$linux_VER$linux_PRIP
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
 
-echo -e "$Y Spoustim build script programu $PROGRAM $DEF"
+download ${DLINK}
 
-source $SCRIPTS_DIR/include/unpack_bzip
+waitUser
 
-echo -e "$Y Spoustim Build $DEF"
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
 {
 cd $BUILD_DIR/$PROGRAM
 	echo -e "$G make mrproper $DEF" 
-	make mrproper
+	make mrproper || exit 1
+  
+	waitUser
 
 	echo -e "$G make headers_check $DEF"
-	make headers_check
-	if [ $? -ne 0 ]
-		then
-			echo -e "$R make headers_check selhalo $DEF"
-			exit 1
-	fi
+	make headers_check || exit 1
+
+	waitUser
+
 	echo -e "$G make INSTALL_HDR_PATH=dest headers_install $DEF"
-	make INSTALL_HDR_PATH=dest headers_install
-	if [ $? -ne 0 ]
-		then
-			echo -e "$R mmake INSTALL_HDR_PATH=dest headers_install selhalo $DEF"
-			exit 1
-	fi
-	echo -e "$C mazu nepotrebne soubory $DEF" 
+	make INSTALL_HDR_PATH=dest headers_install || exit 1
+
+	waitUser
+
 	echo -e "$G find dest/include \( -name .install -o -name ..install.cmd \) -delete $DEF" 
 	find dest/include \( -name .install -o -name ..install.cmd \) -delete
-	echo -e "$C kopiruji potrebne soubory $DEF" 
-	echo -e "$G cp -rv dest/include/* /usr/include $DEF" 
-	cp -rv dest/include/* /usr/include
+
+	waitUser
+
+	copyFilesRec dest/include/* /usr/include
+
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
 if [ $PIPESTATUS -ne 0 ]
 	then
 		echo -e "$R build selhal $DEF"
 		exit 1
 fi  
-if [ $BUILD_RM == 1 ];
-	then
-                echo -e "$C Mazu slozku se zdrojaky $DEF"
-                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-                rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+
+waitUser
+RMsource
 cd $ROOT

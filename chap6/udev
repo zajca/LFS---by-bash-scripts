@@ -1,0 +1,96 @@
+#!/bin/bash
+
+#
+# TODO
+#
+
+NAME=${udev[0]}
+PROGRAM=${udev[3]}
+FILE=${udev[2]}
+EXT=${udev[4]}
+DLINK=${udev[1]}
+MD5=${udev[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	tar -xvf $SOURCES_DIR/udev-config-$udev_conf_VER$udev_conf_PRIP
+	tar -xvf $SOURCES_DIR/udev-$udev_test_VER$udev_test_PRIP --strip-components=1
+
+	install -dv /lib/{firmware,udev/devices/{pts,shm}}
+	mknod -m0666 /lib/udev/devices/null c 1 3
+	
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr \
+    --sysconfdir=/etc --sbindir=/sbin \
+    --with-rootlibdir=/lib --libexecdir=/lib/udev \
+    --disable-extras --disable-introspection
+	if [ $? -ne 0 ]
+		then
+			echo -e "$L_FAIL_CONF"
+			exit 1
+	fi
+
+	echo -e "$G make $DEF"
+	make
+	if [ $? -ne 0 ]
+		then
+			echo -e "$L_FAIL_MAKE"
+			exit 1
+	fi
+	
+	if [ $BUILD_TEST == 1 ];
+    	then
+			echo -e "$G make check $DEF"
+			make check
+			if [ $? -ne 0 ]
+				then
+					echo -e "$L_FAIL_MAKC"
+					exit 1
+			fi
+	fi
+
+	echo -e "$G make install $DEF"
+	make install
+	if [ $? -ne 0 ]
+		then
+			echo -e "$L_FAIL_MAKA"
+			exit 1
+	fi
+	
+	rmdir -v /usr/share/doc/udev
+	cd udev-config-20100128
+	
+	echo -e "$G make install $DEF"
+	make install
+	if [ $? -ne 0 ]
+		then
+			echo -e "$L_FAIL_MAKA"
+			exit 1
+	fi
+	
+	make install-doc
+  
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

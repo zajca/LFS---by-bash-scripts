@@ -1,0 +1,65 @@
+#!/bin/bash
+
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+cd $BUILD_DIR/$PROGRAM
+{
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr --with-shared --without-debug --enable-widec || exit 1
+
+	c_Make || exit 1
+
+	c_MakeInstall || exit 1
+
+	echo -e "$L_MV_FIL"
+	echo -e "$G mv -v /usr/lib/libncursesw.so.5* /lib $DEF"
+	mv -v /usr/lib/libncursesw.so.5* /lib
+
+	echo -e "$L_MK_LNS"
+	echo -e "$G ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so $DEF"
+	ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so
+
+	for lib in ncurses form panel menu ; do \
+    rm -vf /usr/lib/lib${lib}.so ; \
+    echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so ; \
+    ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a ; \
+done
+ln -sfv libncurses++w.a /usr/lib/libncurses++.a
+	
+	rm -vf /usr/lib/libcursesw.so
+echo "INPUT(-lncursesw)" >/usr/lib/libcursesw.so
+ln -sfv libncurses.so /usr/lib/libcurses.so
+ln -sfv libncursesw.a /usr/lib/libcursesw.a
+ln -sfv libncurses.a /usr/lib/libcurses.a
+
+mkdir -v       /usr/share/doc/ncurses-5.7
+cp -v -R doc/* /usr/share/doc/ncurses-5.7
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

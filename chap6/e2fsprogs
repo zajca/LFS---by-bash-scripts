@@ -1,0 +1,69 @@
+#!/bin/bash
+
+NAME=${e2fsprogs[0]}
+PROGRAM=${e2fsprogs[3]}
+FILE=${e2fsprogs[2]}
+EXT=${e2fsprogs[4]}
+DLINK=${e2fsprogs[1]}
+MD5=${e2fsprogs[5]}
+
+waitUser
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuilde2
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM/build
+{
+	echo -e "$G ../configure $DEF" 
+	../configure --prefix=/usr --with-root-prefix="" \
+    --enable-elf-shlibs --disable-libblkid --disable-libuuid \
+    --disable-uuidd --disable-fsck || exit 1
+
+	c_Make || exit 1
+
+	c_MakeTest check || exit 1
+	
+	c_MakeInstall || exit 1
+
+	echo -e "$G make install-libs $DEF"
+	make install-libs || exit 1
+
+	echo -e "$L_CH_PRI"
+	chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+
+	echo -e "$L_UP_SYS"
+	gunzip -v /usr/share/info/libext2fs.info.gz
+install-info --dir-file=/usr/share/info/dir \
+             /usr/share/info/libext2fs.info
+
+	echo -e "$L_UP_SYS"
+makeinfo -o      doc/com_err.info ../lib/et/com_err.texinfo
+install -v -m644 doc/com_err.info /usr/share/info
+install-info --dir-file=/usr/share/info/dir \
+             /usr/share/info/com_err.info
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

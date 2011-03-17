@@ -1,0 +1,92 @@
+#!/bin/bash
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+waitUser
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+SepBuild
+
+waitUser
+
+startBuild
+
+sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
+
+case `uname -m` in
+  i?86) sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' \
+        gcc/Makefile.in ;;
+esac
+
+sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo -e "$G $PROGRAM/configure $DEF" 
+	../$PROGRAM/configure --prefix=/usr \
+    --libexecdir=/usr/lib --enable-shared \
+    --enable-threads=posix --enable-__cxa_atexit \
+    --enable-clocale=gnu --enable-languages=c,c++ \
+    --disable-multilib --disable-bootstrap --with-system-zlib
+
+	c_Make
+	
+	ulimit -s 16384
+
+	make -k check || exit 1
+
+	../$PROGRAM/contrib/test_summary
+	
+	waitUserAl
+
+	c_MakeInstall || exit 1
+
+	ln -sv ../usr/bin/cpp /lib
+
+	ln -sv gcc /usr/bin/cc
+
+	echo 'main(){}' > dummy.c
+cc dummy.c -v -Wl,--verbose &> dummy.log
+readelf -l a.out | grep ': /lib'
+
+grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
+
+grep -B4 '^ /usr/include' dummy.log
+
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+
+grep "/lib.*/libc.so.6 " dummy.log	
+
+grep found dummy.log
+
+#
+#TODO TESTS
+#
+#
+	
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

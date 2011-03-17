@@ -1,0 +1,57 @@
+#!/bin/bash
+
+NAME=${kbd[0]}
+PROGRAM=${kbd[3]}
+FILE=${kbd[2]}
+EXT=${kbd[4]}
+DLINK=${kbd[1]}
+MD5=${kbd[5]}
+pFILE=${pkbd[1]}
+pDLINK=${pkbd[0]}
+pMD5=${pkbd[2]}
+
+download ${DLINK}
+download ${pDLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	addPatch ${pFILE}
+
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr --datadir=/lib/kbd || exit 1
+
+	c_Make || exit 1
+
+	c_MakeInstall
+
+	mv -v /usr/bin/{kbd_mode,loadkeys,openvt,setfont} /bin
+
+	mkdir -v /usr/share/doc/kbd-1.15.2
+	cp -R -v doc/* \
+         /usr/share/doc/kbd-1.15.2
+
+	
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

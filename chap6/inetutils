@@ -1,0 +1,52 @@
+#!/bin/bash
+
+NAME=${inetutils[0]}
+PROGRAM=${inetutils[3]}
+FILE=${inetutils[2]}
+EXT=${inetutils[4]}
+DLINK=${inetutils[1]}
+MD5=${inetutils[5]}
+
+download ${DLINK}
+
+waitUser
+
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
+
+cd $BUILD_DIR/$PROGRAM
+{
+	echo -e "$G $PROGRAM/configure $DEF" 
+	./configure --prefix=/usr --libexecdir=/usr/sbin \
+    --localstatedir=/var --disable-ifconfig \
+    --disable-logger --disable-syslogd --disable-whois \
+    --disable-servers || exit 1
+
+	c_Make || exit 1
+	
+	c_MakeInstall
+
+	make -C doc html || exit 1
+	make -C doc install-html docdir=/usr/share/doc/inetutils-1.8 || exit 1
+
+	echo -e "$L_MV_FIL"
+	mv -v /usr/bin/{hostname,ping,ping6} /bin
+	mv -v /usr/bin/traceroute /sbin
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+	if [ $PIPESTATUS -ne 0 ]
+		then
+			echo -e "$L_FAIL_BUIL"
+			exit 1
+	fi  	  
+waitUser
+RMbuild
+cd $ROOT

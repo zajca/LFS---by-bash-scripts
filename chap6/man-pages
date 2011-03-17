@@ -1,35 +1,37 @@
 #!/bin/bash
 
-NAME=man-pages
-PROGRAM=$NAME-$man_pages_VER
-FILE=$NAME-$man_pages_VER$man_pages_PRIP
+NAME=${manpage[0]}
+PROGRAM=${manpage[3]}
+FILE=${manpage[2]}
+EXT=${manpage[4]}
+DLINK=${manpage[1]}
+MD5=${manpage[5]}
 
-echo -e "$Y Spoustim build script programu $PROGRAM $DEF"
+download ${DLINK}
 
-source $SCRIPTS_DIR/include/unpack_bzip
+waitUser
 
-echo -e "$Y Spoustim Build $DEF"
+check ${FILE} ${MD5}
+
+waitUser
+
+unpack ${EXT}
+
+waitUser
+
+startBuild
+
 {
 cd $BUILD_DIR/$PROGRAM
-	echo -e "$G make install $DEF" 
-    make install
-    if [ $? -ne 0 ]
-	    then
-		    echo -e "$R make install selhal $DEF"
-		    exit 1
-    fi  
+
+    c_MakeInstall
+
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
 if [ $PIPESTATUS -ne 0 ]
 	then
 		echo -e "$R build selhal $DEF"
 		exit 1
 fi  
-if [ $BUILD_RM == 1 ];
-	then
-                echo -e "$C Mazu slozku se zdrojaky $DEF"
-                echo -e "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
-                rm -rf $BUILD_DIR/$PROGRAM
-	else
-		echo -e "$C Slozka s buildem a zdrojaky ponechana $DEF"
-fi
+waitUser
+RMsource
 cd $ROOT
