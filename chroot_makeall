@@ -1,0 +1,66 @@
+#!/bin/bash
+export ROOT=/
+export SCRIPTS_DIR=/scripts
+
+source $SCRIPTS_DIR/include/functions	#nastavi barvy
+source $SCRIPTS_DIR/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
+source $SCRIPTS_DIR/include/l10n-EN
+
+####### Start buildu jednotlivych aplikaci (Balicku) #######
+source $SCRIPTS_DIR/chap6/linux
+source $SCRIPTS_DIR/chap6/man-pages
+source $SCRIPTS_DIR/chap6/glibc
+source $SCRIPTS_DIR/chap6/adj_toolchain
+source $SCRIPTS_DIR/chap6/zlib
+source $SCRIPTS_DIR/chap6/binutils
+source $SCRIPTS_DIR/chap6/gmp
+source $SCRIPTS_DIR/chap6/mpfr
+source $SCRIPTS_DIR/chap6/mpc
+source $SCRIPTS_DIR/chap6/gcc
+source $SCRIPTS_DIR/chap6/sed
+source $SCRIPTS_DIR/chap6/pkg
+source $SCRIPTS_DIR/chap6/ncurses
+source $SCRIPTS_DIR/chap6/util
+source $SCRIPTS_DIR/chap6/e2fsprogs
+source $SCRIPTS_DIR/chap6/coreutils
+source $SCRIPTS_DIR/chap6/iana
+source $SCRIPTS_DIR/chap6/m4
+source $SCRIPTS_DIR/chap6/bison
+source $SCRIPTS_DIR/chap6/procps
+source $SCRIPTS_DIR/chap6/grep
+source $SCRIPTS_DIR/chap6/readline
+source $SCRIPTS_DIR/chap6/bash
+source $SCRIPTS_DIR/chap6/libtool
+source $SCRIPTS_DIR/chap6/gdbm
+source $SCRIPTS_DIR/chap6/inetutils
+source $SCRIPTS_DIR/chap6/perl
+source $SCRIPTS_DIR/chap6/autoconf
+source $SCRIPTS_DIR/chap6/automake
+source $SCRIPTS_DIR/chap6/bzip2
+source $SCRIPTS_DIR/chap6/diffutils
+source $SCRIPTS_DIR/chap6/gawk
+source $SCRIPTS_DIR/chap6/file
+source $SCRIPTS_DIR/chap6/findutils
+source $SCRIPTS_DIR/chap6/flex
+source $SCRIPTS_DIR/chap6/gettext
+source $SCRIPTS_DIR/chap6/groff
+source $SCRIPTS_DIR/chap6/grub
+source $SCRIPTS_DIR/chap6/gzip
+source $SCRIPTS_DIR/chap6/iproute2
+source $SCRIPTS_DIR/chap6/kbd
+source $SCRIPTS_DIR/chap6/less
+source $SCRIPTS_DIR/chap6/make
+source $SCRIPTS_DIR/chap6/xz
+source $SCRIPTS_DIR/chap6/man_db
+source $SCRIPTS_DIR/chap6/moduleinit
+source $SCRIPTS_DIR/chap6/patch
+source $SCRIPTS_DIR/chap6/psmisc
+source $SCRIPTS_DIR/chap6/shadow
+source $SCRIPTS_DIR/chap6/sysklogd
+source $SCRIPTS_DIR/chap6/sysvinit
+source $SCRIPTS_DIR/chap6/tar
+source $SCRIPTS_DIR/chap6/texinfo
+source $SCRIPTS_DIR/chap6/udev
+source $SCRIPTS_DIR/chap6/vim
+# source $SCRIPTS_DIR/chap6/linux
