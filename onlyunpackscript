@@ -1,0 +1,2086 @@
+#!/bin/bash
+
+source $SCRIPTS_DIR/include/functions
+source $SCRIPTS_DIR/prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
+source $SCRIPTS_DIR/include/l10n-EN
+
+export WAIT=0
+export ONLY_DL=1
+
+waitUserUnpack (){
+  if [ $WAIT == 1 ]; then
+    echo "To unpack again type 0"
+    echo "to continue pres enter"
+    read repeat
+  fi
+}
+export -f waitUserUnpack
+
+
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			SepBuild
+			waitUserUnpack
+	done
+fi
+
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+
+download ${DLINK}
+check ${FILE} ${MD5}
+
+
+cd $ROOT
+
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+
+cd $ROOT
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+cd $ROOT
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			cp -rv $BUILD_DIR/gmp $BUILD_DIR/mpc $BUILD_DIR/mpfr $BUILD_DIR/$PROGRAM
+			SepBuild
+			waitUserUnpack
+	done
+fi
+cd $ROOT
+
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pPatch=${pglibc[1]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pPatch} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pPatch} ${pMD5}
+			unpack ${EXT}
+			SepBuild
+			waitUserUnpack
+	done
+fi
+
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			SepBuild
+			waitUserUnpack
+	done
+fi
+
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+
+download ${DLINK}
+check ${FILE} ${MD5}
+
+
+cd $ROOT
+
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+
+cd $ROOT
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			echo -e "$C Unpacking $DEF"
+			echo -e "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			waitUserUnpack
+	done
+fi
+cd $ROOT
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			cp -rv $BUILD_DIR/gmp $BUILD_DIR/mpc $BUILD_DIR/mpfr $BUILD_DIR/$PROGRAM
+			SepBuild
+			waitUserUnpack
+	done
+fi
+cd $ROOT
+
+NAME=${tcl[0]}
+PROGRAM=${tcl[3]}
+FILE=${tcl[2]}
+EXT=${tcl[4]}
+DLINK=${tcl[1]}
+MD5=${tcl[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${expect[0]}
+PROGRAM=${expect[3]}
+FILE=${expect[2]}
+EXT=${expect[4]}
+DLINK=${expect[1]}
+MD5=${expect[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${dejagnu[0]}
+PROGRAM=${dejagnu[3]}
+FILE=${dejagnu[2]}
+EXT=${dejagnu[4]}
+DLINK=${dejagnu[1]}
+MD5=${dejagnu[5]}
+pFILE=${pdejagnu[1]}
+pDLINK=${pdejagnu[0]}
+pMD5=${pdejagnu[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${bash[0]}
+PROGRAM=${bash[3]}
+FILE=${bash[2]}
+EXT=${bash[4]}
+DLINK=${bash[1]}
+MD5=${bash[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${diffutils[0]}
+PROGRAM=${diffutils[3]}
+FILE=${diffutils[2]}
+EXT=${diffutils[4]}
+DLINK=${diffutils[1]}
+MD5=${diffutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${file[0]}
+PROGRAM=${file[3]}
+FILE=${file[2]}
+EXT=${file[4]}
+DLINK=${file[1]}
+MD5=${file[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${findutils[0]}
+PROGRAM=${findutils[3]}
+FILE=${findutils[2]}
+EXT=${findutils[4]}
+DLINK=${findutils[1]}
+MD5=${findutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gawk[0]}
+PROGRAM=${gawk[3]}
+FILE=${gawk[2]}
+EXT=${gawk[4]}
+DLINK=${gawk[1]}
+MD5=${gawk[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gettext[0]}
+PROGRAM=${gettext[3]}
+FILE=${gettext[2]}
+EXT=${gettext[4]}
+DLINK=${gettext[1]}
+MD5=${gettext[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${grep[0]}
+PROGRAM=${grep[3]}
+FILE=${grep[2]}
+EXT=${grep[4]}
+DLINK=${grep[1]}
+MD5=${grep[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+NAME=${gzip[0]}
+PROGRAM=${gzip[3]}
+FILE=${gzip[2]}
+EXT=${gzip[4]}
+DLINK=${gzip[1]}
+MD5=${gzip[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${M4[0]}
+PROGRAM=${M4[3]}
+FILE=${M4[2]}
+EXT=${M4[4]}
+DLINK=${M4[1]}
+MD5=${M4[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${make[0]}
+PROGRAM=${make[3]}
+FILE=${make[2]}
+EXT=${make[4]}
+DLINK=${make[1]}
+MD5=${make[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${patch[0]}
+PROGRAM=${patch[3]}
+FILE=${patch[2]}
+EXT=${patch[4]}
+DLINK=${patch[1]}
+MD5=${patch[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${sed[0]}
+PROGRAM=${sed[3]}
+FILE=${sed[2]}
+EXT=${sed[4]}
+DLINK=${sed[1]}
+MD5=${sed[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${tar[0]}
+PROGRAM=${tar[3]}
+FILE=${tar[2]}
+EXT=${tar[4]}
+DLINK=${tar[1]}
+MD5=${tar[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+NAME=${texinfo[0]}
+PROGRAM=${texinfo[3]}
+FILE=${texinfo[2]}
+EXT=${texinfo[4]}
+DLINK=${texinfo[1]}
+MD5=${texinfo[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${xzutils[0]}
+PROGRAM=${xzutils[3]}
+FILE=${xzutils[2]}
+EXT=${xzutils[4]}
+DLINK=${xzutils[1]}
+MD5=${xzutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${manpage[0]}
+PROGRAM=${manpage[3]}
+FILE=${manpage[2]}
+EXT=${manpage[4]}
+DLINK=${manpage[1]}
+MD5=${manpage[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pFILE=${pglibc[1]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${zlib[0]}
+PROGRAM=${zlib[3]}
+FILE=${zlib[2]}
+EXT=${zlib[4]}
+DLINK=${zlib[1]}
+MD5=${zlib[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			SepBuild
+			waitUserUnpack
+	done
+fi
+
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			SepBuild
+			waitUserUnpack
+	done
+fi
+
+
+waitUser
+
+NAME=${sed[0]}
+PROGRAM=${sed[3]}
+FILE=${sed[2]}
+EXT=${sed[4]}
+DLINK=${sed[1]}
+MD5=${sed[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${pkgconfig[0]}
+PROGRAM=${pkgconfig[3]}
+FILE=${pkgconfig[2]}
+EXT=${pkgconfig[4]}
+DLINK=${pkgconfig[1]}
+MD5=${pkgconfig[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${utillinux[0]}
+PROGRAM=${utillinux[3]}
+FILE=${utillinux[2]}
+EXT=${utillinux[4]}
+DLINK=${utillinux[1]}
+MD5=${utillinux[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${e2fsprogs[0]}
+PROGRAM=${e2fsprogs[3]}
+FILE=${e2fsprogs[2]}
+EXT=${e2fsprogs[4]}
+DLINK=${e2fsprogs[1]}
+MD5=${e2fsprogs[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			mkdir -v $BUILD_DIR/build
+			waitUserUnpack
+	done
+fi
+
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
+pFILE=${pcoreutils[1]}
+pDLINK=${pcoreutils[0]}
+pMD5=${pcoreutils[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${ianaetc[0]}
+PROGRAM=${ianaetc[3]}
+FILE=${ianaetc[2]}
+EXT=${ianaetc[4]}
+DLINK=${ianaetc[1]}
+MD5=${ianaetc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${M4[0]}
+PROGRAM=${M4[3]}
+FILE=${M4[2]}
+EXT=${M4[4]}
+DLINK=${M4[1]}
+MD5=${M4[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${bison[0]}
+PROGRAM=${bison[3]}
+FILE=${bison[2]}
+EXT=${bison[4]}
+DLINK=${bison[1]}
+MD5=${bison[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${procps[0]}
+PROGRAM=${procps[3]}
+FILE=${procps[2]}
+EXT=${procps[4]}
+DLINK=${procps[1]}
+MD5=${procps[5]}
+pFILE=${pprocps[1]}
+pDLINK=${pprocps[0]}
+pMD5=${pprocps[2]}
+p2FILE=${pprocps2[1]}
+p2DLINK=${pprocps2[0]}
+p2MD5=${pprocps2[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		download ${p2DLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		check ${p2FILE} ${p2MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			download ${p2DLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			check ${p2FILE} ${p2MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+PROGRAM=${grep[3]}
+FILE=${grep[2]}
+EXT=${grep[4]}
+DLINK=${grep[1]}
+MD5=${grep[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${readline[0]}
+PROGRAM=${readline[3]}
+FILE=${readline[2]}
+EXT=${readline[4]}
+DLINK=${readline[1]}
+MD5=${readline[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${bash[0]}
+PROGRAM=${bash[3]}
+FILE=${bash[2]}
+EXT=${bash[4]}
+DLINK=${bash[1]}
+MD5=${bash[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${libtool[0]}
+PROGRAM=${libtool[3]}
+FILE=${libtool[2]}
+EXT=${libtool[4]}
+DLINK=${libtool[1]}
+MD5=${libtool[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gdbm[0]}
+PROGRAM=${gdbm[3]}
+FILE=${gdbm[2]}
+EXT=${gdbm[4]}
+DLINK=${gdbm[1]}
+MD5=${gdbm[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${inetutils[0]}
+PROGRAM=${inetutils[3]}
+FILE=${inetutils[2]}
+EXT=${inetutils[4]}
+DLINK=${inetutils[1]}
+MD5=${inetutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${autoconf[0]}
+PROGRAM=${autoconf[3]}
+FILE=${autoconf[2]}
+EXT=${autoconf[4]}
+DLINK=${autoconf[1]}
+MD5=${autoconf[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${automake[0]}
+PROGRAM=${automake[3]}
+FILE=${automake[2]}
+EXT=${automake[4]}
+DLINK=${automake[1]}
+MD5=${automake[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${bzip2[0]}
+PROGRAM=${bzip2[3]}
+FILE=${bzip2[2]}
+EXT=${bzip2[4]}
+DLINK=${bzip2[1]}
+MD5=${bzip2[5]}
+pFILE=${pbzip2[1]}
+pDLINK=${pbzip2[0]}
+pMD5=${pbzip2[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${diffutils[0]}
+PROGRAM=${diffutils[3]}
+FILE=${diffutils[2]}
+EXT=${diffutils[4]}
+DLINK=${diffutils[1]}
+MD5=${diffutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gawk[0]}
+PROGRAM=${gawk[3]}
+FILE=${gawk[2]}
+EXT=${gawk[4]}
+DLINK=${gawk[1]}
+MD5=${gawk[5]}
+download ${DLINK}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${file[0]}
+PROGRAM=${file[3]}
+FILE=${file[2]}
+EXT=${file[4]}
+DLINK=${file[1]}
+MD5=${file[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${findutils[0]}
+PROGRAM=${findutils[3]}
+FILE=${findutils[2]}
+EXT=${findutils[4]}
+DLINK=${findutils[1]}
+MD5=${findutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${flex[0]}
+PROGRAM=${flex[3]}
+FILE=${flex[2]}
+EXT=${flex[4]}
+DLINK=${flex[1]}
+MD5=${flex[5]}
+pFILE=${pflex[1]}
+pDLINK=${pflex[0]}
+pMD5=${pflex[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gettext[0]}
+PROGRAM=${gettext[3]}
+FILE=${gettext[2]}
+EXT=${gettext[4]}
+DLINK=${gettext[1]}
+MD5=${gettext[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${groff[0]}
+PROGRAM=${groff[3]}
+FILE=${groff[2]}
+EXT=${groff[4]}
+DLINK=${groff[1]}
+MD5=${groff[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${grub[0]}
+PROGRAM=${grub[3]}
+FILE=${grub[2]}
+EXT=${grub[4]}
+DLINK=${grub[1]}
+MD5=${grub[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${gzip[0]}
+PROGRAM=${gzip[3]}
+FILE=${gzip[2]}
+EXT=${gzip[4]}
+DLINK=${gzip[1]}
+MD5=${gzip[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${iproute2[0]}
+PROGRAM=${iproute2[3]}
+FILE=${iproute2[2]}
+EXT=${iproute2[4]}
+DLINK=${iproute2[1]}
+MD5=${iproute2[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${kbd[0]}
+PROGRAM=${kbd[3]}
+FILE=${kbd[2]}
+EXT=${kbd[4]}
+DLINK=${kbd[1]}
+MD5=${kbd[5]}
+pFILE=${pkbd[1]}
+pDLINK=${pkbd[0]}
+pMD5=${pkbd[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${less[0]}
+PROGRAM=${less[3]}
+FILE=${less[2]}
+EXT=${less[4]}
+DLINK=${less[1]}
+MD5=${less[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${make[0]}
+PROGRAM=${make[3]}
+FILE=${make[2]}
+EXT=${make[4]}
+DLINK=${make[1]}
+MD5=${make[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${xzutils[0]}
+PROGRAM=${xzutils[3]}
+FILE=${xzutils[2]}
+EXT=${xzutils[4]}
+DLINK=${xzutils[1]}
+MD5=${xzutils[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${mandb[0]}
+PROGRAM=${mandb[3]}
+FILE=${mandb[2]}
+EXT=${mandb[4]}
+DLINK=${mandb[1]}
+MD5=${mandb[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+
+NAME=${moduleit[0]}
+PROGRAM=${moduleit[3]}
+FILE=${moduleit[2]}
+EXT=${moduleit[4]}
+DLINK=${moduleit[1]}
+MD5=${moduleit[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${patch[0]}
+PROGRAM=${patch[3]}
+FILE=${patch[2]}
+EXT=${patch[4]}
+DLINK=${patch[1]}
+MD5=${patch[5]}
+pFILE=${ppatch[1]}
+pDLINK=${ppatch[0]}
+pMD5=${ppatch[2]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		download ${pDLINK}
+		check ${FILE} ${MD5}
+		check ${pFILE} ${pMD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			download ${pDLINK}
+			check ${FILE} ${MD5}
+			check ${pFILE} ${pMD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+
+NAME=${psmisc[0]}
+PROGRAM=${psmisc[3]}
+FILE=${psmisc[2]}
+EXT=${psmisc[4]}
+DLINK=${psmisc[1]}
+MD5=${psmisc[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${shadow[0]}
+PROGRAM=${shadow[3]}
+FILE=${shadow[2]}
+EXT=${shadow[4]}
+DLINK=${shadow[1]}
+MD5=${shadow[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+NAME=${sysklogd[0]}
+PROGRAM=${sysklogd[3]}
+FILE=${sysklogd[2]}
+EXT=${sysklogd[4]}
+DLINK=${sysklogd[1]}
+MD5=${sysklogd[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${sysvinit[0]}
+PROGRAM=${sysvinit[3]}
+FILE=${sysvinit[2]}
+EXT=${sysvinit[4]}
+DLINK=${sysvinit[1]}
+MD5=${sysvinit[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${tar[0]}
+PROGRAM=${tar[3]}
+FILE=${tar[2]}
+EXT=${tar[4]}
+DLINK=${tar[1]}
+MD5=${tar[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${texinfo[0]}
+PROGRAM=${texinfo[3]}
+FILE=${texinfo[2]}
+EXT=${texinfo[4]}
+DLINK=${texinfo[1]}
+MD5=${texinfo[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+NAME=${udev[0]}
+PROGRAM=${udev[3]}
+FILE=${udev[2]}
+EXT=${udev[4]}
+DLINK=${udev[1]}
+MD5=${udev[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+NAME=${vim[0]}
+PROGRAM=${vim[3]}
+FILE=${vim[2]}
+EXT=${vim[4]}
+DLINK=${vim[1]}
+MD5=${vim[5]}
+
+if [ $ONLY_DL == 1 ]; then
+		echo "$C only DL $DEF"
+		download ${DLINK}
+		check ${FILE} ${MD5}
+		waitUser
+	else
+	repeat=0
+	while [ $repeat == 0 ]; do
+			download ${DLINK}
+			check ${FILE} ${MD5}
+			unpack ${EXT}
+			waitUserUnpack
+	done
+fi
+
+
