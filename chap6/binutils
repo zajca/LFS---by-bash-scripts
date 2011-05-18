@@ -25,7 +25,7 @@ waitUser
 
 startBuild
 
-cd $BUILD_DIR/$PROGRAM-BUILD
+cd $BUILD_DIR/$NAME-BUILD
 {
 	echo -e "$C PTY Test $DEF"
 	echo -e "$G expect -c "spawn ls" $DEF"

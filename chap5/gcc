@@ -116,8 +116,8 @@ mv -v $BUILD_DIR/$gmp_dir $BUILD_DIR/$PROGRAM/gmp
 mv -v $BUILD_DIR/$mpc_dir $BUILD_DIR/$PROGRAM/mpc
 waitUser
 
-cd $BUILD_DIR/$PROGRAM-BUILD
-    ../gcc-4.5.2/configure \
+cd $BUILD_DIR/$NAME-BUILD
+    ../$PROGRAM/configure \
     --target=$LFS_TGT --prefix=/tools \
     --disable-nls --disable-shared --disable-multilib \
     --disable-decimal-float --disable-threads \
@@ -140,14 +140,5 @@ if [ $PIPESTATUS -ne 0 ]
 fi  
 waitUser
 RMbuild
-echo -e "$L_RM_SDIR gmp"
-echo -e "$G rm -rf $BUILD_DIR/gmp $DEF"
-rm -rf $BUILD_DIR/gmp
-echo -e "$L_RM_SDIR mpfr"
-echo -e "$G rm -rf $BUILD_DIR/mpfr $DEF"
-rm -rf $BUILD_DIR/mpfr
-echo -e "$L_RM_SDIR mpc"
-echo -e "$G rm -rf $BUILD_DIR/mpc $DEF"
-rm -rf $BUILD_DIR/mpc
 
 cd $ROOT

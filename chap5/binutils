@@ -26,8 +26,8 @@ waitUser
 
 startBuild
 
-cd $BUILD_DIR/$PROGRAM-BUILD
-
+cd $BUILD_DIR/$NAME-BUILD
+pwd
 { time \
   {
 	echo "$G ../$PROGRAM/configure --target=$LFS_TGT --prefix=/tools --disable-nls --disable-werror $DEF" 

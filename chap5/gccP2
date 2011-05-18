@@ -145,11 +145,11 @@ case $(uname -m) in
   ;;
 esac
 
-cd $BUILD_DIR/$PROGRAM-BUILD
+cd $BUILD_DIR/$NAME-BUILD
 
 CC="$LFS_TGT-gcc -B/tools/lib/" \
     AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
-    ../gcc-4.5.2/configure --prefix=/tools \
+    ../$PROGRAM/configure --prefix=/tools \
     --with-local-prefix=/tools --enable-clocale=gnu \
     --enable-shared --enable-threads=posix \
     --enable-__cxa_atexit --enable-languages=c,c++ \
@@ -174,13 +174,4 @@ fi
 
 waitUser
 RMbuild
-echo -e "$L_RM_SDIR gmp"
-echo -e "$G rm -rf $BUILD_DIR/gmp $DEF"
-rm -rf $BUILD_DIR/gmp
-echo -e "$L_RM_SDIR mpfr"
-echo -e "$G rm -rf $BUILD_DIR/mpfr $DEF"
-rm -rf $BUILD_DIR/mpfr
-echo -e "$L_RM_SDIR mpc"
-echo -e "$G rm -rf $BUILD_DIR/mpc $DEF"
-rm -rf $BUILD_DIR/mpc
 cd $ROOT

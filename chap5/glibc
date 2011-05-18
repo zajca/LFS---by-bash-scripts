@@ -34,7 +34,7 @@ cd $BUILD_DIR/$PROGRAM
 	addPatch ${pPatch}
 
 	waitUser
-	cd $BUILD_DIR/$PROGRAM-BUILD
+	cd $BUILD_DIR/$NAME-BUILD
 
 	echo -e "$L_SET_CGLAG"
 	case `uname -m` in

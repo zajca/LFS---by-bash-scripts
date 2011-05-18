@@ -35,17 +35,17 @@ cd $BUILD_DIR/$PROGRAM
 	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
         scripts/test-installation.pl
 	unset DL
-
+	waitUser	
 	sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
-
+	waitUser
 	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
-
+	waitUser
 	addPatch ${pPatch}
-	
+	waitUser
 	sed -i '195,213 s/PRIVATE_FUTEX/FUTEX_CLOCK_REALTIME/' \
 nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timed{rd,wr}lock.S
-
-cd $BUILD_DIR/$PROGRAM-BUILD
+	waitUser
+cd $BUILD_DIR/$NAME-BUILD
 
 case `uname -m` in
   i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" > configparms ;;
@@ -54,26 +54,26 @@ esac
 	../$PROGRAM/configure --prefix=/usr \
     --disable-profile --enable-add-ons \
     --enable-kernel=2.6.22.5 --libexecdir=/usr/lib/glibc || exit 1
-
-	c_Make || exit 1
-	
-	copyFiles ../glibc-2.12.1/iconvdata/gconv-modules iconvdata
-
+	waitUser
+	make || exit 1
+	waitUser
+	copyFiles ../$PROGRAM/iconvdata/gconv-modules iconvdata
+	waitUser
 	echo -e "$G make check $DEF"
 	make -k check 2>&1 | tee glibc-check-log
-	grep Error $BUILD_DIR/glibc-check-log
+	grep Error $BUILD_DIR/$PROGRAM/glibc-check-log
 
 	echo -e "$R **************************************************** $DEF"
-	echo -e "$R Check tect on top for erors and file ${BUILD_DIR}/glibc-check-log $DEF"
+	echo -e "$R Check tect on top for erors and file ${BUILD_DIR}/${PROGRAM}/glibc-check-log $DEF"
 	echo -e "$R **************************************************** $DEF"
 	echo -e "$G pres <ENTER> for continue $DEF"
 	read > /dev/null
 
 	echo -e "$C $L_VAR_MF $G touch /etc/ld.so.conf $DEF"
 	touch /etc/ld.so.conf
-			
-	c_MakeInstall || exit 1
-	
+	waitUser		
+	make install || exit 1
+	waitUser
 	echo -e "$C $L_VAR_MD $G mkdir -pv /usr/lib/locale $DEF"
 	mkdir -pv /usr/lib/locale
 	echo -e "$L_SET_LOC"
@@ -96,7 +96,7 @@ esac
 	localedef -i zh_CN -f GB18030 zh_CN.GB18030
 
 	make localedata/install-locales || exit 1
-	
+	waitUser	
 	echo -e "$L_VAR_MF $G /etc/nsswitch.conf $DEF"
 cat > /etc/nsswitch.conf << "EOF"
 # Begin /etc/nsswitch.conf
@@ -123,13 +123,13 @@ EOF
 	echo -e "$G after all press <ENTER> to continue $DEF"
 	read > /dev/null
 	
-	echo -e "$C Nastaveni timezone $DEF"
-	echo -e "$G Nastavte vaši timezone: napr. Europe/Prague $DEF"
+	echo -e "$C Seting timezone $DEF"
+	echo -e "$G Set your timezone: example Europe/Prague $DEF"
 	read > $TIME_ZONE_TEMP
 	cp -v --remove-destination /usr/share/zoneinfo/$TIME_ZONE_TEMP \
     /etc/localtime
 	
-	echo -e "$C Vytvarim soubor $G /etc/ld.so.conf $C pro qlibc $DEF"
+	echo -e "$C Making File $G /etc/ld.so.conf $C pro qlibc $DEF"
 cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf
 

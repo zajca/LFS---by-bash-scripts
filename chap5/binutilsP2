@@ -25,10 +25,10 @@ waitUser
 
 startBuild
 
-cd $BUILD_DIR/$PROGRAM-BUILD
+cd $BUILD_DIR/$NAME-BUILD
 {
 
-echo "$G ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib $DEF" 
+echo "$G ../configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib $DEF" 
 CC="$LFS_TGT-gcc -B/tools/lib/" AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib ../$PROGRAM/configure --prefix=/tools --disable-nls --with-lib-path=/tools/lib
     if [ $? -ne 0 ]
 		then

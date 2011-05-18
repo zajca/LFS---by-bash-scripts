@@ -36,10 +36,10 @@ esac
 
 sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
-cd $BUILD_DIR/$PROGRAM
+cd $BUILD_DIR/$NAME-BUILD
 {
 
-	echo -e "$G $PROGRAM/configure $DEF" 
+	echo -e "$G ../$PROGRAM/configure $DEF" 
 	../$PROGRAM/configure --prefix=/usr \
     --libexecdir=/usr/lib --enable-shared \
     --enable-threads=posix --enable-__cxa_atexit \

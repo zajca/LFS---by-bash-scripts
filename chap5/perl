@@ -38,12 +38,12 @@ cd $BUILD_DIR/$PROGRAM
 	echo -e "$G cp -v perl pod/pod2man /tools/bin $DEF"
 	cp -v perl pod/pod2man /tools/bin
 	waitUser
-	echo -e "$C Vytvarim slozku $G /tools/lib/perl5/5.12.1 $DEF"
-	mkdir -pv /tools/lib/perl5/5.12.1
+	echo -e "$C Making directory $G /tools/lib/perl5/5.12.3 $DEF"
+	mkdir -pv /tools/lib/perl5/5.12.3
 	waitUser
 	echo -e "$L_COP_FILES"
-	echo -e "$G cp -Rv lib/* /tools/lib/perl5/5.12.1 $DEF"
-	cp -Rv lib/* /tools/lib/perl5/5.12.1
+	echo -e "$G cp -Rv lib/* /tools/lib/perl5/5.12.3 $DEF"
+	cp -Rv lib/* /tools/lib/perl5/5.12.3
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

@@ -70,17 +70,17 @@ export -f unpackGzip
 SepBuild (){
 	echo "$Y Preparing for separate build $PROGRAM $DEF";
 
-	if [ -d $BUILD_DIR/$PROGRAM-BUILD ]; then
+	if [ -d $BUILD_DIR/$NAME-BUILD ]; then
 	  echo "$C Build directory already exist $G [REMOVING] $DEF"
-	  echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-	  rm -rf $BUILD_DIR/$PROGRAM-BUILD
+	  echo "$G rm -rf $BUILD_DIR/$NAME-BUILD $DEF"
+	  rm -rf $BUILD_DIR/$NAME-BUILD
 	else
 	  echo "$M.$DEF"
 	fi
 
 	echo "$C Making directory for separate build $DEF"
-	echo "$G mkdir $BUILD_DIR/$PROGRAM-BUILD $DEF"
-	mkdir $BUILD_DIR/$PROGRAM-BUILD
+	echo "$G mkdir $BUILD_DIR/$NAME-BUILD $DEF"
+	mkdir $BUILD_DIR/$NAME-BUILD
 }
 export -f SepBuild
 
@@ -200,7 +200,7 @@ export -f c_MakeInstall
 
 #function remove source directory
 RMsource (){
-	echo "$C Script directory [REMOVING] $DEF"
+	echo "$C Source directory [REMOVING] $DEF"
 	echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
 	rm -rf $BUILD_DIR/$PROGRAM
 }
@@ -208,10 +208,7 @@ export -f RMsource
 
 #function remove source directory and build directory
 RMbuild (){
-	echo "$C Build directory [REMOVING] $DEF"
-	echo "$G rm -rf $BUILD_DIR/$PROGRAM-BUILD $DEF"
-	rm -rf $BUILD_DIR/$PROGRAM-BUILD
-	echo "$C Script directory [REMOVING] $DEF"
+	echo "$C Source directory [REMOVING] $DEF"
 	echo "$R rm -rf $BUILD_DIR/$PROGRAM $DEF"
 	rm -rf $BUILD_DIR/$PROGRAM
 }
