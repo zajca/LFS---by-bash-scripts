@@ -1,22 +1,17 @@
 #!/bin/bash
 
-NAME=${dejagnu[0]}
-PROGRAM=${dejagnu[3]}
-FILE=${dejagnu[2]}
-EXT=${dejagnu[4]}
-DLINK=${dejagnu[1]}
-MD5=${dejagnu[5]}
-pFILE=${pdejangnu[1]}
-pDLINK=${pdejangnu[0]}
-pMD5=${pdejangnu[2]}
+NAME=${xzutils[0]}
+PROGRAM=${xzutils[3]}
+FILE=${xzutils[2]}
+EXT=${xzutils[4]}
+DLINK=${xzutils[1]}
+MD5=${xzutils[5]}
 
 download ${DLINK}
-download ${pDLINK}
 
 waitUser
 
 check ${FILE} ${MD5}
-check ${pFILE} ${pMD5}
 
 waitUser
 
@@ -28,13 +23,13 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	addPatch ${pFILE}
-
 	./configure --prefix=/tools || exit 1
 	waitUser
-	c_MakeInstall || exit 1
+	c_Make || exit 1
 	waitUser
 	c_MakeTest check || exit 1
+	waitUser
+	c_MakeInstall || exit 1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

@@ -37,6 +37,11 @@ source $SCRIPTS_DIR/chap5/tar
 source $SCRIPTS_DIR/chap5/texinfo
 source $SCRIPTS_DIR/chap5/xzutils
 source $SCRIPTS_DIR/chap5/finish5
+if [ $TOOLS_STRIP == 1 ];
+   	then
+		source $SCRIPTS_DIR/chap5/stripfiles
+fi
+
 # ###### Chapter 6 #######
 # source $SCRIPTS_DIR/chap6/start6
 #source $SCRIPTS_DIR/chap6/restart

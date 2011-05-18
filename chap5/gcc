@@ -2,6 +2,7 @@
 
 NAME=${mpfr[0]}
 PROGRAM=${mpfr[3]}
+mpfr_dir=${mpfr[3]}
 FILE=${mpfr[2]}
 EXT=${mpfr[4]}
 DLINK=${mpfr[1]}
@@ -23,14 +24,12 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
 NAME=${gmp[0]}
 PROGRAM=${gmp[3]}
+gmp_dir=${gmp[3]}
 FILE=${gmp[2]}
 EXT=${gmp[4]}
 DLINK=${gmp[1]}
@@ -52,14 +51,12 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
 NAME=${mpc[0]}
 PROGRAM=${mpc[3]}
+mpc_dir=${mpc[3]}
 FILE=${mpc[2]}
 EXT=${mpc[4]}
 DLINK=${mpc[1]}
@@ -81,9 +78,6 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
 
 cd $ROOT
 
@@ -116,9 +110,21 @@ waitUser
 
 startBuild
 {
+echo -e "$L_MV_FILGCC"
+mv -v $BUILD_DIR/$mpfr_dir $BUILD_DIR/$PROGRAM/mpfr
+mv -v $BUILD_DIR/$gmp_dir $BUILD_DIR/$PROGRAM/gmp
+mv -v $BUILD_DIR/$mpc_dir $BUILD_DIR/$PROGRAM/mpc
+waitUser
 
 cd $BUILD_DIR/$PROGRAM-BUILD
-    ../$PROGRAM/configure --target=$LFS_TGT --prefix=/tools --disable-nls --disable-shared --disable-multilib --disable-decimal-float --disable-threads --disable-libmudflap --disable-libssp --disable-libgomp --enable-languages=c --with-gmp-include=$BUILD_DIR/gmp --with-gmp-lib=$BUILD_DIR/gmp/.libs --with-mpc=$BUILD_DIR/mpc --with-gmp=$BUILD_DIR/gmp --with-mpfr=$BUILD_DIR/mpfr --without-ppl --without-cloog  || exit 1
+    ../gcc-4.5.2/configure \
+    --target=$LFS_TGT --prefix=/tools \
+    --disable-nls --disable-shared --disable-multilib \
+    --disable-decimal-float --disable-threads \
+    --disable-libmudflap --disable-libssp \
+    --disable-libgomp --enable-languages=c \
+    --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs \
+    --without-ppl --without-cloog || exit 1
     waitUser
     c_Make || exit 1
     waitUser

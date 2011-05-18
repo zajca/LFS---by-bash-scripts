@@ -10,15 +10,8 @@ if [ "$UID" == 0 ];
 		echo -e "$L_CH_PRI $G /tools $DEF"
 		chown -R root:root $TOOLS_DIR
 	else
-		echo -e "$L_CH_USRR $SCRIPTS_DIR/finish5 $DEF"
+		echo -e "$C Log in as root and run $DEF"
+		echo -e "$G chown -R root:root $LFS/tools $DEF"
+		echo -e "$C than run $G $SCRIPTS_DIR/chap6/start6 $DEF"
 		exit 1
 fi
-
-echo -e "*******************************************************************"
-echo -e "*******************************************************************"
-echo -e "*******************************************************************"
-echo -e "*********************** $L_DONE_CH5 *************************"
-echo -e "********************** $L_DONE_CON ***********************"
-echo -e "*************$SCRIPTS_DIR/chroot**************"
-echo -e "*******************************************************************"
-echo -e "*******************************************************************"

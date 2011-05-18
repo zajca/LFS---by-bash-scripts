@@ -22,7 +22,7 @@ waitUser
 startBuild
 {
 cd $BUILD_DIR/$PROGRAM
-	./configure ./configure --prefix=/tools --with-shared --without-debug --without-ada --enable-overwrite || exit 1
+	./configure --prefix=/tools --with-shared --without-debug --without-ada --enable-overwrite || exit 1
 	waitUser
 	c_Make || exit 1
 	waitUser

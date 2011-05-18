@@ -30,7 +30,7 @@ cd $BUILD_DIR/$PROGRAM
 	waitUser
 	make INSTALL_HDR_PATH=dest headers_install || exit 1
 	waitUser
-	copyFilesRec dest/include/* /tools/include
+	cp -rv dest/include/* /tools/include
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

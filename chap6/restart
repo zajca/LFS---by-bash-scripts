@@ -1,12 +1,26 @@
 #!/bin/bash
 
 #su root
+DEF="$(tput sgr0)"
+BOLD="$(tput bold)"
+B="${BOLD}$(tput setaf 4)"
+G="${BOLD}$(tput setaf 2)"
+R="${BOLD}$(tput setaf 1)"
+Y="${BOLD}$(tput setaf 3)"
+C="${BOLD}$(tput setaf 6)"
+M="${BOLD}$(tput setaf 5)"
+ROOT=/mnt/LFS	#složka připojeného obrazu
+LFS=$ROOT
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+MAKEFLAGS='-j 3' #number of procesor cores
 
-echo -e "$C Pripojuji systemove$G /dev$C pro potrebu LFS $DEF"
+echo -e "$C mounting $G /dev $DEF"
 echo -e "$G mount -v --bind /dev $LFS/dev $DEF"
 mount -v --bind /dev $LFS/dev
 
-echo -e "$C Pripojuji virtualni souborove systemy kernelu $DEF"
+echo -e "$C mounting VFS $DEF"
 echo -e "$G mount -vt devpts devpts $LFS/dev/pts $DEF"
 mount -vt devpts devpts $LFS/dev/pts
 echo -e "$G mount -vt tmpfs shm $LFS/dev/shm $DEF"
@@ -16,7 +30,8 @@ mount -vt proc proc $LFS/proc
 echo -e "$G mount -vt sysfs sysfs $LFS/sys $DEF"
 mount -vt sysfs sysfs $LFS/sys
 
-echo -e "$C spousti se chroot do systemu $DEF"
+echo -e "$C starting chroot $DEF"
+echo -e "$C In chroot run $G /scripts/makeallchroot $DEF"
 chroot "$LFS" /tools/bin/env -i \
 HOME=/root TERM="$TERM" PS1='\u:\w\$ ' \
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin SCRIPTS_DIR=/scripts \

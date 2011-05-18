@@ -21,9 +21,7 @@ unpack ${EXT}
 
 waitUser
 
-SepBuilde2
-
-waitUser
+mkdir -v $BUILD_DIR/build
 
 startBuild
 

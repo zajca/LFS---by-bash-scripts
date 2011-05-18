@@ -23,10 +23,6 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
-
 cd $ROOT
 
 NAME=${gmp[0]}
@@ -52,10 +48,6 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
-
 cd $ROOT
 
 NAME=${mpc[0]}
@@ -81,10 +73,6 @@ gccSupProgTest
 echo -e "$L_UN_SDIR"
 echo -e "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
 tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
-echo -e "$L_MV_FILGCC"
-echo -e "$G mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME $DEF"
-mv $BUILD_DIR/$PROGRAM $BUILD_DIR/$NAME
-
 cd $ROOT
 
 NAME=${gcc[0]}
@@ -120,7 +108,11 @@ startBuild
 
 {
 cd $BUILD_DIR/$PROGRAM
-
+echo -e "$L_MV_FILGCC"
+mv -v $BUILD_DIR/$mpfr_dir $BUILD_DIR/$PROGRAM/mpfr
+mv -v $BUILD_DIR/$gmp_dir $BUILD_DIR/$PROGRAM/gmp
+mv -v $BUILD_DIR/$mpc_dir $BUILD_DIR/$PROGRAM/mpc
+waitUser
   addPatch ${pFILE}
 
   cp -v gcc/Makefile.in{,.orig}
@@ -163,7 +155,7 @@ CC="$LFS_TGT-gcc -B/tools/lib/" \
     --enable-__cxa_atexit --enable-languages=c,c++ \
     --disable-libstdcxx-pch --disable-multilib \
     --disable-bootstrap --disable-libgomp \
-    --with-gmp-include=$BUILD_DIR/gmp --with-gmp-lib=$BUILD_DIR/gmp/.libs --with-mpc=$BUILD_DIR/mpc --with-gmp=$BUILD_DIR/gmp --with-mpfr=$BUILD_DIR/mpfr \
+    --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs \
     --without-ppl --without-cloog || exit 1
 
   waitUser
