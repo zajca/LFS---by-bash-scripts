@@ -1,0 +1,14 @@
+#!/bin/bash
+set +h
+set -e
+
+cat > /etc/hosts << "EOF"
+# Begin /etc/hosts (network card version)
+
+127.0.0.1 localhost
+**EDITME<192.168.1.1>EDITME** **EDITME<HOSTNAME.example.org>EDITME** **EDITME[alias1] [alias2 ...]EDITME**
+
+# End /etc/hosts (network card version)
+EOF
+echo -e "\n\nTotalseconds: $SECONDS\n"
+exit

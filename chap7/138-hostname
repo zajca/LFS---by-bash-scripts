@@ -1,0 +1,7 @@
+#!/bin/bash
+set +h
+set -e
+
+echo "HOSTNAME=**EDITME<lfs>EDITME**" > /etc/sysconfig/network
+echo -e "\n\nTotalseconds: $SECONDS\n"
+exit

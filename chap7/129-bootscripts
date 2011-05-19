@@ -1,0 +1,8 @@
+#!/bin/bash
+set +h
+set -e
+
+cd $PKGDIR
+make install
+echo -e "\n\nTotalseconds: $SECONDS\n"
+exit
