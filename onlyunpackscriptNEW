@@ -1,0 +1,1228 @@
+#!/bin/sh
+
+export ROOT=/mnt/LFS
+export WAIT=1
+export UNPACK=1
+
+
+export LFS=$ROOT
+export SOURCES_DIR=$ROOT/sources
+export BUILD_DIR=$ROOT/build
+export TOOLS_DIR=$ROOT/tools
+export SCRIPTS_DIR=$ROOT/scripts
+export BREAKPOINT=$SCRIPTS_DIR/breakpoint
+
+source $SCRIPTS_DIR/include/ver
+source $SCRIPTS_DIR/include/l10n-EN
+
+DEF="$(tput sgr0)"
+BOLD="$(tput bold)"
+G="${BOLD}$(tput setaf 2)"
+R="${BOLD}$(tput setaf 1)"
+C="${BOLD}$(tput setaf 6)"
+
+#function wait for user interaction
+waitUser (){
+  if [ $WAIT == 1 ]; then
+    echo "for continue pres enter"
+    read > /dev/null
+  fi
+}
+export -f waitUser
+
+#function downloaded file given in first parametr
+download (){
+ wget -c ${1} -P ${SOURCES_DIR}/
+}
+
+export -f download
+
+#function compare md5 sums
+#it checked file given in first variable
+#then compare with md5sum given in second variable
+check(){
+  echo "$C Checking md5 checksum for file ${1} $DEF"
+  md5test=$(md5sum $SOURCES_DIR/${1} | awk '{ print $1 }')
+  if [ ${2} == ${md5test} ]; then
+    echo "$G [OK] $DEF";
+  else
+    echo "$R [FAIL] $DEF";
+    echo "$2 array value, $md5test file value"
+    echo "for continue pres enter"
+    read > /dev/null
+  fi
+}
+export -f check
+
+unpackPackage (){
+if [ $UNPACK == 1 ]; then
+	repeat=0
+	while [ $repeat ]; do
+		if [ $EXT == bzip ]; then
+		echo "$Y Starting build script $PROGRAM $DEF";
+		if [ -d $BUILD_DIR/$PROGRAM ]; then
+		  echo "$C Directory with source already exist $G [REMOVING] $DEF"
+		  echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+		  rm -rf $BUILD_DIR/$PROGRAM
+		  echo "$C Source directory $G [UNPACKING] $DEF"
+		  echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+		  tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		else
+		  echo "$C Source directory $G [UNPACKING] $DEF"
+		  echo "$G tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+		  tar xjf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+		fi
+		elif [ $EXT == gzip ]; then
+			echo "$Y Starting build script $PROGRAM $DEF";
+			if [ -d $BUILD_DIR/$PROGRAM ]; then
+			  echo "$C Directory with source already exist $G [REMOVING] $DEF"
+			  echo "$G rm -rf $BUILD_DIR/$PROGRAM $DEF"
+			  rm -rf $BUILD_DIR/$PROGRAM
+			  echo "$C Source directory $G [UNPACKING] $DEF"
+			  echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			  tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			else
+			  echo "$C Source directory $G [UNPACKING] $DEF"
+			  echo "$G tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/ $DEF"
+			  tar xzf $SOURCES_DIR/$FILE -C $BUILD_DIR/
+			fi
+		else
+			echo "$R somethink went wrong with archive unpack $DEF";
+		fi
+		echo "To unpack again type somethink and press enter"
+		echo "To continue only, leave blank and pres enter"
+		read repeat
+	done
+fi
+}
+export -f unpackPackage
+
+save_break_point ()
+{
+  echo $BP >$BREAKPOINT
+}
+
+package_1 (){
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_2 (){
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_3 (){
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+unpackPackage
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+unpackPackage
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_4 (){
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_5 (){
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pPatch=${pglibc[1]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pPatch} ${pMD5}
+}
+
+package_6 (){
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_7 (){
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+unpackPackage
+
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+unpackPackage
+
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+unpackPackage
+
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_8 (){
+NAME=${tcl[0]}
+PROGRAM=${tcl[3]}
+FILE=${tcl[2]}
+EXT=${tcl[4]}
+DLINK=${tcl[1]}
+MD5=${tcl[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_9 (){
+NAME=${expect[0]}
+PROGRAM=${expect[3]}
+FILE=${expect[2]}
+EXT=${expect[4]}
+DLINK=${expect[1]}
+MD5=${expect[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_10 (){
+NAME=${dejagnu[0]}
+PROGRAM=${dejagnu[3]}
+FILE=${dejagnu[2]}
+EXT=${dejagnu[4]}
+DLINK=${dejagnu[1]}
+MD5=${dejagnu[5]}
+pFILE=${pdejagnu[1]}
+pDLINK=${pdejagnu[0]}
+pMD5=${pdejagnu[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+
+package_11 (){
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_12 (){
+NAME=${bash[0]}
+PROGRAM=${bash[3]}
+FILE=${bash[2]}
+EXT=${bash[4]}
+DLINK=${bash[1]}
+MD5=${bash[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_13 (){
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_14 (){
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_15 (){
+NAME=${diffutils[0]}
+PROGRAM=${diffutils[3]}
+FILE=${diffutils[2]}
+EXT=${diffutils[4]}
+DLINK=${diffutils[1]}
+MD5=${diffutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_16 (){
+NAME=${file[0]}
+PROGRAM=${file[3]}
+FILE=${file[2]}
+EXT=${file[4]}
+DLINK=${file[1]}
+MD5=${file[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_17 (){
+NAME=${findutils[0]}
+PROGRAM=${findutils[3]}
+FILE=${findutils[2]}
+EXT=${findutils[4]}
+DLINK=${findutils[1]}
+MD5=${findutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_18 (){
+NAME=${gawk[0]}
+PROGRAM=${gawk[3]}
+FILE=${gawk[2]}
+EXT=${gawk[4]}
+DLINK=${gawk[1]}
+MD5=${gawk[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_19 (){
+NAME=${gettext[0]}
+PROGRAM=${gettext[3]}
+FILE=${gettext[2]}
+EXT=${gettext[4]}
+DLINK=${gettext[1]}
+MD5=${gettext[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_20 (){
+NAME=${grep[0]}
+PROGRAM=${grep[3]}
+FILE=${grep[2]}
+EXT=${grep[4]}
+DLINK=${grep[1]}
+MD5=${grep[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_21 (){
+NAME=${gzip[0]}
+PROGRAM=${gzip[3]}
+FILE=${gzip[2]}
+EXT=${gzip[4]}
+DLINK=${gzip[1]}
+MD5=${gzip[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_22 (){
+NAME=${M4[0]}
+PROGRAM=${M4[3]}
+FILE=${M4[2]}
+EXT=${M4[4]}
+DLINK=${M4[1]}
+MD5=${M4[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_23 (){
+NAME=${make[0]}
+PROGRAM=${make[3]}
+FILE=${make[2]}
+EXT=${make[4]}
+DLINK=${make[1]}
+MD5=${make[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_24 (){
+NAME=${patch[0]}
+PROGRAM=${patch[3]}
+FILE=${patch[2]}
+EXT=${patch[4]}
+DLINK=${patch[1]}
+MD5=${patch[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_25 (){
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+
+package_26 (){
+NAME=${sed[0]}
+PROGRAM=${sed[3]}
+FILE=${sed[2]}
+EXT=${sed[4]}
+DLINK=${sed[1]}
+MD5=${sed[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_27 (){
+NAME=${tar[0]}
+PROGRAM=${tar[3]}
+FILE=${tar[2]}
+EXT=${tar[4]}
+DLINK=${tar[1]}
+MD5=${tar[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_28 (){
+NAME=${texinfo[0]}
+PROGRAM=${texinfo[3]}
+FILE=${texinfo[2]}
+EXT=${texinfo[4]}
+DLINK=${texinfo[1]}
+MD5=${texinfo[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_29 (){
+NAME=${xzutils[0]}
+PROGRAM=${xzutils[3]}
+FILE=${xzutils[2]}
+EXT=${xzutils[4]}
+DLINK=${xzutils[1]}
+MD5=${xzutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_30 (){
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_31 (){
+NAME=${manpage[0]}
+PROGRAM=${manpage[3]}
+FILE=${manpage[2]}
+EXT=${manpage[4]}
+DLINK=${manpage[1]}
+MD5=${manpage[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_32 (){
+NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
+DLINK=${glibc[1]}
+MD5=${glibc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pFILE=${pglibc[1]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+
+package_33 (){
+NAME=${zlib[0]}
+PROGRAM=${zlib[3]}
+FILE=${zlib[2]}
+EXT=${zlib[4]}
+DLINK=${zlib[1]}
+MD5=${zlib[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_34 (){
+NAME=${binutils[0]}
+PROGRAM=${binutils[3]}
+FILE=${binutils[2]}
+EXT=${binutils[4]}
+DLINK=${binutils[1]}
+MD5=${binutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_35 (){
+NAME=${gmp[0]}
+PROGRAM=${gmp[3]}
+FILE=${gmp[2]}
+EXT=${gmp[4]}
+DLINK=${gmp[1]}
+MD5=${gmp[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_36 (){
+NAME=${mpfr[0]}
+PROGRAM=${mpfr[3]}
+FILE=${mpfr[2]}
+EXT=${mpfr[4]}
+DLINK=${mpfr[1]}
+MD5=${mpfr[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_37 (){
+NAME=${mpc[0]}
+PROGRAM=${mpc[3]}
+FILE=${mpc[2]}
+EXT=${mpc[4]}
+DLINK=${mpc[1]}
+MD5=${mpc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_38 (){
+NAME=${gcc[0]}
+PROGRAM=${gcc[3]}
+FILE=${gcc[2]}
+EXT=${gcc[4]}
+DLINK=${gcc[1]}
+MD5=${gcc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_39 (){
+NAME=${sed[0]}
+PROGRAM=${sed[3]}
+FILE=${sed[2]}
+EXT=${sed[4]}
+DLINK=${sed[1]}
+MD5=${sed[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_40 (){
+NAME=${pkgconfig[0]}
+PROGRAM=${pkgconfig[3]}
+FILE=${pkgconfig[2]}
+EXT=${pkgconfig[4]}
+DLINK=${pkgconfig[1]}
+MD5=${pkgconfig[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_41 (){
+NAME=${ncurses[0]}
+PROGRAM=${ncurses[3]}
+FILE=${ncurses[2]}
+EXT=${ncurses[4]}
+DLINK=${ncurses[1]}
+MD5=${ncurses[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_42 (){
+NAME=${utillinux[0]}
+PROGRAM=${utillinux[3]}
+FILE=${utillinux[2]}
+EXT=${utillinux[4]}
+DLINK=${utillinux[1]}
+MD5=${utillinux[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_43 (){
+NAME=${e2fsprogs[0]}
+PROGRAM=${e2fsprogs[3]}
+FILE=${e2fsprogs[2]}
+EXT=${e2fsprogs[4]}
+DLINK=${e2fsprogs[1]}
+MD5=${e2fsprogs[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_44 (){
+NAME=${coreutils[0]}
+PROGRAM=${coreutils[3]}
+FILE=${coreutils[2]}
+EXT=${coreutils[4]}
+DLINK=${coreutils[1]}
+MD5=${coreutils[5]}
+pFILE=${pcoreutils[1]}
+pDLINK=${pcoreutils[0]}
+pMD5=${pcoreutils[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+
+package_45 (){
+NAME=${ianaetc[0]}
+PROGRAM=${ianaetc[3]}
+FILE=${ianaetc[2]}
+EXT=${ianaetc[4]}
+DLINK=${ianaetc[1]}
+MD5=${ianaetc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_46 (){
+NAME=${M4[0]}
+PROGRAM=${M4[3]}
+FILE=${M4[2]}
+EXT=${M4[4]}
+DLINK=${M4[1]}
+MD5=${M4[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_47 (){
+NAME=${bison[0]}
+PROGRAM=${bison[3]}
+FILE=${bison[2]}
+EXT=${bison[4]}
+DLINK=${bison[1]}
+MD5=${bison[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_48 (){
+NAME=${procps[0]}
+PROGRAM=${procps[3]}
+FILE=${procps[2]}
+EXT=${procps[4]}
+DLINK=${procps[1]}
+MD5=${procps[5]}
+pFILE=${pprocps[1]}
+pDLINK=${pprocps[0]}
+pMD5=${pprocps[2]}
+p2FILE=${pprocps2[1]}
+p2DLINK=${pprocps2[0]}
+p2MD5=${pprocps2[2]}
+
+download ${DLINK}
+download ${pDLINK}
+download ${p2DLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+check ${p2FILE} ${p2MD5}
+}
+
+package_49 (){
+PROGRAM=${grep[3]}
+FILE=${grep[2]}
+EXT=${grep[4]}
+DLINK=${grep[1]}
+MD5=${grep[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_50 (){
+NAME=${readline[0]}
+PROGRAM=${readline[3]}
+FILE=${readline[2]}
+EXT=${readline[4]}
+DLINK=${readline[1]}
+MD5=${readline[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_51 (){
+NAME=${bash[0]}
+PROGRAM=${bash[3]}
+FILE=${bash[2]}
+EXT=${bash[4]}
+DLINK=${bash[1]}
+MD5=${bash[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_52 (){
+NAME=${libtool[0]}
+PROGRAM=${libtool[3]}
+FILE=${libtool[2]}
+EXT=${libtool[4]}
+DLINK=${libtool[1]}
+MD5=${libtool[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_53 (){
+NAME=${gdbm[0]}
+PROGRAM=${gdbm[3]}
+FILE=${gdbm[2]}
+EXT=${gdbm[4]}
+DLINK=${gdbm[1]}
+MD5=${gdbm[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_54 (){
+NAME=${inetutils[0]}
+PROGRAM=${inetutils[3]}
+FILE=${inetutils[2]}
+EXT=${inetutils[4]}
+DLINK=${inetutils[1]}
+MD5=${inetutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_55 (){
+NAME=${perl[0]}
+PROGRAM=${perl[3]}
+FILE=${perl[2]}
+EXT=${perl[4]}
+DLINK=${perl[1]}
+MD5=${perl[5]}
+pFILE=${pperl[1]}
+pDLINK=${pperl[0]}
+pMD5=${pperl[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+package_56 (){
+NAME=${autoconf[0]}
+PROGRAM=${autoconf[3]}
+FILE=${autoconf[2]}
+EXT=${autoconf[4]}
+DLINK=${autoconf[1]}
+MD5=${autoconf[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_57 (){
+NAME=${automake[0]}
+PROGRAM=${automake[3]}
+FILE=${automake[2]}
+EXT=${automake[4]}
+DLINK=${automake[1]}
+MD5=${automake[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_58 (){
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
+pFILE=${pbzip[1]}
+pDLINK=${pbzip[0]}
+pMD5=${pbzip[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+package_59 (){
+NAME=${diffutils[0]}
+PROGRAM=${diffutils[3]}
+FILE=${diffutils[2]}
+EXT=${diffutils[4]}
+DLINK=${diffutils[1]}
+MD5=${diffutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_60 (){
+NAME=${gawk[0]}
+PROGRAM=${gawk[3]}
+FILE=${gawk[2]}
+EXT=${gawk[4]}
+DLINK=${gawk[1]}
+MD5=${gawk[5]}
+download ${DLINK}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_61 (){
+NAME=${file[0]}
+PROGRAM=${file[3]}
+FILE=${file[2]}
+EXT=${file[4]}
+DLINK=${file[1]}
+MD5=${file[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_62 (){
+NAME=${findutils[0]}
+PROGRAM=${findutils[3]}
+FILE=${findutils[2]}
+EXT=${findutils[4]}
+DLINK=${findutils[1]}
+MD5=${findutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_63 (){
+NAME=${flex[0]}
+PROGRAM=${flex[3]}
+FILE=${flex[2]}
+EXT=${flex[4]}
+DLINK=${flex[1]}
+MD5=${flex[5]}
+pFILE=${pflex[1]}
+pDLINK=${pflex[0]}
+pMD5=${pflex[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+package_64 (){
+NAME=${gettext[0]}
+PROGRAM=${gettext[3]}
+FILE=${gettext[2]}
+EXT=${gettext[4]}
+DLINK=${gettext[1]}
+MD5=${gettext[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_65 (){
+NAME=${groff[0]}
+PROGRAM=${groff[3]}
+FILE=${groff[2]}
+EXT=${groff[4]}
+DLINK=${groff[1]}
+MD5=${groff[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_66 (){
+NAME=${grub[0]}
+PROGRAM=${grub[3]}
+FILE=${grub[2]}
+EXT=${grub[4]}
+DLINK=${grub[1]}
+MD5=${grub[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_67 (){
+NAME=${gzip[0]}
+PROGRAM=${gzip[3]}
+FILE=${gzip[2]}
+EXT=${gzip[4]}
+DLINK=${gzip[1]}
+MD5=${gzip[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_68 (){
+NAME=${iproute2[0]}
+PROGRAM=${iproute2[3]}
+FILE=${iproute2[2]}
+EXT=${iproute2[4]}
+DLINK=${iproute2[1]}
+MD5=${iproute2[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_69 (){
+NAME=${kbd[0]}
+PROGRAM=${kbd[3]}
+FILE=${kbd[2]}
+EXT=${kbd[4]}
+DLINK=${kbd[1]}
+MD5=${kbd[5]}
+pFILE=${pkbd[1]}
+pDLINK=${pkbd[0]}
+pMD5=${pkbd[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+package_70 (){
+NAME=${less[0]}
+PROGRAM=${less[3]}
+FILE=${less[2]}
+EXT=${less[4]}
+DLINK=${less[1]}
+MD5=${less[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_71 (){
+NAME=${make[0]}
+PROGRAM=${make[3]}
+FILE=${make[2]}
+EXT=${make[4]}
+DLINK=${make[1]}
+MD5=${make[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_72 (){
+NAME=${xzutils[0]}
+PROGRAM=${xzutils[3]}
+FILE=${xzutils[2]}
+EXT=${xzutils[4]}
+DLINK=${xzutils[1]}
+MD5=${xzutils[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_73 (){
+NAME=${mandb[0]}
+PROGRAM=${mandb[3]}
+FILE=${mandb[2]}
+EXT=${mandb[4]}
+DLINK=${mandb[1]}
+MD5=${mandb[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_74 (){
+NAME=${moduleit[0]}
+PROGRAM=${moduleit[3]}
+FILE=${moduleit[2]}
+EXT=${moduleit[4]}
+DLINK=${moduleit[1]}
+MD5=${moduleit[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_75 (){
+NAME=${patch[0]}
+PROGRAM=${patch[3]}
+FILE=${patch[2]}
+EXT=${patch[4]}
+DLINK=${patch[1]}
+MD5=${patch[5]}
+pFILE=${ppatch[1]}
+pDLINK=${ppatch[0]}
+pMD5=${ppatch[2]}
+
+download ${DLINK}
+download ${pDLINK}
+check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
+}
+package_76 (){
+NAME=${psmisc[0]}
+PROGRAM=${psmisc[3]}
+FILE=${psmisc[2]}
+EXT=${psmisc[4]}
+DLINK=${psmisc[1]}
+MD5=${psmisc[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_77 (){
+NAME=${shadow[0]}
+PROGRAM=${shadow[3]}
+FILE=${shadow[2]}
+EXT=${shadow[4]}
+DLINK=${shadow[1]}
+MD5=${shadow[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_78 (){
+NAME=${sysklogd[0]}
+PROGRAM=${sysklogd[3]}
+FILE=${sysklogd[2]}
+EXT=${sysklogd[4]}
+DLINK=${sysklogd[1]}
+MD5=${sysklogd[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_79 (){
+NAME=${sysvinit[0]}
+PROGRAM=${sysvinit[3]}
+FILE=${sysvinit[2]}
+EXT=${sysvinit[4]}
+DLINK=${sysvinit[1]}
+MD5=${sysvinit[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_80 (){
+NAME=${tar[0]}
+PROGRAM=${tar[3]}
+FILE=${tar[2]}
+EXT=${tar[4]}
+DLINK=${tar[1]}
+MD5=${tar[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_81 (){
+NAME=${texinfo[0]}
+PROGRAM=${texinfo[3]}
+FILE=${texinfo[2]}
+EXT=${texinfo[4]}
+DLINK=${texinfo[1]}
+MD5=${texinfo[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_82 (){
+DLINK=${udevtt[1]}
+MD5=${udevtt[5]}
+FILE=${udevtt[2]}
+		download ${DLINK}
+		check ${FILE} ${MD5}
+
+DLINK=${udevct[1]}
+MD5=${udevct[5]}
+FILE=${udevct[2]}
+		download ${DLINK}
+		check ${FILE} ${MD5}
+
+NAME=${udev[0]}
+PROGRAM=${udev[3]}
+FILE=${udev[2]}
+EXT=${udev[4]}
+DLINK=${udev[1]}
+MD5=${udev[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+package_83 (){
+NAME=${vim[0]}
+PROGRAM=${vim[3]}
+FILE=${vim[2]}
+EXT=${vim[4]}
+DLINK=${vim[1]}
+MD5=${vim[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_84 (){
+NAME=${lfsootscripts[0]}
+PROGRAM=${lfsootscripts[3]}
+FILE=${lfsootscripts[2]}
+EXT=${lfsootscripts[4]}
+DLINK=${lfsootscripts[1]}
+MD5=${lfsootscripts[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+package_85 (){
+NAME=${linux[0]}
+PROGRAM=${linux[3]}
+FILE=${linux[2]}
+EXT=${linux[4]}
+DLINK=${linux[1]}
+MD5=${linux[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+}
+
+#
+# Initial state
+[ -e $BREAKPOINT ] && BP=`cat $BREAKPOINT | sed 's/^\([0-9]*\).*$/\1/'`
+[ "$BP" = "" ] && BP=1
+
+# Process each function based on the breakpoint
+while [ $BP -le 85 ]
+do
+  package_$BP
+  unpackPackage
+  waitUser
+  save_break_point
+  BP=`expr $BP + 1`
+done
+[ -e $BREAKPOINT ] && rm -f $BREAKPOINT
