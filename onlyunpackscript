@@ -5,8 +5,8 @@ source $SCRIPTS_DIR/prepare	#nastavi promene a kontroluje existenci dulezitych s
 source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
 source $SCRIPTS_DIR/include/l10n-EN
 
-export WAIT=0
-export ONLY_DL=1
+export WAIT=1
+export ONLY_DL=0
 
 waitUserUnpack (){
   if [ $WAIT == 1 ]; then
@@ -1142,7 +1142,7 @@ if [ $ONLY_DL == 1 ]; then
 			download ${DLINK}
 			check ${FILE} ${MD5}
 			unpack ${EXT}
-			mkdir -v $BUILD_DIR/build
+			mkdir -v $BUILD_DIR/$PROGRAM/build
 			waitUserUnpack
 	done
 fi
@@ -1482,15 +1482,15 @@ if [ $ONLY_DL == 1 ]; then
 	done
 fi
 
-NAME=${bzip2[0]}
-PROGRAM=${bzip2[3]}
-FILE=${bzip2[2]}
-EXT=${bzip2[4]}
-DLINK=${bzip2[1]}
-MD5=${bzip2[5]}
-pFILE=${pbzip2[1]}
-pDLINK=${pbzip2[0]}
-pMD5=${pbzip2[2]}
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
+pFILE=${pbzip[1]}
+pDLINK=${pbzip[0]}
+pMD5=${pbzip[2]}
 
 if [ $ONLY_DL == 1 ]; then
 		echo "$C only DL $DEF"
@@ -2040,6 +2040,19 @@ if [ $ONLY_DL == 1 ]; then
 	done
 fi
 
+DLINK=${udevtt[1]}
+MD5=${udevtt[5]}
+FILE=${udevtt[2]}
+		download ${DLINK}
+		check ${FILE} ${MD5}
+
+DLINK=${udevct[1]}
+MD5=${udevct[5]}
+FILE=${udevct[2]}
+		download ${DLINK}
+		check ${FILE} ${MD5}
+
+
 NAME=${udev[0]}
 PROGRAM=${udev[3]}
 FILE=${udev[2]}
@@ -2061,6 +2074,7 @@ if [ $ONLY_DL == 1 ]; then
 			waitUserUnpack
 	done
 fi
+
 NAME=${vim[0]}
 PROGRAM=${vim[3]}
 FILE=${vim[2]}
