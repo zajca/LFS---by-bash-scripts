@@ -24,15 +24,16 @@ startBuild
 cd $BUILD_DIR/$PROGRAM
 {
 	./configure --prefix=/tools --enable-install-program=hostname || exit 1
+	StartMake
 	waitUser
-	c_Make || exit 1
+	make|| exit 1
 	waitUser
 	c_MakeTest RUN_EXPENSIVE_TESTS=yes check || exit 1
-	
+	StartMakeInstall
 	waitUser
-	c_MakeInstall || exit 1
+	make install || exit 1
 	waitUser
-	copyFiles src/su /tools/bin/su-tools
+	cp -v src/su /tools/bin/su-tools
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

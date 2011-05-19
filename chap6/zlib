@@ -26,20 +26,21 @@ cd $BUILD_DIR/$PROGRAM
 	echo -e "$L_FX_HF"
 	echo -e "$G sed -i 's/ifdef _LARGEFILE64_SOURCE/ifndef _LARGEFILE64_SOURCE/' zlib.h $DEF"
 	sed -i 's/ifdef _LARGEFILE64_SOURCE/ifndef _LARGEFILE64_SOURCE/' zlib.h
-
+	waitUser
 	CFLAGS='-mstackrealign -fPIC -O3' ./configure --prefix=/usr || exit 1
-
-	echo -e "$G make $DEF"
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
-
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	echo -e "$L_MV_FIL"
 	echo -e "$G mv -v /usr/lib/libz.so.* /lib $DEF"
 	mv -v /usr/lib/libz.so.* /lib
-
+	waitUser
 	echo -e "$L_MK_LNS"
 	echo -e "$G ln -sfv ../../lib/libz.so.1.2.5 /usr/lib/libz.so $DEF"
 	ln -sfv ../../lib/libz.so.1.2.5 /usr/lib/libz.so

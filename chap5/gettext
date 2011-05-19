@@ -23,12 +23,14 @@ startBuild
 {
 cd $BUILD_DIR/$PROGRAM/gettext-tools
 	./configure --prefix=/tools --disable-shared || exit 1
-	waitUser
+	StartMake -C gnulib-lib
+	waitUserv
 	make -C gnulib-lib || exit 1
+	StartMake -C src msgfmt
 	waitUser
 	make -C src msgfmt || exit 1
 	waitUser
-	copyFiles src/msgfmt /tools/bin
+	cp -v src/msgfmt /tools/bin
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

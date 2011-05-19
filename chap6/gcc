@@ -45,43 +45,92 @@ cd $BUILD_DIR/$NAME-BUILD
     --enable-threads=posix --enable-__cxa_atexit \
     --enable-clocale=gnu --enable-languages=c,c++ \
     --disable-multilib --disable-bootstrap --with-system-zlib
-
-	c_Make
-	
+	StartMake
+	waitUser
+	make || exit 1
+	waitUser
 	ulimit -s 16384
-
+	waitUser
 	make -k check || exit 1
-
+	waitUser
 	../$PROGRAM/contrib/test_summary
 	
-	waitUserAl
-
-	c_MakeInstall || exit 1
-
+	echo "$R test output by $G grep -A7 Summ $DEF"
+	echo "for continue pres enter"
+    read > /dev/null
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	ln -sv ../usr/bin/cpp /lib
-
+	waitUser
 	ln -sv gcc /usr/bin/cc
-
-	echo 'main(){}' > dummy.c
+	waitUser
+echo 'main(){}' > dummy.c
 cc dummy.c -v -Wl,--verbose &> dummy.log
 readelf -l a.out | grep ': /lib'
 
+	echo "$R test output shout be  [Requesting program interpreter: /lib/ld-linux.so.2] $DEF"
+	echo "for continue pres enter"
+    read > /dev/null
+
 grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
 
-grep -B4 '^ /usr/include' dummy.log
+	echo "$R test output shout be $DEF"
+	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crt1.o succeeded"
+	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crti.o succeeded"
+	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crtn.o succeeded"
+	echo "for continue pres enter"
+    read > /dev/null
 
+grep -B4 '^ /usr/include' dummy.log
+	echo "$R test output shout be $DEF"
+	echo "#include <...> search starts here:"
+	echo " /usr/local/include"
+	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/include"
+	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/include-fixed"
+	echo "/usr/include"
+	echo "for continue pres enter"
+    read > /dev/null
 grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
 
+	echo "$R test output shout be $DEF"
+	echo "$G for 32bit $DEF"
+	echo "SEARCH_DIR('/usr/i686-pc-linux-gnu/lib')"
+	echo "SEARCH_DIR('/usr/local/lib')"
+	echo "SEARCH_DIR('/lib')"
+	echo "SEARCH_DIR('/usr/lib');"
+	echo "$G and for 64bit $DEF"
+	echo "$R test output shout be $DEF"
+	echo "SEARCH_DIR('/usr/x86_64-unknown-linux-gnu/lib64')"
+	echo "SEARCH_DIR('/usr/local/lib64')"
+	echo "SEARCH_DIR('/lib64')"
+	echo "SEARCH_DIR('/usr/lib64')"
+	echo "SEARCH_DIR('/usr/x86_64-unknown-linux-gnu/lib')"
+	echo "SEARCH_DIR('/usr/local/lib')"
+	echo "SEARCH_DIR('/lib')"
+	echo "SEARCH_DIR('/usr/lib');"
+	echo "for continue pres enter"
+    read > /dev/null
 grep "/lib.*/libc.so.6 " dummy.log	
 
+	echo "$R test output shout be $DEF"
+	echo "attempt to open /lib/libc.so.6 succeeded"
+	echo "for continue pres enter"
+    read > /dev/null
+    
 grep found dummy.log
+	echo "$R test output shout be $DEF"
+	echo "found ld-linux.so.2 at /lib/ld-linux.so.2"
+	echo "for continue pres enter"
+    read > /dev/null
 
 #
 #TODO TESTS
 #
 #
 	
-} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-chap6.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
 			echo -e "$L_FAIL_BUIL"

@@ -27,62 +27,37 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-
-	tar -xvf $SOURCES_DIR/udev-config-$udev_conf_VER$udev_conf_PRIP
-	tar -xvf $SOURCES_DIR/udev-$udev_test_VER$udev_test_PRIP --strip-components=1
-
+FILEct=${udevct[2]}
+FILEtt=${udevtt[2]}
+	tar -xvf $SOURCES_DIR/$FILEct
+	waitUser
+	tar -xvf $SOURCES_DIR/$FILEtt --strip-components=1
+	waitUser
 	install -dv /lib/{firmware,udev/devices/{pts,shm}}
 	mknod -m0666 /lib/udev/devices/null c 1 3
-	
+	waitUser
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr \
     --sysconfdir=/etc --sbindir=/sbin \
     --with-rootlibdir=/lib --libexecdir=/lib/udev \
-    --disable-extras --disable-introspection
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_CONF"
-			exit 1
-	fi
-
-	echo -e "$G make $DEF"
-	make
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKE"
-			exit 1
-	fi
+    --disable-extras --disable-introspection || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
-	if [ $BUILD_TEST == 1 ];
-    	then
-			echo -e "$G make check $DEF"
-			make check
-			if [ $? -ne 0 ]
-				then
-					echo -e "$L_FAIL_MAKC"
-					exit 1
-			fi
-	fi
-
-	echo -e "$G make install $DEF"
-	make install
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
-	
+	c_MakeTest check || exit 1
+	waitUser
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	rmdir -v /usr/share/doc/udev
 	cd udev-config-20100128
-	
-	echo -e "$G make install $DEF"
-	make install
-	if [ $? -ne 0 ]
-		then
-			echo -e "$L_FAIL_MAKA"
-			exit 1
-	fi
-	
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	StartMakeInstall -doc
+	waitUser
 	make install-doc
   
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

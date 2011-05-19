@@ -27,11 +27,11 @@ cd $BUILD_DIR/$PROGRAM
     src/init.c
 	sed -i -e 's/utmpdump wall/utmpdump/' \
        -e 's/mountpoint.1 wall.1/mountpoint.1/' src/Makefile
-
-	echo -e "$G make -C src $DEF"
+	StartMake -C src
+	waitUser
 	make -C src || exit 1
-	
-	echo -e "$G make -C src install $DEF"
+	StartMake -C src install
+	waitUser
 	make -C src install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
@@ -40,7 +40,7 @@ if [ $PIPESTATUS -ne 0 ]
 		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  	  
-
+waitUser
 cat > /etc/inittab << "EOF"
 # Begin /etc/inittab
 

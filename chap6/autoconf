@@ -25,12 +25,14 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr || exit 1
-
-	c_Make || exit 1
-	
+	StartMake
+	waitUser
+	make || exit 1
+	waitUser
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

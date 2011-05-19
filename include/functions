@@ -9,11 +9,6 @@ Y="${BOLD}$(tput setaf 3)"
 C="${BOLD}$(tput setaf 6)"
 M="${BOLD}$(tput setaf 5)"
 
-startBuild (){
-	echo "$Y Starting Build $DEF"
-}
-export -f startBuild
-
 # function chose what to be done with archive
 # parametr 1 file extension bzip or gzip
 # ordionary use unpack ${EXT}
@@ -111,7 +106,7 @@ testExDir (){
 	else
 	  echo "$C Directory $1 not exist $DEF"
 	  echo "$G mkdir -p $1 $DEF"
-	  mkdir -p $1
+	  mkdir -vp $1
 	fi
 }
 export -f testExDir
@@ -181,9 +176,9 @@ export -f c_Make
 #function start make tests
 #parameters are make tests options
 c_MakeTest (){
-	echo "for start make $@ pres 1 and enter"
-	read var
-	if [ $var == 1 ]; then
+	#echo "for start make $@ pres 1 and enter"
+	#read MakeTests
+	if [ $MakeTests == 1 ]; then
 	  echo -e "$G make $@ $DEF"
 	  make $@
 	fi
@@ -208,6 +203,9 @@ export -f RMsource
 
 #function remove source directory and build directory
 RMbuild (){
+	echo "$C Build directory [REMOVING] $DEF"
+	echo "$R rm -rf $BUILD_DIR/$NAME-BUILD $DEF"
+	rm -rf $BUILD_DIR/$NAME-BUILD
 	echo "$C Source directory [REMOVING] $DEF"
 	echo "$R rm -rf $BUILD_DIR/$PROGRAM $DEF"
 	rm -rf $BUILD_DIR/$PROGRAM
@@ -277,3 +275,24 @@ check(){
     read > /dev/null
   fi
 }
+#function starting build
+startBuild (){
+	echo "$Y Starting Build $DEF"
+}
+export -f startBuild
+
+#function starting make
+StartMake (){
+	echo "$G Starting make $@ $DEF"
+}
+export -f StartMake
+
+#function starting make install
+StartMakeInstall (){
+	echo "$G Starting make install $@ $DEF"
+}
+export -f c_Make
+
+BASHexec=
+
+

@@ -30,17 +30,23 @@ cd $BUILD_DIR/$NAME-BUILD
 	echo -e "$C PTY Test $DEF"
 	echo -e "$G expect -c "spawn ls" $DEF"
 	expect -c "spawn ls"
+	echo "$R spawn ls is OK else is bad $DEF"
+	echo "$C for continue pres enter $DEF"
+    read > /dev/null
 
 	rm -fv etc/standards.info
 sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
-
+	
 	echo -e "$G $PROGRAM/configure $DEF" 
+	waitUser
 	../$PROGRAM/configure --prefix=/usr --enable-shared || exit 1
 
-	echo -e "$G make tooldir=/usr $DEF"
+	StartMake tooldir=/usr
 	make tooldir=/usr || exit 1
 
 	make check || exit 1
+	echo "$C for continue pres enter $DEF"
+    read > /dev/null
 	
 	echo -e "$G make tooldir=/usr install $DEF"
 	make tooldir=/usr install || exit 1
@@ -48,9 +54,9 @@ sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
 
 	echo -e "$L_MK_LNS"
 	echo -e "$G cp -v ../$PROGRAM/include/libiberty.h /usr/include $DEF"
-	cp -v ../$PROGRAM/include/libiberty.h /usr/include
+	cp -v ../binutils-2.21/include/libiberty.h /usr/include
 	fi
-} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-chap6.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
 			echo -e "$L_FAIL_BUIL"

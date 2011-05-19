@@ -26,21 +26,24 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
-
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	StartMake TEXMF=/usr/share/texmf install-tex
+	waitUser
 	make TEXMF=/usr/share/texmf install-tex || exit 1
-
+	waitUser
 	cd /usr/share/info
 rm -v dir
+waitUser
 for f in *
 do install-info $f dir 2>/dev/null
 done
-
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

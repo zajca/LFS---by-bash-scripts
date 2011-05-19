@@ -24,18 +24,25 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-      echo '.so man5/modprobe.conf.5' > modprobe.d.5
+echo '.so man5/modprobe.conf.5' > modprobe.d.5
 
 	./configure
+	StartMake check
+	waitUser
 	make check
+	waitUser
 	./tests/runtests
+	StartMake clean
+	waitUser
 	make clean
-
+	waitUser
 
 	./configure --prefix=/ --enable-zlib-dynamic --mandir=/usr/share/man || exit 1
-
-	c_Make || exit 1
-	
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
 	make INSTALL=install install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

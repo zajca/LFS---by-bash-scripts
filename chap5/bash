@@ -25,20 +25,15 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo "$G $PROGRAM/configure --prefix=/tools --without-bash-malloc  $DEF" 
 	./configure --prefix=/tools --without-bash-malloc || exit 1
-
+	StartMake
 	waitUser
-	c_Make || exit 1
-
+	make || exit 1
 	waitUser
-	
 	c_MakeTest tests || exit 1
-
+	StartMakeInstall
 	waitUser
-	
-	c_MakeInstall || exit 1
-	
+	make install || exit 1
 	waitUser
-	
 	ln -vs bash /tools/bin/sh
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

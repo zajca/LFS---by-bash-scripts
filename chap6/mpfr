@@ -26,19 +26,22 @@ cd $BUILD_DIR/$PROGRAM
 {
 
 	echo -e "$G $PROGRAM/configure $DEF" 
-	./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.0.0 || exit 1
-
-	c_Make || exit 1
-	
+	./configure --prefix=/usr --enable-thread-safe \
+  --docdir=/usr/share/doc/mpfr-3.0.0 || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	echo -e "$G make check $DEF"
+	waitUser
 	make check || exit 1
-		
-	c_MakeInstall || exit 1
-
-	echo -e "$G make html $DEF" 
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	StartMake html
+	waitUser
 	make html || exit 1
-
-	echo -e "$G make install-html $DEF" 
+	StartMakeInstall -html
+	waitUser
 	make install-html || exit 1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]

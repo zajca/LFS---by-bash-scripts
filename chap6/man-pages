@@ -23,8 +23,9 @@ startBuild
 
 {
 cd $BUILD_DIR/$PROGRAM
-
-    c_MakeInstall
+	StartMakeInstall
+	waitUser
+    make install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-ch6.log
 if [ $PIPESTATUS -ne 0 ]

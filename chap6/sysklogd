@@ -17,16 +17,15 @@ waitUser
 
 unpack ${EXT}
 
-waitUser
-
 startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
-	echo -e "$G make BINDIR=/sbin install $DEF"
+	StartMake BINDIR=/sbin install
 	make BINDIR=/sbin install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
@@ -35,7 +34,7 @@ if [ $PIPESTATUS -ne 0 ]
 		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  	  
-
+waitUser
 cat > /etc/syslog.conf << "EOF"
 # Begin /etc/syslog.conf
 

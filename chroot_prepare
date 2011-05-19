@@ -6,6 +6,8 @@ export ROOT=/
 #PATH=/tools/bin:/bin:/usr/bin
 #export LFS LC_ALL LFS_TGT PATH
 export WAIT=1
+export MakeTests=0
+export on64=0 #only if you building 32bit on 64bit machine
 export SOURCES_DIR=/sources
 export BUILD_DIR=/build
 export TOOLS_DIR=/tools
@@ -99,17 +101,11 @@ testExDir /var/local
 
 waitUser
 
-testSimLink /bin/bash /tools/bin/bash /bin/
-testSimLink /bin/cat /tools/bin/cat /bin/
-testSimLink /bin/echo /tools/bin/echo /bin/
-testSimLink /bin/pwd /tools/bin/pwd /bin/
-testSimLink /bin/stty /tools/bin/stty /bin/
-testSimLink /bin/perl /tools/bin/perl /bin/
-testSimLink /lib/libgcc_s.so /tools/lib/libgcc_s.so /lib/
-testSimLink /lib/libgcc_s.so.1 /tools/lib/libgcc_s.so.1 /lib/
-testSimLink /lib/libstdc++.so /tools/lib/libstdc++.so /lib/
-testSimLink /lib/libstdc++.so.6 /tools/lib/libstdc++.so.6 /lib/
-createSimLink /bin/bash /bin/sh
+ln -sv /tools/bin/{bash,cat,echo,pwd,stty} /bin
+ln -sv /tools/bin/perl /usr/bin
+ln -sv /tools/lib/libgcc_s.so{,.1} /usr/lib
+ln -sv /tools/lib/libstdc++.so{,.6} /usr/lib
+ln -sv bash /bin/sh
 
 echo -e "$C making mtab $DEF"
 echo -e "$G touch /etc/mtab $DEF"

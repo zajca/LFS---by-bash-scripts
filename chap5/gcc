@@ -125,12 +125,15 @@ cd $BUILD_DIR/$NAME-BUILD
     --disable-libgomp --enable-languages=c \
     --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs \
     --without-ppl --without-cloog || exit 1
+	StartMake
     waitUser
-    c_Make || exit 1
+    make || exit 1
+    StartMakeInstall
     waitUser
-    c_MakeInstall || exit 1
-
-ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
+    make install || exit 1
+	waitUser
+ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | \
+    sed 's/libgcc/&_eh/'`
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

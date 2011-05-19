@@ -28,17 +28,20 @@ cd $BUILD_DIR/$PROGRAM
 
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr --enable-multibyte || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest test || exit 1
-	
-	c_MakeInstall || exit 1
-
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	ln -sv vim /usr/bin/vi
 	for L in  /usr/share/man/{,*/}man1/vim.1; do
 	    ln -sv vim.1 $(dirname $L)/vi.1
 	done
+	waitUser
 	ln -sv ../vim/vim73/doc /usr/share/doc/vim-7.3
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
@@ -47,7 +50,7 @@ cd $BUILD_DIR/$PROGRAM
 			echo -e "$L_FAIL_BUIL"
 			exit 1
 	fi  	    
-
+waitUser
 cat > /etc/vimrc << "EOF"
 " Begin /etc/vimrc
 

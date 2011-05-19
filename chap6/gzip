@@ -26,12 +26,14 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr --bindir=/bin || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest check  || exit 1
-	
-	c_MakeInstall || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 
 	mv -v /bin/{gzexe,uncompress,zcmp,zdiff,zegrep} /usr/bin
 	mv -v /bin/{zfgrep,zforce,zgrep,zless,zmore,znew} /usr/bin

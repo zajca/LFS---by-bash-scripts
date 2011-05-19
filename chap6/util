@@ -21,19 +21,20 @@ waitUser
 
 startBuild
 
-
+cd $BUILD_DIR/$PROGRAM
+{
 sed -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
     -i $(grep -rl '/etc/adjtime' .)
 mkdir -pv /var/lib/hwclock
-
-cd $BUILD_DIR/$PROGRAM
-{
+waitUser
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --enable-arch --enable-partx --enable-write || exit 1
-	
-	c_Make
-
-	c_MakeInstall
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]

@@ -32,18 +32,22 @@ cd $BUILD_DIR/$PROGRAM
 		echo -e "$G $PROGRAM/configure $DEF"
 		./configure --prefix=/usr --enable-cxx --enable-mpbsd || exit 1
 	fi
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	echo -e "$G make check $DEF"
 	make check 2>&1 | tee gmp-check-log
-	
+		
 	awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log
-	waitUserAl
-	
-	c_MakeInstall || exit 1
+	echo "for continue pres enter"
+    read > /dev/null
 
-	mkdir -v /usr/share/doc/gmp-5.0.1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+mkdir -v /usr/share/doc/gmp-5.0.1
 cp    -v doc/{isa_abi_headache,configuration} doc/*.html \
          /usr/share/doc/gmp-5.0.1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

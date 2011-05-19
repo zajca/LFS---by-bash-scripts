@@ -18,8 +18,8 @@ if [ $PIPESTATUS -ne 0 ]
 		exit 1
 fi  
 
-echo -e "$L_RM_TFIL $DEF $G /tools/dummy.c, /tools/a.out $DEF"
-rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
-echo -e "$G $TOOLS_DIR/testlink.2 $DEF $L_SET_KEEP"
+#echo -e "$L_RM_TFIL $DEF $G /tools/dummy.c, /tools/a.out $DEF"
+#rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
+#echo -e "$G $TOOLS_DIR/testlink.2 $DEF $L_SET_KEEP"
 
 cd $ROOT

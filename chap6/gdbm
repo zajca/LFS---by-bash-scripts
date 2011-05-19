@@ -26,14 +26,16 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 
-	echo -e "$G make install-compat $DEF"
+	StartMakeInstall install-compat
 	make install-compat || exit 1
 
 	echo -e "$L_FX $L_VAR_MD"

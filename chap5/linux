@@ -24,9 +24,12 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
+	StartMake mrproper
 	make mrproper || exit 1
+	StartMake headers_check
 	waitUser
 	make headers_check || exit 1
+	StartMake INSTALL_HDR_PATH=dest headers_install
 	waitUser
 	make INSTALL_HDR_PATH=dest headers_install || exit 1
 	waitUser

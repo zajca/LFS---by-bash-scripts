@@ -24,19 +24,22 @@ startBuild
 cd $BUILD_DIR/$PROGRAM/unix
     
 	./configure --prefix=/tools || exit 1
+	StartMake
 	waitUser
-	c_Make || exit 1
+	make || exit 1
 	waitUser
 	TZ=UTC
 	c_Make test || exit 1
+	StartMakeInstall
 	waitUser
-	c_MakeInstall || exit 1
+	make install || exit 1
 	waitUser
 	echo -e "$L_CH_PRI $G /tools/lib/libtcl8.5.so $DEF"
 	echo -e "$G chmod -v u+w /tools/lib/libtcl8.5.so $DEF"
 	chmod -v u+w /tools/lib/libtcl8.5.so
+	StartMakeInstall install-private-headers
 	waitUser
-	c_Make install-private-headers || exit 1
+	make install-private-headers || exit 1
 	echo -e "$L_MK_LNS"
 	echo -e "$G ln -sv tclsh8.5 /tools/bin/tclsh $DEF"
 	ln -sv tclsh8.5 /tools/bin/tclsh

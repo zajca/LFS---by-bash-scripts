@@ -3,6 +3,8 @@
 
 export TOOLS_STRIP=0 # 1=Pro malou partition smaže nepotřebné soubory a dokumenty
 export WAIT=0
+export MakeTests=0
+export on64=0 #only if you building 32bit on 64bit machine
 
 export ROOT=/mnt/LFS	#složka připojeného obrazu
 export LFS=$ROOT

@@ -30,18 +30,20 @@ startBuild
 cd $BUILD_DIR/$PROGRAM
 {
 	addPatch ${pFILE}
-
+	waitUser
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr | exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
-
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	ln -sv libfl.a /usr/lib/libl.a
-
+	waitUser
 echo -e "$L_MK_FIL"
 cat > /usr/bin/lex << "EOF"
 #!/bin/sh
@@ -52,11 +54,11 @@ exec /usr/bin/flex -l "$@"
 # End /usr/bin/lex
 EOF
 chmod -v 755 /usr/bin/lex
-
+waitUser
 mkdir -v /usr/share/doc/flex-2.5.35
 cp    -v doc/flex.pdf \
          /usr/share/doc/flex-2.5.35
-
+waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

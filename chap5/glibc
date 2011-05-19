@@ -36,18 +36,23 @@ cd $BUILD_DIR/$PROGRAM
 	waitUser
 	cd $BUILD_DIR/$NAME-BUILD
 
-	echo -e "$L_SET_CGLAG"
-	case `uname -m` in
-	  i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms ;;
-	esac
+case `uname -m` in
+  i?86) echo "CFLAGS += -march=i486 -mtune=native" > configparms ;;
+esac
 
 	#SHELL=/bin/bash
 	#CONFIG_SHELL=/bin/bash
-	../$PROGRAM/configure --prefix=/tools --host=$LFS_TGT --build=$(../glibc-2.13/scripts/config.guess) --disable-profile --enable-add-ons --enable-kernel=2.6.22.5 --with-headers=/tools/include libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes || exit 1
+	../$PROGRAM/configure --prefix=/tools \
+    --host=$LFS_TGT --build=$(../glibc-2.13/scripts/config.guess) \
+    --disable-profile --enable-add-ons \
+    --enable-kernel=2.6.22.5 --with-headers=/tools/include \
+    libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes || exit 1
+	StartMake
 	waitUser
-	c_Make || exit 1
+	make || exit 1
+	StartMakeInstall
 	waitUser
-	c_MakeInstall || exit 1
+	make install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

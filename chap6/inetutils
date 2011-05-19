@@ -29,18 +29,24 @@ cd $BUILD_DIR/$PROGRAM
     --localstatedir=/var --disable-ifconfig \
     --disable-logger --disable-syslogd --disable-whois \
     --disable-servers || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 	
-	c_MakeInstall
-
+	StartMake make -C doc html
+	waitUser
 	make -C doc html || exit 1
+	StartMake -C doc install-html docdir=/usr/share/doc/inetutils-1.8
+	waitUser
 	make -C doc install-html docdir=/usr/share/doc/inetutils-1.8 || exit 1
-
+	waitUser
 	echo -e "$L_MV_FIL"
 	mv -v /usr/bin/{hostname,ping,ping6} /bin
 	mv -v /usr/bin/traceroute /sbin
-
+	waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

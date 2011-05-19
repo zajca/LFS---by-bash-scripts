@@ -32,14 +32,17 @@ cd $BUILD_DIR/$PROGRAM/build
 	../configure --prefix=/usr --with-root-prefix="" \
     --enable-elf-shlibs --disable-libblkid --disable-libuuid \
     --disable-uuidd --disable-fsck || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 
 	c_MakeTest check || exit 1
-	
-	c_MakeInstall || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 
-	echo -e "$G make install-libs $DEF"
+	StartMakeInstall -libs
+	waitUser
 	make install-libs || exit 1
 
 	echo -e "$L_CH_PRI"

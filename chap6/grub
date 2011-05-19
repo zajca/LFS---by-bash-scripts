@@ -30,10 +30,12 @@ cd $BUILD_DIR/$PROGRAM
              --disable-grub-emu-usb  \
              --disable-grub-fstest   \
              --disable-efiemu || exit 1
-
-	c_Make || exit 1
-	
-	c_MakeInstall || exit 1
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]

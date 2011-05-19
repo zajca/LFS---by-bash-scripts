@@ -25,35 +25,40 @@ cd $BUILD_DIR/$PROGRAM
 {
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr --with-shared --without-debug --enable-widec || exit 1
-
-	c_Make || exit 1
-
-	c_MakeInstall || exit 1
-
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	
 	echo -e "$L_MV_FIL"
+	waitUser
 	echo -e "$G mv -v /usr/lib/libncursesw.so.5* /lib $DEF"
 	mv -v /usr/lib/libncursesw.so.5* /lib
 
 	echo -e "$L_MK_LNS"
+	waitUser
 	echo -e "$G ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so $DEF"
 	ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so
-
+	waitUser
 	for lib in ncurses form panel menu ; do \
     rm -vf /usr/lib/lib${lib}.so ; \
     echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so ; \
     ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a ; \
 done
+waitUser
 ln -sfv libncurses++w.a /usr/lib/libncurses++.a
-	
+waitUser
 	rm -vf /usr/lib/libcursesw.so
 echo "INPUT(-lncursesw)" >/usr/lib/libcursesw.so
 ln -sfv libncurses.so /usr/lib/libcurses.so
 ln -sfv libncursesw.a /usr/lib/libcursesw.a
 ln -sfv libncurses.a /usr/lib/libcurses.a
-
+waitUser
 mkdir -v       /usr/share/doc/ncurses-5.7
 cp -v -R doc/* /usr/share/doc/ncurses-5.7
-
+waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

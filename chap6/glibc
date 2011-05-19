@@ -54,10 +54,11 @@ esac
 	../$PROGRAM/configure --prefix=/usr \
     --disable-profile --enable-add-ons \
     --enable-kernel=2.6.22.5 --libexecdir=/usr/lib/glibc || exit 1
+	StartMake
 	waitUser
 	make || exit 1
 	waitUser
-	copyFiles ../$PROGRAM/iconvdata/gconv-modules iconvdata
+	cp -v ../glibc-2.13/iconvdata/gconv-modules iconvdata
 	waitUser
 	echo -e "$G make check $DEF"
 	make -k check 2>&1 | tee glibc-check-log
@@ -71,6 +72,7 @@ esac
 
 	echo -e "$C $L_VAR_MF $G touch /etc/ld.so.conf $DEF"
 	touch /etc/ld.so.conf
+	StartMakeInstall
 	waitUser		
 	make install || exit 1
 	waitUser
@@ -139,7 +141,7 @@ cat > /etc/ld.so.conf << "EOF"
 # End /etc/ld.so.conf
 EOF
 	
-} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-chap6.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
 			echo -e "$L_FAIL_BUIL"

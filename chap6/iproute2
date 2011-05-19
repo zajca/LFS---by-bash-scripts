@@ -26,9 +26,12 @@ cd $BUILD_DIR/$PROGRAM
 {
 	sed -i '/^TARGETS/s@arpd@@g' misc/Makefile
 	sed -i '1289i\\tfilter.cloned = 2;' ip/iproute.c
-
+	StartMake DESTDIR=
+	waitUser
 	make DESTDIR= || exit 1
 	
+	StartMakeInstall
+	waitUser
 	make DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man \
      DOCDIR=/usr/share/doc/iproute2-2.6.37 install || exit 1
 	

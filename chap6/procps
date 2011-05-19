@@ -36,13 +36,15 @@ cd $BUILD_DIR/$PROGRAM
 {
 	addPatch ${pFILE}
 	addPatch ${p2FILE}
-
+	waitUser
 	sed -i -e 's@\*/module.mk@proc/module.mk ps/module.mk@' Makefile
-
-	c_Make || exit 1
-	
-	c_MakeInstall || exit 1
-
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

@@ -108,14 +108,9 @@ startBuild
 
 {
 cd $BUILD_DIR/$PROGRAM
-echo -e "$L_MV_FILGCC"
-mv -v $BUILD_DIR/$mpfr_dir $BUILD_DIR/$PROGRAM/mpfr
-mv -v $BUILD_DIR/$gmp_dir $BUILD_DIR/$PROGRAM/gmp
-mv -v $BUILD_DIR/$mpc_dir $BUILD_DIR/$PROGRAM/mpc
-waitUser
   addPatch ${pFILE}
-
-  cp -v gcc/Makefile.in{,.orig}
+waitUser
+cp -v gcc/Makefile.in{,.orig}
 sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
   waitUser
 cp -v gcc/Makefile.in{,.tmp}
@@ -144,6 +139,12 @@ case $(uname -m) in
     done
   ;;
 esac
+waitUser
+echo -e "$L_MV_FILGCC"
+mv -v $BUILD_DIR/$mpfr_dir $BUILD_DIR/$PROGRAM/mpfr
+mv -v $BUILD_DIR/$gmp_dir $BUILD_DIR/$PROGRAM/gmp
+mv -v $BUILD_DIR/$mpc_dir $BUILD_DIR/$PROGRAM/mpc
+waitUser
 
 cd $BUILD_DIR/$NAME-BUILD
 
@@ -157,11 +158,12 @@ CC="$LFS_TGT-gcc -B/tools/lib/" \
     --disable-bootstrap --disable-libgomp \
     --with-gmp-include=$(pwd)/gmp --with-gmp-lib=$(pwd)/gmp/.libs \
     --without-ppl --without-cloog || exit 1
-
+StartMake
   waitUser
-  c_Make || exit 1
+  make || exit 1
+  StartMakeInstall
   waitUser
-  c_MakeInstall || exit 1
+  make install || exit 1
   waitUser
   ln -vs gcc /tools/bin/cc
 

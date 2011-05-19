@@ -30,23 +30,26 @@ startBuild
 cd $BUILD_DIR/$PROGRAM
 {
 	addPatch ${pFILE}
-	
+	waitUser
 	sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
-
+	StartMake -f Makefile-libbz2_so
+	waitUser
 	make -f Makefile-libbz2_so || exit 1
+	StartMake clean
+	waitUser
 	make clean || exit 1
-
-	c_Make || exit 1
+	StartMake
+	make || exit 1
 	
 	echo -e "$G make PREFIX=/usr install $DEF"
 	make PREFIX=/usr install || exit 1
 
-	cp -v bzip2-shared /bin/bzip2
-	cp -av libbz2.so* /lib
-	ln -sv ../../lib/libbz2.so.1.0 /usr/lib/libbz2.so
-	rm -v /usr/bin/{bunzip2,bzcat,bzip2}
-	ln -sv bzip2 /bin/bunzip2
-	ln -sv bzip2 /bin/bzcat
+cp -v bzip2-shared /bin/bzip2
+cp -av libbz2.so* /lib
+ln -sv ../../lib/libbz2.so.1.0 /usr/lib/libbz2.so
+rm -v /usr/bin/{bunzip2,bzcat,bzip2}
+ln -sv bzip2 /bin/bunzip2
+ln -sv bzip2 /bin/bzcat
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]

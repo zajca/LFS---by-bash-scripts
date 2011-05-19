@@ -6,7 +6,9 @@ echo -e "$L_SET_LINK"
 cd $TOOLS_DIR
 {
 SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs
-$LFS_TGT-gcc -dumpspecs | sed -e 's@/lib\(64\)\?/ld@/tools&@g' -e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS 
+$LFS_TGT-gcc -dumpspecs | sed \
+  -e 's@/lib\(64\)\?/ld@/tools&@g' \
+  -e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS 
 echo "New specs file is: $SPECS"
 unset SPECS
 
@@ -14,7 +16,6 @@ echo -e "$L_TEST_SPR"
 
 echo 'main(){}' > dummy.c
 $LFS_TGT-gcc -B/tools/lib dummy.c
-
 readelf -l a.out | grep ': /tools' > testlink.1
 
 case $(uname -m) in
@@ -28,7 +29,7 @@ if [ $PIPESTATUS -ne 0 ]
 		exit 1
 fi  
 
-echo -e "$L_RM_TFIL $G /tools/dummy.c, /tools/a.out $DEF"
-rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
-echo -e "$DEF $G $TOOLS_DIR/testlink.1 $DEF $L_SET_KEEP"
+#echo -e "$L_RM_TFIL $G /tools/dummy.c, /tools/a.out $DEF"
+#rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out
+#echo -e "$DEF $G $TOOLS_DIR/testlink.1 $DEF $L_SET_KEEP"
 cd $ROOT

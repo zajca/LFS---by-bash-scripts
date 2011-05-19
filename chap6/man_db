@@ -31,11 +31,13 @@ cd $BUILD_DIR/$PROGRAM
     --docdir=/usr/share/doc/man-db-2.5.9 --sysconfdir=/etc --disable-setuid \
     --with-browser=/usr/bin/lynx --with-vgrind=/usr/bin/vgrind \
     --with-grap=/usr/bin/grap || exit 1
-
-	c_Make || exit 1
+	StartMake
+	waitUser
+	make || exit 1
 	
 	c_MakeTest -k check || exit 1
-
+	StartMakeInstall
+	waitUser
 	c_MakeInstall || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

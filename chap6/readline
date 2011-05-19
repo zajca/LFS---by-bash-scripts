@@ -26,23 +26,25 @@ cd $BUILD_DIR/$PROGRAM
 {
 	sed -i '/MV.*old/d' Makefile.in
 sed -i '/{OLDSUFF}/c:' support/shlib-install
-
+	waitUser
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr --libdir=/lib || exit 1
-
-	echo -e "$G make $DEF"
+	StartMake SHLIB_LIBS=-lncurses
+	waitUser
 	make SHLIB_LIBS=-lncurses || exit 1
-
-	c_MakeInstall || exit 1
-
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	waitUser
 	mv -v /lib/lib{readline,history}.a /usr/lib
 	rm -v /lib/lib{readline,history}.so
 	ln -sfv ../../lib/libreadline.so.6 /usr/lib/libreadline.so
 	ln -sfv ../../lib/libhistory.so.6 /usr/lib/libhistory.so
-	
+	waitUser
 	mkdir   -v       /usr/share/doc/readline-6.2
 	install -v -m644 doc/*.{ps,pdf,html,dvi} \
 			/usr/share/doc/readline-6.2
+	waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
