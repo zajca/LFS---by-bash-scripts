@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export ROOT=/
+export SCRIPTS_DIR=/scripts
+
+source $SCRIPTS_DIR/include/functions	#nastavi barvy
+source $SCRIPTS_DIR/include/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
+source $SCRIPTS_DIR/include/l10n-EN
+
+####### Start buildu jednotlivych aplikaci (Balicku) #######
+
+source $SCRIPTS_DIR/chap7/bootscripts
+source $SCRIPTS_DIR/chap7/clockInputrcProfile
+source $SCRIPTS_DIR/chap7/locale
+source $SCRIPTS_DIR/chap7/network
+source $SCRIPTS_DIR/chap8/fstab
+#source $SCRIPTS_DIR/chap8/kernel
+
