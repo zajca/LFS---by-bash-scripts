@@ -11,6 +11,7 @@ source $SCRIPTS_DIR/include/l10n-EN
 source $SCRIPTS_DIR/chap6/linux
 source $SCRIPTS_DIR/chap6/man-pages
 source $SCRIPTS_DIR/chap6/glibc
+source $SCRIPTS_DIR/chap6/locales
 source $SCRIPTS_DIR/chap6/adj_toolchain
 source $SCRIPTS_DIR/chap6/zlib
 source $SCRIPTS_DIR/chap6/binutils
