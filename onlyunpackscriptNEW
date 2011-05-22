@@ -241,9 +241,14 @@ FILE=${gcc[2]}
 EXT=${gcc[4]}
 DLINK=${gcc[1]}
 MD5=${gcc[5]}
+pDLINK=${pglibc[0]}
+pMD5=${pglibc[2]}
+pPatch=${pglibc[1]}
 
 download ${DLINK}
+download ${pDLINK}
 check ${FILE} ${MD5}
+check ${pFILE} ${pMD5}
 }
 
 package_8 (){
@@ -277,9 +282,9 @@ FILE=${dejagnu[2]}
 EXT=${dejagnu[4]}
 DLINK=${dejagnu[1]}
 MD5=${dejagnu[5]}
-pFILE=${pdejagnu[1]}
-pDLINK=${pdejagnu[0]}
-pMD5=${pdejagnu[2]}
+pFILE=${pdejangnu[1]}
+pDLINK=${pdejangnu[0]}
+pMD5=${pdejangnu[2]}
 
 download ${DLINK}
 download ${pDLINK}

@@ -62,7 +62,8 @@ esac
 	waitUser
 	echo -e "$G make check $DEF"
 	make -k check 2>&1 | tee glibc-check-log
-	grep Error $BUILD_DIR/$PROGRAM/glibc-check-log
+	echo -e "$R Check Errors $DEF"
+	grep Error $BUILD_DIR/$NAME-BUILD/glibc-check-log
 
 	echo -e "$R **************************************************** $DEF"
 	echo -e "$R Check tect on top for erors and file ${BUILD_DIR}/${PROGRAM}/glibc-check-log $DEF"

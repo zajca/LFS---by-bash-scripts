@@ -87,6 +87,10 @@ for dir in /usr /usr/local; do
 ln -sv share/{man,doc,info} $dir
 done
 
+case $(uname -m) in
+ x86_64) ln -sv lib /lib64 && ln -sv lib /usr/lib64 ;;
+esac
+
 testExDir /var/lock
 testExDir /var/log
 testExDir /var/mail
