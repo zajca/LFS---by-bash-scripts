@@ -705,11 +705,16 @@ MD5=${coreutils[5]}
 pFILE=${pcoreutils[1]}
 pDLINK=${pcoreutils[0]}
 pMD5=${pcoreutils[2]}
+pFILE2=${pcoreutils2[1]}
+pDLINK2=${pcoreutils2[0]}
+pMD52=${pcoreutils2[2]}
 
 download ${DLINK}
 download ${pDLINK}
+download ${pDLINK2}
 check ${FILE} ${MD5}
 check ${pFILE} ${pMD5}
+check ${pFILE2} ${pMD52}
 }
 
 package_45 (){

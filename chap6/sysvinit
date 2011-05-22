@@ -40,6 +40,7 @@ if [ $PIPESTATUS -ne 0 ]
 		echo -e "$L_FAIL_BUIL"
 		exit 1
 fi  	  
+echo -e "$C Making file $G /etc/inittab $DEF"
 waitUser
 cat > /etc/inittab << "EOF"
 # Begin /etc/inittab

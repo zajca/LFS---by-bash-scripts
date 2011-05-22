@@ -26,7 +26,7 @@ SepBuild
 waitUser
 
 startBuild
-
+cd $BUILD_DIR/$PROGRAM
 sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
 
 case `uname -m` in
@@ -35,7 +35,7 @@ case `uname -m` in
 esac
 
 sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
-
+waitUser
 cd $BUILD_DIR/$NAME-BUILD
 {
 
@@ -70,7 +70,8 @@ echo 'main(){}' > dummy.c
 cc dummy.c -v -Wl,--verbose &> dummy.log
 readelf -l a.out | grep ': /lib'
 
-	echo "$R test output shout be  [Requesting program interpreter: /lib/ld-linux.so.2] $DEF"
+	echo "$R test output shout be  [Requesting program interpreter: /lib/ld-linux.so.2] for 32bit $DEF"
+	echo "$R [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2] for 64bit $DEF"	
 	echo "for continue pres enter"
     read > /dev/null
 
@@ -80,6 +81,7 @@ grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
 	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crt1.o succeeded"
 	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crti.o succeeded"
 	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/../../../crtn.o succeeded"
+	echo "$R or almost same for 64bit only i686 is x86_64 $DEF"
 	echo "for continue pres enter"
     read > /dev/null
 
@@ -90,6 +92,7 @@ grep -B4 '^ /usr/include' dummy.log
 	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/include"
 	echo "/usr/lib/gcc/i686-pc-linux-gnu/4.5.2/include-fixed"
 	echo "/usr/include"
+	echo "$R or almost same for 64bit only i686 is x86_64 $DEF"
 	echo "for continue pres enter"
     read > /dev/null
 grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'

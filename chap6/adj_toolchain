@@ -25,8 +25,8 @@ cc dummy.c -v -Wl,--verbose &> dummy.log
 readelf -l a.out | grep ': /lib'
 
 echo -e "$R IF is everything OK, you should see somethink like this$DEF"
-echo -e "$G [Requesting program interpreter: /tools/lib/ld-linux.so.2] for 32bit $DEF"
-echo -e "$G [Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2] for 64bit $DEF"
+echo -e "$G [Requesting program interpreter: /lib/ld-linux.so.2] for 32bit $DEF"
+echo -e "$G [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2] for 64bit $DEF"
 waitUser
 #case $(uname -m) in
 #    x86_64) compareFiles $SCRIPTS_DIR/linker.ch6.1.test64 $TOOLS_DIR/testlink.ch6.1 ||  ;;
@@ -40,9 +40,6 @@ if [ $PIPESTATUS -ne 0 ]
 		echo -e "$L_FAIL_LINK"
 		exit 1
 fi  
-
-read > /dev/null
-
 echo -e "$L_RM_TFIL $G rm -v dummy.c a.out dummy.log $DEF"
 rm -r $TOOLS_DIR/dummy.c $TOOLS_DIR/a.out $TOOLS_DIR/dummy.log
 echo -e "$DEF $G $TOOLS_DIR/testlink.ch6.1 $TOOLS_DIR/pathtest.ch6.1 $TOOLS_DIR/corhead.ch6.1 $TOOLS_DIR/testlink.ch6.2 $TOOLS_DIR/libctest.ch6.1 $TOOLS_DIR/dynlink.ch6.1 $DEF $L_SET_KEEP"

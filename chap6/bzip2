@@ -1,14 +1,14 @@
 #!/bin/bash
 
-NAME=${bzip2[0]}
-PROGRAM=${bzip2[3]}
-FILE=${bzip2[2]}
-EXT=${bzip2[4]}
-DLINK=${bzip2[1]}
-MD5=${bzip2[5]}
-pFILE=${pbzip2[1]}
-pDLINK=${pbzip2[0]}
-pMD5=${pbzip2[2]}
+NAME=${bzip[0]}
+PROGRAM=${bzip[3]}
+FILE=${bzip[2]}
+EXT=${bzip[4]}
+DLINK=${bzip[1]}
+MD5=${bzip[5]}
+pFILE=${pbzip[1]}
+pDLINK=${pbzip[0]}
+pMD5=${pbzip[2]}
 
 download ${DLINK}
 download ${pDLINK}
@@ -39,9 +39,11 @@ cd $BUILD_DIR/$PROGRAM
 	waitUser
 	make clean || exit 1
 	StartMake
+	waitUser
 	make || exit 1
 	
 	echo -e "$G make PREFIX=/usr install $DEF"
+	waitUser	
 	make PREFIX=/usr install || exit 1
 
 cp -v bzip2-shared /bin/bzip2

@@ -33,29 +33,29 @@ cd $BUILD_DIR/$PROGRAM
 	waitUser
 	make || exit 1
 	
-	chown -Rv nobody .
-
-
-	if [ $BUILD_TEST == 1 ];
-    	then
-			echo -e "$G su-tools nobody -s /bin/bash -c make tests $DEF"
-			su-tools nobody -s /bin/bash -c "make tests"
-			if [ $? -ne 0 ]
-				then
-					echo -e "$L_FAIL_MAKT"
-					exit 1
-			fi
+	if [ $MakeTests == 1 ]; then
+		chown -Rv nobody .
+		echo -e "$G su-tools nobody -s /bin/bash -c make tests $DEF"
+		su-tools nobody -s /bin/bash -c "make tests" || exit 1 
 	fi
 	StartMakeInstall
+	waitUser
 	make install || exit 1
 	echo -e "$R $BASHexec $DEF"
-	exec /bin/bash --login +h
+	waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then
 			echo -e "$L_FAIL_BUIL"
 			exit 1
-	fi  	  
-waitUser
+	fi
+
 RMbuild
+waitUser
+touch $SCRIPTS_DIR/bashCH6Complete
+
+echo -e "$C New Login, you must start script/chroot_makeall again $DEF"
+
+exec /bin/bash --login +h  	  
+
 cd $ROOT

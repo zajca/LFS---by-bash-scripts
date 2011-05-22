@@ -58,7 +58,7 @@ udev=(Udev http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-166.tar.bz2
 udevtt=(Udev-Test-Tarball http://anduin.linuxfromscratch.org/sources/other/udev-166-testfiles.tar.bz2 udev-166-testfiles.tar.bz2 udev-166-testfiles bzip 64ada14e464dee3388787e3aebf2ac34)
 udevct=(Udev-Configuration-Tarball http://www.linuxfromscratch.org/lfs/downloads/6.8/udev-config-20100128.tar.bz2 udev-config-20100128.tar.bz2 udev-config-20100128 bzip 32de4eb504b2ad67b43cb4fe16da92e2)
 utillinux=(Util-linux http://www.kernel.org/pub/linux/utils/util-linux/v2.19/util-linux-2.19.tar.bz2 util-linux-2.19.tar.bz2 util-linux-2.19 bzip 590ca71aad0b254e2631d84401f28255)
-vim=(Vim ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2 vim-7.3.tar.bz2 vim-7.3 bzip 5b9510a17074e2b37d8bb38ae09edbf2)
+vim=(Vim ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2 vim-7.3.tar.bz2 vim73 bzip 5b9510a17074e2b37d8bb38ae09edbf2)
 xzutils=(Xz-Utils http://tukaani.org/xz/xz-5.0.1.tar.bz2 xz-5.0.1.tar.bz2 xz-5.0.1 bzip cb6c7a58cec4d663a395c54d186ca0c6)
 zlib=(Zlib http://www.zlib.net/zlib-1.2.5.tar.bz2 zlib-1.2.5.tar.bz2 zlib-1.2.5 bzip be1e89810e66150f5b0327984d8625a0)
 

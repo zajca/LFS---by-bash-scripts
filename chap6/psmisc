@@ -37,7 +37,7 @@ cd $BUILD_DIR/$PROGRAM
 	waitUser
 	mv -v /usr/bin/fuser /bin
 	mv -v /usr/bin/killall /bin
-	waitUser
+	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

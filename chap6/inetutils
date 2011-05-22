@@ -46,7 +46,7 @@ cd $BUILD_DIR/$PROGRAM
 	echo -e "$L_MV_FIL"
 	mv -v /usr/bin/{hostname,ping,ping6} /bin
 	mv -v /usr/bin/traceroute /sbin
-	waitUser
+	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

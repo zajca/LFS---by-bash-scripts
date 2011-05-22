@@ -48,15 +48,22 @@ cd $BUILD_DIR/$PROGRAM
     ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a ; \
 done
 waitUser
+echo "$G ln -sfv libncurses++w.a /usr/lib/libncurses++.a $DEF"
 ln -sfv libncurses++w.a /usr/lib/libncurses++.a
 waitUser
+echo "$G rm -vf /usr/lib/libcursesw.so $DEF" 
 	rm -vf /usr/lib/libcursesw.so
 echo "INPUT(-lncursesw)" >/usr/lib/libcursesw.so
+echo "$G ln -sfv libncurses.so /usr/lib/libcurses.so $DEF"
 ln -sfv libncurses.so /usr/lib/libcurses.so
+echo "$G ln -sfv libncursesw.a /usr/lib/libcursesw.a $DEF"
 ln -sfv libncursesw.a /usr/lib/libcursesw.a
+echo "$G ln -sfv libncurses.a /usr/lib/libcurses.a $DEF"
 ln -sfv libncurses.a /usr/lib/libcurses.a
 waitUser
+echo "$G mkdir -v       /usr/share/doc/ncurses-5.7 $DEF"
 mkdir -v       /usr/share/doc/ncurses-5.7
+echo "$G cp -v -R doc/* /usr/share/doc/ncurses-5.7 $DEF"
 cp -v -R doc/* /usr/share/doc/ncurses-5.7
 waitUser
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log

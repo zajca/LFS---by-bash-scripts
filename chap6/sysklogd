@@ -26,6 +26,7 @@ cd $BUILD_DIR/$PROGRAM
 	make || exit 1
 	
 	StartMake BINDIR=/sbin install
+	waitUser
 	make BINDIR=/sbin install || exit 1
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
@@ -33,7 +34,8 @@ if [ $PIPESTATUS -ne 0 ]
 	then
 		echo -e "$L_FAIL_BUIL"
 		exit 1
-fi  	  
+fi
+echo -e "$C making file $G /etc/syslog.conf $DEF"  	  
 waitUser
 cat > /etc/syslog.conf << "EOF"
 # Begin /etc/syslog.conf
@@ -49,7 +51,5 @@ user.* -/var/log/user.log
 # End /etc/syslog.conf
 EOF
 
- 
-waitUser
 RMbuild
 cd $ROOT

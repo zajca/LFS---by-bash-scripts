@@ -44,7 +44,7 @@ sed -i '/{OLDSUFF}/c:' support/shlib-install
 	mkdir   -v       /usr/share/doc/readline-6.2
 	install -v -m644 doc/*.{ps,pdf,html,dvi} \
 			/usr/share/doc/readline-6.2
-	waitUser
+	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

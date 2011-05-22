@@ -28,7 +28,7 @@ startBuild
 
 cd $BUILD_DIR/$PROGRAM
 {
-	addPatch ${FILE}
+	addPatch ${pFILE}
 	waitUser
 	echo -e "$G $PROGRAM/configure $DEF" 
 	./configure --prefix=/usr || exit 1
@@ -40,7 +40,7 @@ cd $BUILD_DIR/$PROGRAM
 	StartMakeInstall
 	waitUser
 	make install || exit 1
-	waitUser
+	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
 		then

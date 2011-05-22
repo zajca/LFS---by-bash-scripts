@@ -26,17 +26,18 @@ cd $BUILD_DIR/$PROGRAM
 {
 echo '.so man5/modprobe.conf.5' > modprobe.d.5
 
-	./configure
-	StartMake check
-	waitUser
-	make check
-	waitUser
-	./tests/runtests
-	StartMake clean
-	waitUser
-	make clean
-	waitUser
-
+	if [ $MakeTests == 1 ]; then
+		./configure
+		StartMake check
+		waitUser
+		make check
+		waitUser
+		./tests/runtests
+		StartMake clean
+		waitUser
+		make clean
+		waitUser
+	fi
 	./configure --prefix=/ --enable-zlib-dynamic --mandir=/usr/share/man || exit 1
 	StartMake
 	waitUser

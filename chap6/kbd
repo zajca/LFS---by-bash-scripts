@@ -32,7 +32,8 @@ cd $BUILD_DIR/$PROGRAM
 
 	addPatch ${pFILE}
 
-	echo -e "$G $PROGRAM/configure $DEF" 
+	echo -e "$G $PROGRAM/configure $DEF"
+	waitUser
 	./configure --prefix=/usr --datadir=/lib/kbd || exit 1
 	StartMake
 	waitUser
@@ -46,7 +47,6 @@ cd $BUILD_DIR/$PROGRAM
 	mkdir -v /usr/share/doc/kbd-1.15.2
 	cp -R -v doc/* \
          /usr/share/doc/kbd-1.15.2
-	waitUser
 	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 	if [ $PIPESTATUS -ne 0 ]
