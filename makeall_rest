@@ -3,12 +3,12 @@
 export ROOT=/
 export SCRIPTS_DIR=/scripts
 
-source $SCRIPTS_DIR/include/functions	#nastavi barvy
-source $SCRIPTS_DIR/include/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
-source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
+source $SCRIPTS_DIR/include/functions
+source $SCRIPTS_DIR/include/chroot_prepare
+source $SCRIPTS_DIR/include/ver
 source $SCRIPTS_DIR/include/l10n-EN
 
-####### Start buildu jednotlivych aplikaci (Balicku) #######
+####### Start builds of packages #######
 
 source $SCRIPTS_DIR/chap7/bootscripts
 source $SCRIPTS_DIR/chap7/clockInputrcProfile

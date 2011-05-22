@@ -4,15 +4,31 @@ cd /tmp
 
 echo -e "$C grub-mkrescue --output=grub-img.iso $DEF"
 grub-mkrescue --output=grub-img.iso
+waitUser
 echo -e "$C dd if=grub-img.iso of=/dev/fd0 bs=1440 count=1 $DEF"
 dd if=grub-img.iso of=/dev/fd0 bs=1440 count=1
+waitUser
 echo -e "$C grub-mkdevicemap --device-map=device.map $DEF"
 grub-mkdevicemap --device-map=device.map
+waitUser
 echo -e "$C cat device.map $DEF"
 cat device.map
+waitUser
 echo -e "$R Set root disk device adress example sda sdb !!without number!!$DEF"
 read varSD
 echo -e "$C grub-install --grub-setup=/bin/true /dev/${varSD} $DEF"
 grub-install --grub-setup=/bin/true /dev/${varSD}
+waitUser
 echo -e "$C grub-mkconfig -o /boot/grub/grub.cfg $DEF"
 grub-mkconfig -o /boot/grub/grub.cfg
+waitUser
+echo -e "$G=======================================$DEF"
+echo -e "$G=======================================$DEF"
+echo -e "$G=======================================$DEF"
+echo -e "$G======Congratulation you did it========$DEF"
+echo -e "$G=======================================$DEF"
+echo -e "$G====Now read chapter 8.4 about GRUB====$DEF"
+echo -e "$G=====and make your system bootable=====$DEF"
+echo -e "$G=======================================$DEF"
+echo -e "$G=======================================$DEF"
+echo -e "$G=======================================$DEF"
