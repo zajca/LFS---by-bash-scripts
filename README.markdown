@@ -49,30 +49,45 @@ lfsuser is folder with user lfs files
 important scripts
 -----------------
 ###include:
-####chroot_prepare is script with variables in chroot and its making basic directories
-####functions is script with all used BASH functions	
-####l10n-EN file with language variables, only part of variables are used. Probable this file will be deleted
-####prepare	is script with variables for chapter5 and its making basic directories
-####ver is file with arrays that defines packages
+####chroot_prepare
+is script with variables in chroot and its making basic directories
+####functions
+is script with all used BASH functions	
+####l10n-EN
+file with language variables, only part of variables are used. Probable this file will be deleted
+####prepare
+is script with variables for chapter5 and its making basic directories
+####ver
+is file with arrays that defines packages
 		packagename = ( name dlink archivename foldername extension md5)
-###chap6: -there are two important files
-####start6 this script mount VFS on start chapter6
-####restart this script is mounting VFS too. It's for case that you must reboot host system.
-		(now i don't what different is on that two files :D )
-####chroot_makeall script for chapter 6
-####makeall script for chapter 5
-####makeall_rest script for chapter 7 and 8
-####onlyunpackscript description lower
-####version-check.sh script from LFS to check host system
+###chap6: 
+-there are two important files
+####start6 
+this script mount VFS on start chapter6
+####restart 
+this script is mounting VFS too. It's for case that you must reboot host system. (now i don't what different is on that two files :D )
+####chroot_makeall
+script for chapter 6
+####makeall
+script for chapter 5
+####makeall_rest
+script for chapter 7 and 8
+####onlyunpackscript
+description lower
+####version-check.sh
+script from LFS to check host system
 
 onlyunpackscript
 ----------------
   Very usefull script for download and unpack packages
 
 ###variables:
-####ROOT=/mnt/LFS mountpoint of LFS HDD
-####WAIT=1 useless variable if 1 it wait every step but if you unpacking you must wait elsewhere and if you only downloading you want every step pres enter
-####UNPACK=1 if 1 it will download and unpack packages step by step like is in LFS Book. If you want read book and paste commands by your self it's great way. If 0 script only download and check MD5 sum at all packages.
+####ROOT=/mnt/LFS
+mountpoint of LFS HDD
+####WAIT=1
+useless variable if 1 it wait every step but if you unpacking you must wait elsewhere and if you only downloading you want every step pres enter
+####UNPACK=1
+if 1 it will download and unpack packages step by step like is in LFS Book. If you want read book and paste commands by your self it's great way. If 0 script only download and check MD5 sum at all packages.
 
 If you unpacking, script will after each unpack stop and wait. If you type somethink in this time to terminal and press enter last unpack will be erased and unpacked again. It for case of error in compilation. 
 
