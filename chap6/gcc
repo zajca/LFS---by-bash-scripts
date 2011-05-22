@@ -127,11 +127,6 @@ grep found dummy.log
 	echo "found ld-linux.so.2 at /lib/ld-linux.so.2"
 	echo "for continue pres enter"
     read > /dev/null
-
-#
-#TODO TESTS
-#
-#
 	
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM-chap6.log
 	if [ $PIPESTATUS -ne 0 ]

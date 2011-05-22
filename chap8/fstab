@@ -1,20 +1,18 @@
 #!/bin/bash
-set +h
-set -e
-
+echo -e "$C Making File $G /etc/fstab $DEF"
+echo -e "$C edit /etc/fstab and change <somethink> to device adress of your disk and filesystem $DEF"
 cat > /etc/fstab << "EOF"
 # Begin /etc/fstab
 
 # file system  mount-point  type   options         dump  fsck
 #                                                        order
 
-/dev/**EDITME<xxx>EDITME**     /            **EDITME<fff>EDITME**  defaults        1     1
-/dev/**EDITME<yyy>EDITME**     swap         swap   pri=1           0     0
+/dev/<edit sda1 or somethink like this>     /            <add filesystem>  defaults        1     1
+/dev/<edit sda2 or somethink like this>     swap         swap   pri=1           0     0
 proc           /proc        proc   defaults        0     0
 sysfs          /sys         sysfs  defaults        0     0
 devpts         /dev/pts     devpts gid=4,mode=620  0     0
 tmpfs          /run         tmpfs  defaults        0     0
 # End /etc/fstab
 EOF
-echo -e "\n\nTotalseconds: $SECONDS\n"
-exit
+

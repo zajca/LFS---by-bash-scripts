@@ -51,7 +51,7 @@ rpc: files
 EOF
 	echo -e "$R **************************************************** $DEF"
 	echo -e "$R *** Now open new trminal and run script *** $DEF"
-	echo -e "$R **********$SCRIPTS_DIR/only_chroot*********** $DEF"
+	echo -e "$R **********$SCRIPTS_DIR/chrootIN/chrootChap6*********** $DEF"
 	echo -e "$R ***************Than run tzselect******************* $DEF"
 	echo -e "$G after all press <ENTER> to continue $DEF"
 	read > /dev/null

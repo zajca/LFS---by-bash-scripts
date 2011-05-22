@@ -1,0 +1,18 @@
+#!/bin/bash
+
+NAME=${lfsootscripts[0]}
+PROGRAM=${lfsootscripts[3]}
+FILE=${lfsootscripts[2]}
+EXT=${lfsootscripts[4]}
+DLINK=${lfsootscripts[1]}
+MD5=${lfsootscripts[5]}
+
+download ${DLINK}
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+StartMakeInstall
+waitUser
+make install || exit 1
+waitUser
+RMbuild

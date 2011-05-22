@@ -1,0 +1,52 @@
+#!/bin/bash
+
+echo -e "$C Set your hostname. example MyPC $DEF"
+read varHostname
+echo "HOSTNAME=${varHostname}" > /etc/sysconfig/network
+waitUser
+echo -e "$C Making File $G /etc/hosts $DEF"
+echo -e "$C You can configure it later $DEF"
+cat > /etc/hosts << "EOF"
+# Begin /etc/hosts (network card version)
+
+127.0.0.1 <HOSTNAME.example.org> <HOSTNAME> localhost
+
+# End /etc/hosts (network card version)
+EOF
+echo -e "$C Making udev rule $DEF"
+waitUser
+for NIC in /sys/class/net/* ; do
+    INTERFACE=${NIC##*/} udevadm test --action=add $NIC
+done
+echo -e "$R read your network interface $DEF"
+waitUser
+cat /etc/udev/rules.d/70-persistent-net.rules
+waitUser
+
+cd /etc/sysconfig/network-devices
+echo -e "$C Type interface of your network card example $G eth0 $DEF"
+read varETH
+mkdir -v ifconfig.${varETH}
+
+echo -e "$C edit $G /etc/sysconfig/network-devices/ifconfig.${varETH}/ipv4 $C and change IP adresses to your value $DEF"
+cat > ifconfig.${varETH}/ipv4 << "EOF"
+ONBOOT=yes
+SERVICE=ipv4-static
+IP=192.168.1.1
+GATEWAY=192.168.1.2
+PREFIX=24
+BROADCAST=192.168.1.255
+EOF
+
+waitUser
+echo -e "$C Making File $G /etc/resolv.conf $DEF"
+echo -e "$C edit /etc/resolv.conf and add adress of your DNS servers $DEF"
+cat > /etc/resolv.conf << "EOF"
+# Begin /etc/resolv.conf
+
+domain <Your Domain Name>
+nameserver <IP address of your primary nameserver>
+nameserver <IP address of your secondary nameserver>
+
+# End /etc/resolv.conf
+EOF
