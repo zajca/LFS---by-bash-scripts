@@ -1,6 +1,9 @@
 #!/bin/bash
 
 NAME=${glibc[0]}
+PROGRAM=${glibc[3]}
+FILE=${glibc[2]}
+EXT=${glibc[4]}
 TIME_ZONE_TEMP="Europe/Prague"
 
 cd $BUILD_DIR/$NAME-BUILD
@@ -46,20 +49,19 @@ rpc: files
 
 # End /etc/nsswitch.conf
 EOF
-
 	echo -e "$R **************************************************** $DEF"
 	echo -e "$R *** Now open new trminal and run script *** $DEF"
 	echo -e "$R **********$SCRIPTS_DIR/only_chroot*********** $DEF"
 	echo -e "$R ***************Than run tzselect******************* $DEF"
 	echo -e "$G after all press <ENTER> to continue $DEF"
 	read > /dev/null
-	
+
 	echo -e "$C Seting timezone $DEF"
 	echo -e "$G Set your timezone: example Europe/Prague $DEF"
-	read > $TIME_ZONE_TEMP
+	read > TIME_ZONE_TEMP
 	cp -v --remove-destination /usr/share/zoneinfo/$TIME_ZONE_TEMP \
     /etc/localtime
-	
+		
 	echo -e "$C Making File $G /etc/ld.so.conf $C pro qlibc $DEF"
 cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf
@@ -69,5 +71,6 @@ cat > /etc/ld.so.conf << "EOF"
 
 # End /etc/ld.so.conf
 EOF
-  
+waitUser
+RMbuild
 cd $ROOT

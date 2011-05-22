@@ -24,25 +24,14 @@ echo 'main(){}' > dummy.c
 cc dummy.c -v -Wl,--verbose &> dummy.log
 readelf -l a.out | grep ': /lib'
 
-case $(uname -m) in
-    x86_64) compareFiles $SCRIPTS_DIR/linker.ch6.1.test64 $TOOLS_DIR/testlink.ch6.1 ;;
-    i?86) compareFiles $SCRIPTS_DIR/linker.ch6.1.test $TOOLS_DIR/testlink.ch6.1 ;; 
-esac
-
-grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log > pathtest.ch6.1
-  compareFiles $SCRIPTS_DIR/pathtest.ch6.1.test $TOOLS_DIR/pathtest.ch6.1
-
-grep -B1 '^ /usr/include' dummy.log > corhead.ch6.1
-  compareFiles $SCRIPTS_DIR/corhead.ch6.1.test $TOOLS_DIR/corhead.ch6.1
-
-grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g' > testlink.ch6.2
-  compareFiles $SCRIPTS_DIR/corhead.ch6.2.test $TOOLS_DIR/corhead.ch6.2
-
-grep "/lib.*/libc.so.6 " dummy.log > libctest.ch6.1
-  compareFiles $SCRIPTS_DIR/libctest.ch6.1.test $TOOLS_DIR/libctest.ch6.1
-
-grep found dummy.log > dynlink.ch6.1
-  compareFiles $SCRIPTS_DIR/dynlink.ch6.1.test $TOOLS_DIR/dynlink.ch6.1
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$G [Requesting program interpreter: /tools/lib/ld-linux.so.2] for 32bit $DEF"
+echo -e "$G [Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2] for 64bit $DEF"
+waitUser
+#case $(uname -m) in
+#    x86_64) compareFiles $SCRIPTS_DIR/linker.ch6.1.test64 $TOOLS_DIR/testlink.ch6.1 ||  ;;
+#    i?86) compareFiles $SCRIPTS_DIR/linker.ch6.1.test $TOOLS_DIR/testlink.ch6.1 ;; 
+#esac
 
 } 2>&1 | tee $BUILD_DIR/LOG_LINKER_CH6.log
 

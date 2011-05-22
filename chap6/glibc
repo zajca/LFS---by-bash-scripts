@@ -84,5 +84,4 @@ esac
 			exit 1
 	fi  	  
 waitUser
-RMbuild
 cd $ROOT
