@@ -13,7 +13,6 @@ export SCRIPTS_DIR=$ROOT/scripts
 export BREAKPOINT=$SCRIPTS_DIR/breakpoint
 
 source $SCRIPTS_DIR/include/ver
-source $SCRIPTS_DIR/include/l10n-EN
 
 DEF="$(tput sgr0)"
 BOLD="$(tput bold)"

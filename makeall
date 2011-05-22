@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source $SCRIPTS_DIR/include/functions
-source $SCRIPTS_DIR/prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/include/prepare	#nastavi promene a kontroluje existenci dulezitych slozek
 source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
 source $SCRIPTS_DIR/include/l10n-EN
 

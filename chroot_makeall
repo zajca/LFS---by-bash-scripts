@@ -3,7 +3,7 @@ export ROOT=/
 export SCRIPTS_DIR=/scripts
 
 source $SCRIPTS_DIR/include/functions	#nastavi barvy
-source $SCRIPTS_DIR/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
+source $SCRIPTS_DIR/include/chroot_prepare	#nastavi promene a kontroluje existenci dulezitych slozek
 source $SCRIPTS_DIR/include/ver #ulozi do promenych verze programu
 source $SCRIPTS_DIR/include/l10n-EN
 
@@ -70,4 +70,9 @@ source $SCRIPTS_DIR/chap6/tar
 source $SCRIPTS_DIR/chap6/texinfo
 source $SCRIPTS_DIR/chap6/udev
 source $SCRIPTS_DIR/chap6/vim
-# source $SCRIPTS_DIR/chap6/linux
+echo -e "$C For strip debug symbols $DEF"
+echo -e "$C Chroot in with $G scripts/chrootIN/chrootForStrip $DEF"
+echo -e "$C And start scripts/chap6/StripDebug $DEF"
+logout
+
+
