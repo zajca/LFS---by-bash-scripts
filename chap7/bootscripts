@@ -11,6 +11,7 @@ download ${DLINK}
 check ${FILE} ${MD5}
 waitUser
 unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
 StartMakeInstall
 waitUser
 make install || exit 1

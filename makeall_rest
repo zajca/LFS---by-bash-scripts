@@ -15,5 +15,5 @@ source $SCRIPTS_DIR/chap7/clockInputrcProfile
 source $SCRIPTS_DIR/chap7/locale
 source $SCRIPTS_DIR/chap7/network
 source $SCRIPTS_DIR/chap8/fstab
-#source $SCRIPTS_DIR/chap8/kernel
-
+source $SCRIPTS_DIR/chap8/kernel
+source $SCRIPTS_DIR/chap8/grub

@@ -3,7 +3,7 @@
 echo -e "$C List of locales $DEF"
 locale -a
 
-echo -e "$C type you locale and pres enter, exampe $G en_us.utf8"
+echo -e "$C type you locale and pres enter, example $G en_US.utf8"
 read vaLocale
 LC_ALL=$vaLocale locale charmap
 LC_ALL=$vaLocale locale language
@@ -11,7 +11,7 @@ LC_ALL=$vaLocale locale charmap
 LC_ALL=$vaLocale locale int_curr_symbol
 LC_ALL=$vaLocale locale int_prefix
 
-echo -e "$C Change variable LANG later for other language $DEF"
+echo -e "$C Change variable LANG later for other language in $G /etc/profile $DEF"
 echo "# Begin /etc/profile"  > /etc/profile
 echo "" >> /etc/profile
 echo "export LANG=${vaLocale}" >> /etc/profile

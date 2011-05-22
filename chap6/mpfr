@@ -34,6 +34,8 @@ cd $BUILD_DIR/$PROGRAM
 	echo -e "$G make check $DEF"
 	waitUser
 	make check || exit 1
+	echo "$C for continue pres enter $DEF"
+    read > /dev/null
 	StartMakeInstall
 	waitUser
 	make install || exit 1

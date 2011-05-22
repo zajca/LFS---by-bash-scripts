@@ -26,6 +26,7 @@ waitUser
 cd /etc/sysconfig/network-devices
 echo -e "$C Type interface of your network card example $G eth0 $DEF"
 read varETH
+
 mkdir -v ifconfig.${varETH}
 
 echo -e "$C edit $G /etc/sysconfig/network-devices/ifconfig.${varETH}/ipv4 $C and change IP adresses to your value $DEF"

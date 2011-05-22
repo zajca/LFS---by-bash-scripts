@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd /tmp
+
+echo -e "$C grub-mkrescue --output=grub-img.iso $DEF"
+grub-mkrescue --output=grub-img.iso
+echo -e "$C dd if=grub-img.iso of=/dev/fd0 bs=1440 count=1 $DEF"
+dd if=grub-img.iso of=/dev/fd0 bs=1440 count=1
+echo -e "$C grub-mkdevicemap --device-map=device.map $DEF"
+grub-mkdevicemap --device-map=device.map
+echo -e "$C cat device.map $DEF"
+cat device.map
+echo -e "$R Set root disk device adress example sda sdb !!without number!!$DEF"
+read varSD
+echo -e "$C grub-install --grub-setup=/bin/true /dev/${varSD} $DEF"
+grub-install --grub-setup=/bin/true /dev/${varSD}
+echo -e "$C grub-mkconfig -o /boot/grub/grub.cfg $DEF"
+grub-mkconfig -o /boot/grub/grub.cfg

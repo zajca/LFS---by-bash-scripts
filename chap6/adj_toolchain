@@ -32,6 +32,41 @@ waitUser
 #    x86_64) compareFiles $SCRIPTS_DIR/linker.ch6.1.test64 $TOOLS_DIR/testlink.ch6.1 ||  ;;
 #    i?86) compareFiles $SCRIPTS_DIR/linker.ch6.1.test $TOOLS_DIR/testlink.ch6.1 ;; 
 #esac
+grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
+
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$G /usr/lib/crt1.o succeeded $DEF"
+echo -e "$G /usr/lib/crti.o succeeded $DEF"
+echo -e "$G /usr/lib/crtn.o succeeded $DEF"
+waitUser
+
+grep -B1 '^ /usr/include' dummy.log
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$G #include <...> search starts here: $DEF"
+echo -e "$G /usr/include $DEF"
+waitUser
+
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$R and somethin similar with x86_64 $DEF"
+echo -e "$G SEARCH_DIR("/tools/i686-pc-linux-gnu/lib") $DEF"
+echo -e "$G SEARCH_DIR("/usr/lib") $DEF"
+echo -e "$G SEARCH_DIR("/lib"); $DEF"
+waitUser
+
+grep "/lib.*/libc.so.6 " dummy.log
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$R and somethin similar with x86_64 $DEF"
+echo -e "$G attempt to open /lib/libc.so.6 succeeded $DEF"
+waitUser
+
+grep found dummy.log
+echo -e "$R IF is everything OK, you should see somethink like this$DEF"
+echo -e "$R and somethin similar with x86_64 $DEF"
+echo -e "$G found ld-linux.so.2 at /lib/ld-linux.so.2 $DEF"
+waitUser
+
+
 
 } 2>&1 | tee $BUILD_DIR/LOG_LINKER_CH6.log
 
