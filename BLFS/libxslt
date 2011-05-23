@@ -4,9 +4,9 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
-NAME=libxml2
-PROGRAM=libxml2-2.7.7
-FILE=libxml2-2.7.7.tar.gz
+NAME=libxslt
+PROGRAM=libxslt-1.1.26
+FILE=libxslt-1.1.26.tar.gz
 EXT=gzip
 DLINK=http://xmlsoft.org/sources/${FILE}
 MD5=9abc9959823ca9ff904f1fbcf21df066
