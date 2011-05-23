@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /scripts/variables
+source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
