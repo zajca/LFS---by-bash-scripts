@@ -1,0 +1,45 @@
+#!/bin/bash
+
+source ./variables
+source $SCRIPTS_DIR/include/functions
+
+NAME=ruby
+PROGRAM=Ruby-1.9.1-p376
+FILE=ruby-1.9.1-p376.tar.bz2
+EXT=bzip
+DLINK=ftp://ftp.ruby-lang.org/pub/ruby/1.9/${FILE}
+MD5=e019ae9c643c5efe91be49e29781fb94
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+	./configure --prefix=/usr \
+            --enable-shared \
+            --enable-pthread \
+            --enable-install-doc
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

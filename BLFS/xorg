@@ -1,0 +1,638 @@
+#!/bin/bash
+
+source ./variables
+source $SCRIPTS_DIR/include/functions
+
+mkdir -v $BUILD_DIR/xc
+cd $BUILD_DIR/xc
+{
+
+export XORG_PREFIX="/usr"
+export XORG_CONFIG="--prefix=$XORG_PREFIX --sysconfdir=/etc \
+    --mandir=$XORG_PREFIX/share/man --localstatedir=/var"
+
+cat > /etc/profile.d/xorg.sh << "EOF" &&
+XORG_PREFIX="/usr"
+XORG_CONFIG="--prefix=$XORG_PREFIX \
+             --sysconfdir=/etc \
+             --mandir=$XORG_PREFIX/share/man \
+             --localstatedir=/var"
+export XORG_PREFIX XORG_CONFIG
+EOF
+chmod 644 /etc/profile.d/xorg.sh
+
+NAME=util-macros
+PROGRAM=util-macros-1.11.0
+FILE=util-macros-1.11.0.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/util/${FILE}
+MD5=22d5cdff672450cb6902e0d68c200dcb
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+	./configure $XORG_CONFIG
+
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+NAME=XorgProtocolHeaders
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/proto-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/proto-7.6-1.wget
+MD5=308a5476fc096a8a525d07279a6f6aa3
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+mkdir -v proto
+cd proto
+grep -v '^#' $SOURCES_DIR/proto-7.6-1.wget | wget -i- -c -B http://xorg.freedesktop.org/releases/individual/proto/
+md5sum -c $SOURCES_DIR/proto-7.6-1.md5
+
+for package in $(grep -v '^#' $SOURCES_DIR/proto-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make install
+  cd ..
+  rm -rf $packagedir
+	waitUser
+done 2>&1 | tee -a $BUILD_DIR/proto-7.5-2-compile.log
+
+NAME=makedepend
+PROGRAM=makedepend-1.0.3
+FILE=makedepend-1.0.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/util/${FILE}
+MD5=4e6cb97bbecfbb34f3f644a75e513093
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+NAME=libXau
+PROGRAM=libXau-1.0.6
+FILE=libXau-1.0.6.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/lib/${FILE}
+MD5=4a2cbd83727682f9ee1c1e719bac6adb
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+NAME=libXdmcp
+PROGRAM=libXdmcp-1.1.0
+FILE=libXdmcp-1.1.0.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/lib/${FILE}
+MD5=762b6bbaff7b7d0831ddb4f072f939a5
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=libpthread-stubs
+PROGRAM=libpthread-stubs-0.3
+FILE=libpthread-stubs-0.3.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=e8fa31b42e13f87e8f5a7a2b731db7ee
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=xcb-proto
+PROGRAM=xcb-proto-1.6
+FILE=xcb-proto-1.6.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=04313e1d914b44d0e457f6c494fc178b
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+install -dv -m755 ${XORG_PREFIX}/share/doc/xcb-proto-1.6 &&
+install -v -m644 doc/* ${XORG_PREFIX}/share/doc/xcb-proto-1.6
+
+cd $ROOT
+
+NAME=libxcb
+PROGRAM=libxcb-1.7
+FILE=libxcb-1.7.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=925699df361b99491165ebc12068056b
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.7
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=Xorg-Libraries
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir lib
+cd lib
+grep -v '^#' $SOURCES_DIR/lib-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/lib/
+md5sum -c $SOURCES_DIR/lib-7.6-1.md5
+
+for package in $(grep -v '^#' $SOURCES_DIR/lib-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  case "$packagedir" in
+  libX11-1.3.2 )
+    # Uncomment if you did not build libxcb
+    #CONFIGPARAMS="--without-xcb"
+  esac &&
+  ./configure $XORG_CONFIG $CONFIGPARAMS
+  make
+  make install
+  unset CONFIGPARAMS
+  ldconfig
+  cd ..
+  rm -rf $packagedir
+  waitUser
+done 2>&1 | tee -a ../lib-7.5-2-compile.log
+
+ln -sv $XORG_PREFIX/lib/X11 /usr/lib/X11 &&
+ln -sv $XORG_PREFIX/include/X11 /usr/include/X11 &&
+ln -sv $XORG_PREFIX /usr/X11R6
+
+cd $ROOT
+
+NAME=xcb-util
+PROGRAM=xcb-util-0.3.6
+FILE=xcb-util-0.3.6.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=dd8968b8ee613cb027a8ef1fcbdc8fc9
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=MesaLib
+PROGRAM=MesaLib-7.9
+FILE=MesaLib-7.9.tar.bz2
+EXT=bzip
+DLINK=ftp://ftp.freedesktop.org/pub/mesa/7.9/${FILE}
+pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-7.9-add_xdemos-2.patch
+MD5=82c740c49d572baa6da2b1a1eee90bca
+
+download ${DLINK}
+download ${pDLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+sed 's@FLAGS=\"-g@FLAGS=\"@' -i configure
+patch -Np1 -i $SOURCES_DIR/MesaLib-7.9-add_xdemos-2.patch
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG --enable-xcb
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+install -v -m755 -d ${XORG_PREFIX}/share/doc/MesaLib-7.9
+install -v -m644    docs/* \
+                    ${XORG_PREFIX}/share/doc/MesaLib-7.9
+ln -s -v ${XORG_PREFIX}/include/GL /usr/include
+cd $ROOT
+
+NAME=Xorg-Applications
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/app-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/app-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir app &&
+cd app &&
+grep -v '^#' $SOURCES_DIR/app-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/app/
+md5sum -c $SOURCES_DIR/app-7.6-1.md5
+
+for package in $(grep -v '^#' $SOURCES_DIR/app-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+done 2>&1 | tee -a ../app-7.5-2-compile.log
+
+cd $ROOT
+
+
+NAME=xcursor-themes
+PROGRAM=xcursor-themes-1.0.3
+FILE=xcursor-themes-1.0.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/data/${FILE}
+MD5=ba21aad0b353f1881f5069e423a44587
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=Xorg-Fonts
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/font-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/font-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+sed -i -e 's,#ifdef KDRIVESERVER,#if 1,' dix/dixfonts.c
+mkdir font &&
+cd font &&
+grep -v '^#' $SOURCES_DIR/font-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/font/
+md5sum -c $SOURCES_DIR/font-7.6-1.md5
+
+for package in $(grep -v '^#' $SOURCES_DIR/font-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+  rm -f $package
+done 2>&1 | tee -a ../font-7.5-2-compile.log
+
+install -v -d -m755 /usr/share/fonts &&
+ln -svn $XORG_PREFIX/share/fonts/X11/fonts/OTF /usr/share/fonts/X11-OTF
+ln -svn $XORG_PREFIX/share/fonts/X11/fonts/TTF /usr/share/fonts/X11-TTF
+
+cd $ROOT
+
+NAME=xkeyboard-config
+PROGRAM=xkeyboard-config-2.0
+FILE=xkeyboard-config-2.0.tar.bz2
+EXT=bzip
+DLINK=http://xlibs.freedesktop.org/xkbdesc/${FILE}
+MD5=bb8a98ee61cdc4bd835fdfd2b5cee3e6
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+/configure $XORG_CONFIG --with-xkb-rules-symlink=xorg
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.0
+install -v -m644 docs/{README,HOWTO}* \
+    $XORG_PREFIX/share/doc/xkeyboard-config-2.0
+
+cd $ROOT
+
+NAME=pixman
+PROGRAM=pixman-0.15.20
+FILE=pixman-0.15.20.tar.gz
+EXT=bzip
+DLINK=http://cairographics.org/releases/${FILE}
+MD5=613c95e7ddc8069b7aa2708f93219b7d
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+
+NAME=xorg-server
+PROGRAM=xorg-server-1.9.3
+FILE=xorg-server-1.9.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/xserver/${FILE}
+MD5=5bef6839a76d029204ab31aa2fcb5201
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG \
+    --with-module-dir=$XORG_PREFIX/lib/X11/modules \
+    --with-xkb-output=/var/lib/xkb \
+    --enable-install-setuid \
+    --disable-config-hal
+
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+
+NAME=xcursor-themes
+PROGRAM=xcursor-themes-1.0.3
+FILE=xcursor-themes-1.0.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/data/${FILE}
+MD5=ba21aad0b353f1881f5069e423a44587
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+
+NAME=Xorg-Drivers
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/driver-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/driver-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir driver
+cd driver
+grep -v '^#' $SOURCES_DIR/driver-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/driver/
+md5sum -c $SOURCES_DIR/driver-7.6-1.md5
+
+for package in $(grep -v '^#' $SOURCES_DIR/driver-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  case $packagedir in
+  xf86-input-evdev-[0-9]* | xf86-video-ati-[0-9]* | \
+  xf86-video-fbdev-[0-9]* | xf86-video-glint-[0-9]* | \
+  xf86-video-newport-[0-9]* )
+    sed -i -e "s/\xc3\xb8/\\\\[\/o]/" \
+           -e "s/\xc3\xa4/\\\\[:a]/" \
+           -e "s/\xc3\x9c/\\\\[:U]/" man/*.man
+    ;;
+  esac &&
+  case $packagedir in
+xf86-video-s3-[0-9]* | xf86-video-xgi-[0-9]* )
+    for file in `grep -Rl "xf86Version.h" *`
+    do
+        sed 's@xf86Version.h@xorgVersion.h@g' -i "$file"
+    done
+    ;;
+esac &&
+  ./configure $XORG_CONFIG \
+      --with-xorg-module-dir=$XORG_PREFIX/lib/X11/modules
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+done 2>&1 | tee -a ../driver-7.5-2-compile.log
+
+cd $ROOT
+
+NAME=xterm
+PROGRAM=xterm-267
+FILE=xterm-267.tgz
+EXT=bzip
+DLINK=ftp://invisible-island.net/xterm/${FILE}
+MD5=3945ab70cfa2a9e95804157ee1b0f8e8
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap &&
+echo -e '\tkbs=\\177,' >>terminfo &&
+TERMINFO=/usr/lib/terminfo ./configure $XORG_CONFIG \
+    --enable-luit --enable-wide-chars \
+    --with-app-defaults=/etc/X11/app-defaults &&
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+	make install-ti
+
+cat >> /etc/X11/app-defaults/XTerm << "EOF"
+*VT100*locale: true
+*VT100*faceName: Monospace
+*VT100*faceSize: 10
+*backarrowKeyIsErase: true
+*ptyInitialErase: true
+EOF
+
+cd $ROOT
+
+ln -vsf <$XORG_PREFIX> /usr/X11R6
+
+cd ~
+Xorg -configure
+
+X -retro -config ~/xorg.conf.new
+
+install -v -m644 ~/xorg.conf.new /etc/X11/xorg.conf
+
+cat > ~/.xinitrc << "EOF"
+# Begin .xinitrc file
+xterm  -g 80x40+0+0   &
+xclock -g 100x100-0+0 &
+twm
+EOF
+
+cat >> /etc/sysconfig/createfiles << "EOF"
+/tmp/.ICE-unix dir 1777 root root
+EOF
+
+

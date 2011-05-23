@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export ROOT=/
+export WAIT=1
+export MakeTests=0
+export SOURCES_DIR=/sources
+export BUILD_DIR=/build
+export TOOLS_DIR=/tools
+export SCRIPTS_DIR=/scripts
+export MAKEFLAGS='-j 3' #number of procesor cores
