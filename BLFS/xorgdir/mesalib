@@ -4,6 +4,10 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/libdrm
+source $SCRIPTS_DIR/BLFS/expat
+source $SCRIPTS_DIR/BLFS/talloc
+
 NAME=MesaLib
 PROGRAM=MesaLib-7.9
 FILE=MesaLib-7.9.tar.bz2

@@ -1,0 +1,61 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+source $SCRIPTS_DIR/BLFS/FreeType
+
+NAME=fontconfig
+PROGRAM=fontconfig-2.8.0
+FILE=fontconfig-2.8.0.tar.gz
+EXT=gzip
+DLINK=http://fontconfig.org/release/${FILE}
+MD5=f77e15a92006ddc2adbb06f840d591c0e
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --localstatedir=/var \
+            --disable-docs \
+            --without-add-fonts \
+            --docdir=/usr/share/doc/fontconfig-2.8.0
+
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+install -v -m755 \
+    -d /usr/share/{man/man{3,5},doc/fontconfig-2.8.0/fontconfig-devel} &&
+install -v -m644 fc-*/*.1          /usr/share/man/man1 &&
+install -v -m644 doc/*.3           /usr/share/man/man3 &&
+install -v -m644 doc/fonts-conf.5  /usr/share/man/man5 &&
+install -v -m644 doc/fontconfig-devel/* \
+    /usr/share/doc/fontconfig-2.8.0/fontconfig-devel &&
+install -v -m644 doc/*.{pdf,sgml,txt,html} \
+    /usr/share/doc/fontconfig-2.8.0
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

@@ -4,6 +4,8 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/intltool
+
 NAME=xkeyboard-config
 PROGRAM=xkeyboard-config-2.0
 FILE=xkeyboard-config-2.0.tar.bz2

@@ -5,32 +5,27 @@ source /scripts/BLFS/variables
 source $SCRIPTS_DIR/include/functions
 
 
-NAME=Python
-PROGRAM=Python-2.6.4
-FILE=Python-2.6.4.tar.bz2
+NAME=XML-Parser
+PROGRAM=XML-Parser-2.40
+FILE=XML-Parser-2.40.tar.gz
 EXT=bzip
-DLINK=http://www.python.org/ftp/python/2.6.4/${FILE}
-pFILE=Python-2.6.4-bdb_4.8-1.patch
-pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
-MD5=fee5408634a54e721a93531aba37f8c1
+DLINK=http://www.cpan.org/authors/id/C/CH/CHORNY/${FILE}
 
 download ${DLINK}
-waitUser
-check ${FILE} ${MD5}
 waitUser
 unpack ${EXT}
 
 cd $BUILD_DIR/$PROGRAM
 {
 
-	echo "$G $PROGRAM/configure   $DEF"
-	waitUser
+	echo "$G perl Makefile.PL  $DEF"
+perl Makefile.PL
 
 	StartMake
 	waitUser
 	make || exit 1
 
-	c_MakeTest tests || exit 1
+	make test || exit 1
 
 	StartMakeInstall
 	waitUser

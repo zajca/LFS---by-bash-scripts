@@ -4,7 +4,6 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
-
 NAME=Python
 PROGRAM=Python-2.6.4
 FILE=Python-2.6.4.tar.bz2
@@ -22,19 +21,22 @@ unpack ${EXT}
 
 cd $BUILD_DIR/$PROGRAM
 {
+sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" \
+     setup.py &&
+patch -Np1 -i $SOURCES_DIR/Python-2.6.4-bdb_4.8-1.patch
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-
+./configure --prefix=/usr --enable-shared
 	StartMake
 	waitUser
 	make || exit 1
-
-	c_MakeTest tests || exit 1
-
 	StartMakeInstall
 	waitUser
 	make install || exit 1
+chmod -v 755 /usr/lib/libpython2.6.so.1.0
+
+echo "export PYTHONDOCS=/usr/share/doc/Python-2.6.4/html" >> ~/.bashrc
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

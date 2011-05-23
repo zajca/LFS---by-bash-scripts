@@ -5,14 +5,14 @@ source /scripts/BLFS/variables
 source $SCRIPTS_DIR/include/functions
 
 
-NAME=Python
-PROGRAM=Python-2.6.4
-FILE=Python-2.6.4.tar.bz2
+NAME=expat
+PROGRAM=expat-2.0.1
+FILE=expat-2.0.1.tar.gz
 EXT=bzip
-DLINK=http://www.python.org/ftp/python/2.6.4/${FILE}
-pFILE=Python-2.6.4-bdb_4.8-1.patch
+DLINK=http://downloads.sourceforge.net/expat/${FILE}
+pFILE=expat-2.0.1-fixes-3.patch
 pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
-MD5=fee5408634a54e721a93531aba37f8c1
+MD5=ee8b492592568805593f81f8cdf2a04c
 
 download ${DLINK}
 waitUser
@@ -22,20 +22,18 @@ unpack ${EXT}
 
 cd $BUILD_DIR/$PROGRAM
 {
-
+patch -Np1 -i $SOURCES_DIR/$pFILE
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-
+./configure --prefix=/usr
 	StartMake
 	waitUser
 	make || exit 1
-
-	c_MakeTest tests || exit 1
-
 	StartMakeInstall
 	waitUser
 	make install || exit 1
-
+install -v -m755 -d /usr/share/doc/expat-2.0.1
+install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.0.1
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

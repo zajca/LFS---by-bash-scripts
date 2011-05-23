@@ -4,6 +4,8 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/python
+
 NAME=xcb-proto
 PROGRAM=xcb-proto-1.6
 FILE=xcb-proto-1.6.tar.bz2

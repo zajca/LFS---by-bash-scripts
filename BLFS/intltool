@@ -4,15 +4,14 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/XMLParser
 
-NAME=Python
-PROGRAM=Python-2.6.4
-FILE=Python-2.6.4.tar.bz2
-EXT=bzip
-DLINK=http://www.python.org/ftp/python/2.6.4/${FILE}
-pFILE=Python-2.6.4-bdb_4.8-1.patch
-pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
-MD5=fee5408634a54e721a93531aba37f8c1
+NAME=intltool
+PROGRAM=intltool-0.41.1
+FILE=intltool-0.41.1.tar.gz
+EXT=gzip
+DLINK=http://launchpad.net/intltool/trunk/0.41.1/+download/${FILE}
+MD5=d6c91bf06681919ccfdf3624035b75dc
 
 download ${DLINK}
 waitUser
@@ -25,17 +24,15 @@ cd $BUILD_DIR/$PROGRAM
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-
+./configure --prefix=/usr
 	StartMake
 	waitUser
 	make || exit 1
-
-	c_MakeTest tests || exit 1
-
 	StartMakeInstall
 	waitUser
 	make install || exit 1
-
+install -v -m644 -D doc/I18N-HOWTO \
+    /usr/share/doc/intltool-0.41.1/I18N-HOWTO
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]
 	then

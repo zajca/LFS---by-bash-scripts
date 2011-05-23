@@ -4,15 +4,12 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
-
-NAME=Python
-PROGRAM=Python-2.6.4
-FILE=Python-2.6.4.tar.bz2
+NAME=libpng
+PROGRAM=libpng-1.2.44
+FILE=libpng-1.2.44.tar.bz2
 EXT=bzip
-DLINK=http://www.python.org/ftp/python/2.6.4/${FILE}
-pFILE=Python-2.6.4-bdb_4.8-1.patch
-pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
-MD5=fee5408634a54e721a93531aba37f8c1
+DLINK=http://downloads.sourceforge.net/libpng/${FILE}
+MD5=e3ac7879d62ad166a6f0c7441390d12b
 
 download ${DLINK}
 waitUser
@@ -25,16 +22,17 @@ cd $BUILD_DIR/$PROGRAM
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-
+./configure --prefix=/usr
 	StartMake
 	waitUser
 	make || exit 1
 
-	c_MakeTest tests || exit 1
-
 	StartMakeInstall
 	waitUser
 	make install || exit 1
+install -v -m755 -d /usr/share/doc/libpng-1.2.44
+install -v -m644    README libpng-1.2.44.txt \
+                    /usr/share/doc/libpng-1.2.44
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

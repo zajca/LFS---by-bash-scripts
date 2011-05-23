@@ -4,6 +4,8 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/fontconfig
+
 NAME=Xorg-Libraries
 md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.md5
 wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.wget

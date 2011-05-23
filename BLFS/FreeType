@@ -4,15 +4,12 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
-
-NAME=Python
-PROGRAM=Python-2.6.4
-FILE=Python-2.6.4.tar.bz2
+NAME=freetype
+PROGRAM=freetype-2.4.4
+FILE=freetype-2.4.4.tar.bz2
 EXT=bzip
-DLINK=http://www.python.org/ftp/python/2.6.4/${FILE}
-pFILE=Python-2.6.4-bdb_4.8-1.patch
-pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
-MD5=fee5408634a54e721a93531aba37f8c1
+DLINK=http://downloads.sourceforge.net/freetype/${FILE}
+MD5=b3e2b6e2f1c3e0dffa1fd2a0f848b671
 
 download ${DLINK}
 waitUser
@@ -22,19 +19,21 @@ unpack ${EXT}
 
 cd $BUILD_DIR/$PROGRAM
 {
-
+sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' \
+          include/freetype/config/ftoption.h &&
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
+./configure --prefix=/usr
 
 	StartMake
 	waitUser
 	make || exit 1
 
-	c_MakeTest tests || exit 1
-
 	StartMakeInstall
 	waitUser
 	make install || exit 1
+install -v -m755 -d /usr/share/doc/freetype-2.4.4 
+cp -v -R docs/*     /usr/share/doc/freetype-2.4.4
 
 } 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
 if [ $PIPESTATUS -ne 0 ]

@@ -4,24 +4,26 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
-source $SCRIPTS_DIR/BLFS/Gperf
 
-NAME=xcb-util
-PROGRAM=xcb-util-0.3.6
-FILE=xcb-util-0.3.6.tar.bz2
+NAME=talloc
+PROGRAM=talloc-2.0.1
+FILE=talloc-2.0.1.tar.gz
 EXT=bzip
-DLINK=http://xcb.freedesktop.org/dist/${FILE}
-MD5=dd8968b8ee613cb027a8ef1fcbdc8fc9
+DLINK=http://samba.org/ftp/talloc/${FILE}
+MD5=c6e736540145ca58cb3dcb42f91cf57b
 
 download ${DLINK}
 waitUser
 check ${FILE} ${MD5}
 waitUser
 unpack ${EXT}
+
 cd $BUILD_DIR/$PROGRAM
+{
+
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-./configure $XORG_CONFIG
+./configure --prefix=/usr
 	StartMake
 	waitUser
 	make || exit 1
@@ -29,5 +31,14 @@ cd $BUILD_DIR/$PROGRAM
 	StartMakeInstall
 	waitUser
 	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
 
 cd $ROOT
