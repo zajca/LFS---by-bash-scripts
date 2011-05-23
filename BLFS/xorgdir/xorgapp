@@ -19,12 +19,24 @@ grep -v '^#' $SOURCES_DIR/app-7.6-1.wget | wget -i- -c \
     -B http://xorg.freedesktop.org/releases/individual/app/
 md5sum -c $SOURCES_DIR/app-7.6-1.md5
 waitUser
-for package in $(grep -v '^#' $SOURCES_DIR/app-7.5-2.wget)
+for package in $(grep -v '^#' $SOURCES_DIR/app-7.6-1.wget)
 do
   packagedir=${package%.tar.bz2}
   tar -xf $package
   cd $packagedir
-  ./configure $XORG_CONFIG
+  case "$packagedir" in
+	  twm-[0-9]* )
+		       sed -e '/^rcdir =/s,^\(rcdir = \).*,\1/etc/X11/app-defaults,' \
+		           -i src/Makefile.in &&
+		       ./configure $XORG_CONFIG
+		       ;;
+	xinit-[0-9]* )
+		       ./configure $XORG_CONFIG --with-xinitdir=/etc/X11/app-defaults
+		       ;;
+		   * )
+		       ./configure $XORG_CONFIG
+		       ;;
+  esac
   make
   make install
   cd ..
