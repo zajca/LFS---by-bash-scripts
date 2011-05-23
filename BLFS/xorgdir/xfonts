@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=Xorg-Fonts
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/font-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/font-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+sed -i -e 's,#ifdef KDRIVESERVER,#if 1,' dix/dixfonts.c
+mkdir font
+cd font
+grep -v '^#' $SOURCES_DIR/font-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/font/
+md5sum -c $SOURCES_DIR/font-7.6-1.md5
+waitUser
+for package in $(grep -v '^#' $SOURCES_DIR/font-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+  rm -f $package
+waitUser
+done 2>&1 | tee -a ../font-7.5-2-compile.log
+
+install -v -d -m755 /usr/share/fonts
+ln -svn $XORG_PREFIX/share/fonts/X11/fonts/OTF /usr/share/fonts/X11-OTF
+ln -svn $XORG_PREFIX/share/fonts/X11/fonts/TTF /usr/share/fonts/X11-TTF
+waitUser
+cd $ROOT

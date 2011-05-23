@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=libxcb
+PROGRAM=libxcb-1.7
+FILE=libxcb-1.7.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=925699df361b99491165ebc12068056b
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.7
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+

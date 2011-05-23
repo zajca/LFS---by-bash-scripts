@@ -1,0 +1,36 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=xorg-server
+PROGRAM=xorg-server-1.9.3
+FILE=xorg-server-1.9.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/xserver/${FILE}
+MD5=5bef6839a76d029204ab31aa2fcb5201
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG \
+    --with-module-dir=$XORG_PREFIX/lib/X11/modules \
+    --with-xkb-output=/var/lib/xkb \
+    --enable-install-setuid \
+    --disable-config-hal
+
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT

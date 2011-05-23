@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=libXau
+PROGRAM=libXau-1.0.6
+FILE=libXau-1.0.6.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/lib/${FILE}
+MD5=4a2cbd83727682f9ee1c1e719bac6adb
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1

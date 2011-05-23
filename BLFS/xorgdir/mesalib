@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=MesaLib
+PROGRAM=MesaLib-7.9
+FILE=MesaLib-7.9.tar.bz2
+EXT=bzip
+DLINK=ftp://ftp.freedesktop.org/pub/mesa/7.9/${FILE}
+pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-7.9-add_xdemos-2.patch
+MD5=82c740c49d572baa6da2b1a1eee90bca
+
+download ${DLINK}
+download ${pDLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+sed 's@FLAGS=\"-g@FLAGS=\"@' -i configure
+patch -Np1 -i $SOURCES_DIR/MesaLib-7.9-add_xdemos-2.patch
+waitUser
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG --enable-xcb
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+install -v -m755 -d ${XORG_PREFIX}/share/doc/MesaLib-7.9
+install -v -m644    docs/* \
+                    ${XORG_PREFIX}/share/doc/MesaLib-7.9
+ln -s -v ${XORG_PREFIX}/include/GL /usr/include
+waitUser
+cd $ROOT

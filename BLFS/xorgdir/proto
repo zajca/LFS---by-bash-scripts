@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=XorgProtocolHeaders
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/proto-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/proto-7.6-1.wget
+MD5=308a5476fc096a8a525d07279a6f6aa3
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+mkdir -v proto
+cd proto
+grep -v '^#' $SOURCES_DIR/proto-7.6-1.wget | wget -i- -c -B http://xorg.freedesktop.org/releases/individual/proto/
+md5sum -c $SOURCES_DIR/proto-7.6-1.md5
+waitUser
+for package in $(grep -v '^#' $SOURCES_DIR/proto-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make install
+  cd ..
+  rm -rf $packagedir
+	waitUser
+done 2>&1 | tee -a $BUILD_DIR/proto-7.5-2-compile.log
+

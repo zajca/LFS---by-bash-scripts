@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=xcb-proto
+PROGRAM=xcb-proto-1.6
+FILE=xcb-proto-1.6.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=04313e1d914b44d0e457f6c494fc178b
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+install -dv -m755 ${XORG_PREFIX}/share/doc/xcb-proto-1.6
+install -v -m644 doc/* ${XORG_PREFIX}/share/doc/xcb-proto-1.6
+
+cd $ROOT
+

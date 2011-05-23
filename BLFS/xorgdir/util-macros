@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=util-macros
+PROGRAM=util-macros-1.11.0
+FILE=util-macros-1.11.0.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/util/${FILE}
+MD5=22d5cdff672450cb6902e0d68c200dcb
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+	./configure $XORG_CONFIG
+
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+

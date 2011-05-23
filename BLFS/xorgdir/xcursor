@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=xcursor-themes
+PROGRAM=xcursor-themes-1.0.3
+FILE=xcursor-themes-1.0.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/data/${FILE}
+MD5=ba21aad0b353f1881f5069e423a44587
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT

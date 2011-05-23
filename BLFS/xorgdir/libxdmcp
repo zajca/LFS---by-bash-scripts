@@ -1,0 +1,32 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=libXdmcp
+PROGRAM=libXdmcp-1.1.0
+FILE=libXdmcp-1.1.0.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/lib/${FILE}
+MD5=762b6bbaff7b7d0831ddb4f072f939a5
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT
+

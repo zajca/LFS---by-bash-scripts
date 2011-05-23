@@ -1,0 +1,35 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=Xorg-Applications
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/app-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/app-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir app
+cd app
+grep -v '^#' $SOURCES_DIR/app-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/app/
+md5sum -c $SOURCES_DIR/app-7.6-1.md5
+waitUser
+for package in $(grep -v '^#' $SOURCES_DIR/app-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  ./configure $XORG_CONFIG
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+waitUser
+done 2>&1 | tee -a ../app-7.5-2-compile.log
+
+cd $ROOT

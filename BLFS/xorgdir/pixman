@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=pixman
+PROGRAM=pixman-0.15.20
+FILE=pixman-0.15.20.tar.gz
+EXT=bzip
+DLINK=http://cairographics.org/releases/${FILE}
+MD5=613c95e7ddc8069b7aa2708f93219b7d
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT

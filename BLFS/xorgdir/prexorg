@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+mkdir -v $BUILD_DIR/xc
+mkdir -v /etc/profile.d
+cd $BUILD_DIR/xc
+
+export XORG_PREFIX="/usr"
+export XORG_CONFIG="--prefix=$XORG_PREFIX --sysconfdir=/etc \
+    --mandir=$XORG_PREFIX/share/man --localstatedir=/var"
+
+cat > /etc/profile.d/xorg.sh << "EOF"
+XORG_PREFIX="/usr"
+XORG_CONFIG="--prefix=$XORG_PREFIX \
+             --sysconfdir=/etc \
+             --mandir=$XORG_PREFIX/share/man \
+             --localstatedir=/var"
+export XORG_PREFIX XORG_CONFIG
+EOF
+chmod 644 /etc/profile.d/xorg.sh

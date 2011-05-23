@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=xcb-util
+PROGRAM=xcb-util-0.3.6
+FILE=xcb-util-0.3.6.tar.bz2
+EXT=bzip
+DLINK=http://xcb.freedesktop.org/dist/${FILE}
+MD5=dd8968b8ee613cb027a8ef1fcbdc8fc9
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+cd $ROOT

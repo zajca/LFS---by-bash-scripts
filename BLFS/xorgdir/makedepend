@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=makedepend
+PROGRAM=makedepend-1.0.3
+FILE=makedepend-1.0.3.tar.bz2
+EXT=bzip
+DLINK=http://xorg.freedesktop.org/releases/individual/util/${FILE}
+MD5=4e6cb97bbecfbb34f3f644a75e513093
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure $XORG_CONFIG
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+

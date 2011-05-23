@@ -1,0 +1,36 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=xkeyboard-config
+PROGRAM=xkeyboard-config-2.0
+FILE=xkeyboard-config-2.0.tar.bz2
+EXT=bzip
+DLINK=http://xlibs.freedesktop.org/xkbdesc/${FILE}
+MD5=bb8a98ee61cdc4bd835fdfd2b5cee3e6
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+/configure $XORG_CONFIG --with-xkb-rules-symlink=xorg
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.0
+install -v -m644 docs/{README,HOWTO}* \
+    $XORG_PREFIX/share/doc/xkeyboard-config-2.0
+
+cd $ROOT
+

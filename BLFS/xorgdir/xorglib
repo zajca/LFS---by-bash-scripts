@@ -1,0 +1,46 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=Xorg-Libraries
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/lib-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir lib
+cd lib
+grep -v '^#' $SOURCES_DIR/lib-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/lib/
+md5sum -c $SOURCES_DIR/lib-7.6-1.md5
+waitUser
+for package in $(grep -v '^#' $SOURCES_DIR/lib-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  case "$packagedir" in
+  libX11-1.3.2 )
+    # Uncomment if you did not build libxcb
+    #CONFIGPARAMS="--without-xcb"
+  esac
+  ./configure $XORG_CONFIG $CONFIGPARAMS
+  make
+  make install
+  unset CONFIGPARAMS
+  ldconfig
+  cd ..
+  rm -rf $packagedir
+  waitUser
+done 2>&1 | tee -a ../lib-7.5-2-compile.log
+
+ln -sv $XORG_PREFIX/lib/X11 /usr/lib/X11
+ln -sv $XORG_PREFIX/include/X11 /usr/include/X11
+ln -sv $XORG_PREFIX /usr/X11R6
+waitUser
+cd $ROOT

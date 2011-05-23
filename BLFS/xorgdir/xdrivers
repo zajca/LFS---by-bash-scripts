@@ -1,0 +1,53 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+NAME=Xorg-Drivers
+md5DLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/driver-7.6-1.md5
+wgetDLINK=http://anduin.linuxfromscratch.org/files/BLFS/svn/xorg/driver-7.6-1.wget
+
+download ${md5DLINK}
+download ${wgetDLINK}
+waitUser
+cd $BUILD_DIR
+
+mkdir driver
+cd driver
+grep -v '^#' $SOURCES_DIR/driver-7.6-1.wget | wget -i- -c \
+    -B http://xorg.freedesktop.org/releases/individual/driver/
+md5sum -c $SOURCES_DIR/driver-7.6-1.md5
+waitUser
+for package in $(grep -v '^#' $SOURCES_DIR/driver-7.5-2.wget)
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf $package
+  cd $packagedir
+  case $packagedir in
+  xf86-input-evdev-[0-9]* | xf86-video-ati-[0-9]* | \
+  xf86-video-fbdev-[0-9]* | xf86-video-glint-[0-9]* | \
+  xf86-video-newport-[0-9]* )
+    sed -i -e "s/\xc3\xb8/\\\\[\/o]/" \
+           -e "s/\xc3\xa4/\\\\[:a]/" \
+           -e "s/\xc3\x9c/\\\\[:U]/" man/*.man
+    ;;
+  esac
+  case $packagedir in
+xf86-video-s3-[0-9]* | xf86-video-xgi-[0-9]* )
+    for file in `grep -Rl "xf86Version.h" *`
+    do
+        sed 's@xf86Version.h@xorgVersion.h@g' -i "$file"
+    done
+    ;;
+esac
+  ./configure $XORG_CONFIG \
+      --with-xorg-module-dir=$XORG_PREFIX/lib/X11/modules
+  make
+  make install
+  cd ..
+  rm -rf $packagedir
+waitUser
+done 2>&1 | tee -a ../driver-7.5-2-compile.log
+
+cd $ROOT
