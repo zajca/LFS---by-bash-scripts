@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source ./variables
+source /scripts/variables
+
 source $SCRIPTS_DIR/include/functions
 
 mkdir -v $BUILD_DIR/xc
@@ -11,7 +12,7 @@ export XORG_PREFIX="/usr"
 export XORG_CONFIG="--prefix=$XORG_PREFIX --sysconfdir=/etc \
     --mandir=$XORG_PREFIX/share/man --localstatedir=/var"
 
-cat > /etc/profile.d/xorg.sh << "EOF" &&
+cat > /etc/profile.d/xorg.sh << "EOF"
 XORG_PREFIX="/usr"
 XORG_CONFIG="--prefix=$XORG_PREFIX \
              --sysconfdir=/etc \
@@ -59,7 +60,7 @@ mkdir -v proto
 cd proto
 grep -v '^#' $SOURCES_DIR/proto-7.6-1.wget | wget -i- -c -B http://xorg.freedesktop.org/releases/individual/proto/
 md5sum -c $SOURCES_DIR/proto-7.6-1.md5
-
+waitUser
 for package in $(grep -v '^#' $SOURCES_DIR/proto-7.5-2.wget)
 do
   packagedir=${package%.tar.bz2}
@@ -195,7 +196,7 @@ cd $BUILD_DIR/$PROGRAM
 	StartMakeInstall
 	waitUser
 	make install || exit 1
-install -dv -m755 ${XORG_PREFIX}/share/doc/xcb-proto-1.6 &&
+install -dv -m755 ${XORG_PREFIX}/share/doc/xcb-proto-1.6
 install -v -m644 doc/* ${XORG_PREFIX}/share/doc/xcb-proto-1.6
 
 cd $ROOT
@@ -240,7 +241,7 @@ cd lib
 grep -v '^#' $SOURCES_DIR/lib-7.6-1.wget | wget -i- -c \
     -B http://xorg.freedesktop.org/releases/individual/lib/
 md5sum -c $SOURCES_DIR/lib-7.6-1.md5
-
+waitUser
 for package in $(grep -v '^#' $SOURCES_DIR/lib-7.5-2.wget)
 do
   packagedir=${package%.tar.bz2}
@@ -250,7 +251,7 @@ do
   libX11-1.3.2 )
     # Uncomment if you did not build libxcb
     #CONFIGPARAMS="--without-xcb"
-  esac &&
+  esac
   ./configure $XORG_CONFIG $CONFIGPARAMS
   make
   make install
@@ -261,10 +262,10 @@ do
   waitUser
 done 2>&1 | tee -a ../lib-7.5-2-compile.log
 
-ln -sv $XORG_PREFIX/lib/X11 /usr/lib/X11 &&
-ln -sv $XORG_PREFIX/include/X11 /usr/include/X11 &&
+ln -sv $XORG_PREFIX/lib/X11 /usr/lib/X11
+ln -sv $XORG_PREFIX/include/X11 /usr/include/X11
 ln -sv $XORG_PREFIX /usr/X11R6
-
+waitUser
 cd $ROOT
 
 NAME=xcb-util
@@ -310,6 +311,7 @@ unpack ${EXT}
 cd $BUILD_DIR/$PROGRAM
 sed 's@FLAGS=\"-g@FLAGS=\"@' -i configure
 patch -Np1 -i $SOURCES_DIR/MesaLib-7.9-add_xdemos-2.patch
+waitUser
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
 ./configure $XORG_CONFIG --enable-xcb
@@ -324,6 +326,7 @@ install -v -m755 -d ${XORG_PREFIX}/share/doc/MesaLib-7.9
 install -v -m644    docs/* \
                     ${XORG_PREFIX}/share/doc/MesaLib-7.9
 ln -s -v ${XORG_PREFIX}/include/GL /usr/include
+waitUser
 cd $ROOT
 
 NAME=Xorg-Applications
@@ -335,12 +338,12 @@ download ${wgetDLINK}
 waitUser
 cd $BUILD_DIR
 
-mkdir app &&
-cd app &&
+mkdir app
+cd app
 grep -v '^#' $SOURCES_DIR/app-7.6-1.wget | wget -i- -c \
     -B http://xorg.freedesktop.org/releases/individual/app/
 md5sum -c $SOURCES_DIR/app-7.6-1.md5
-
+waitUser
 for package in $(grep -v '^#' $SOURCES_DIR/app-7.5-2.wget)
 do
   packagedir=${package%.tar.bz2}
@@ -351,6 +354,7 @@ do
   make install
   cd ..
   rm -rf $packagedir
+waitUser
 done 2>&1 | tee -a ../app-7.5-2-compile.log
 
 cd $ROOT
@@ -391,12 +395,12 @@ download ${wgetDLINK}
 waitUser
 cd $BUILD_DIR
 sed -i -e 's,#ifdef KDRIVESERVER,#if 1,' dix/dixfonts.c
-mkdir font &&
-cd font &&
+mkdir font
+cd font
 grep -v '^#' $SOURCES_DIR/font-7.6-1.wget | wget -i- -c \
     -B http://xorg.freedesktop.org/releases/individual/font/
 md5sum -c $SOURCES_DIR/font-7.6-1.md5
-
+waitUser
 for package in $(grep -v '^#' $SOURCES_DIR/font-7.5-2.wget)
 do
   packagedir=${package%.tar.bz2}
@@ -408,12 +412,13 @@ do
   cd ..
   rm -rf $packagedir
   rm -f $package
+waitUser
 done 2>&1 | tee -a ../font-7.5-2-compile.log
 
-install -v -d -m755 /usr/share/fonts &&
+install -v -d -m755 /usr/share/fonts
 ln -svn $XORG_PREFIX/share/fonts/X11/fonts/OTF /usr/share/fonts/X11-OTF
 ln -svn $XORG_PREFIX/share/fonts/X11/fonts/TTF /usr/share/fonts/X11-TTF
-
+waitUser
 cd $ROOT
 
 NAME=xkeyboard-config
@@ -545,7 +550,7 @@ cd driver
 grep -v '^#' $SOURCES_DIR/driver-7.6-1.wget | wget -i- -c \
     -B http://xorg.freedesktop.org/releases/individual/driver/
 md5sum -c $SOURCES_DIR/driver-7.6-1.md5
-
+waitUser
 for package in $(grep -v '^#' $SOURCES_DIR/driver-7.5-2.wget)
 do
   packagedir=${package%.tar.bz2}
@@ -559,7 +564,7 @@ do
            -e "s/\xc3\xa4/\\\\[:a]/" \
            -e "s/\xc3\x9c/\\\\[:U]/" man/*.man
     ;;
-  esac &&
+  esac
   case $packagedir in
 xf86-video-s3-[0-9]* | xf86-video-xgi-[0-9]* )
     for file in `grep -Rl "xf86Version.h" *`
@@ -567,13 +572,14 @@ xf86-video-s3-[0-9]* | xf86-video-xgi-[0-9]* )
         sed 's@xf86Version.h@xorgVersion.h@g' -i "$file"
     done
     ;;
-esac &&
+esac
   ./configure $XORG_CONFIG \
       --with-xorg-module-dir=$XORG_PREFIX/lib/X11/modules
   make
   make install
   cd ..
   rm -rf $packagedir
+waitUser
 done 2>&1 | tee -a ../driver-7.5-2-compile.log
 
 cd $ROOT
@@ -591,11 +597,11 @@ check ${FILE} ${MD5}
 waitUser
 unpack ${EXT}
 cd $BUILD_DIR/$PROGRAM
-sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap &&
-echo -e '\tkbs=\\177,' >>terminfo &&
+sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap
+echo -e '\tkbs=\\177,' >>terminfo
 TERMINFO=/usr/lib/terminfo ./configure $XORG_CONFIG \
     --enable-luit --enable-wide-chars \
-    --with-app-defaults=/etc/X11/app-defaults &&
+    --with-app-defaults=/etc/X11/app-defaults
 	StartMake
 	waitUser
 	make || exit 1
@@ -603,8 +609,9 @@ TERMINFO=/usr/lib/terminfo ./configure $XORG_CONFIG \
 	StartMakeInstall
 	waitUser
 	make install || exit 1
+waitUser
 	make install-ti
-
+waitUser
 cat >> /etc/X11/app-defaults/XTerm << "EOF"
 *VT100*locale: true
 *VT100*faceName: Monospace
@@ -616,14 +623,14 @@ EOF
 cd $ROOT
 
 ln -vsf <$XORG_PREFIX> /usr/X11R6
-
+waitUser
 cd ~
 Xorg -configure
-
+waitUser
 X -retro -config ~/xorg.conf.new
-
+waitUser
 install -v -m644 ~/xorg.conf.new /etc/X11/xorg.conf
-
+waitUser
 cat > ~/.xinitrc << "EOF"
 # Begin .xinitrc file
 xterm  -g 80x40+0+0   &
