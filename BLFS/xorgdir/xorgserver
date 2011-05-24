@@ -4,6 +4,8 @@ source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
 
+source $SCRIPTS_DIR/BLFS/OpenSSL
+
 NAME=xorg-server
 PROGRAM=xorg-server-1.9.3
 FILE=xorg-server-1.9.3.tar.bz2

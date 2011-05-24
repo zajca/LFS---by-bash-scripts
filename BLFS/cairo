@@ -5,11 +5,12 @@ source /scripts/BLFS/variables
 source $SCRIPTS_DIR/include/functions
 
 source $SCRIPTS_DIR/BLFS/libpng
+source $SCRIPTS_DIR/BLFS/pixman
 
 NAME=cairo
 PROGRAM=cairo-1.8.10
 FILE=cairo-1.8.10.tar.gz
-EXT=bzip
+EXT=gzip
 DLINK=http://cairographics.org/releases/${FILE}
 MD5=b60a82f405f9400bbfdcf850b1728d25
 

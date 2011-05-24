@@ -7,13 +7,15 @@ source $SCRIPTS_DIR/include/functions
 source $SCRIPTS_DIR/BLFS/libdrm
 source $SCRIPTS_DIR/BLFS/expat
 source $SCRIPTS_DIR/BLFS/talloc
+source $SCRIPTS_DIR/BLFS/libxml
 
 NAME=MesaLib
-PROGRAM=MesaLib-7.9
+PROGRAM=Mesa-7.9
 FILE=MesaLib-7.9.tar.bz2
 EXT=bzip
 DLINK=ftp://ftp.freedesktop.org/pub/mesa/7.9/${FILE}
-pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-7.9-add_xdemos-2.patch
+pFILE=MesaLib-7.9-add_xdemos-2.patch
+pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
 MD5=82c740c49d572baa6da2b1a1eee90bca
 
 download ${DLINK}
@@ -24,7 +26,7 @@ waitUser
 unpack ${EXT}
 cd $BUILD_DIR/$PROGRAM
 sed 's@FLAGS=\"-g@FLAGS=\"@' -i configure
-patch -Np1 -i $SOURCES_DIR/MesaLib-7.9-add_xdemos-2.patch
+patch -Np1 -i $SOURCES_DIR/$pFILE
 waitUser
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser

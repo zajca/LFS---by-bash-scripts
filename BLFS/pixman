@@ -5,12 +5,12 @@ source /scripts/BLFS/variables
 source $SCRIPTS_DIR/include/functions
 
 
-NAME=talloc
-PROGRAM=talloc-2.0.1
-FILE=talloc-2.0.1.tar.gz
+NAME=pixman
+PROGRAM=pixman-0.16.6
+FILE=pixman-0.16.6.tar.gz
 EXT=gzip
-DLINK=http://samba.org/ftp/talloc/${FILE}
-MD5=c6e736540145ca58cb3dcb42f91cf57b
+DLINK=http://cairographics.org/releases/${FILE}
+MD5=17fed8b3888d38ec53ce35e0addfc34b
 
 download ${DLINK}
 waitUser

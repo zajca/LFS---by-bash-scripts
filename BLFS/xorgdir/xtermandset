@@ -7,7 +7,7 @@ source $SCRIPTS_DIR/include/functions
 NAME=xterm
 PROGRAM=xterm-267
 FILE=xterm-267.tgz
-EXT=bzip
+EXT=gzip
 DLINK=ftp://invisible-island.net/xterm/${FILE}
 MD5=3945ab70cfa2a9e95804157ee1b0f8e8
 

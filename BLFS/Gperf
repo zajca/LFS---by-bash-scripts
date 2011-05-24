@@ -24,7 +24,7 @@ cd $BUILD_DIR/$PROGRAM
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-/configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.0.4
+./configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.0.4
 	StartMake
 	waitUser
 	make || exit 1

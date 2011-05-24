@@ -14,6 +14,7 @@ pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
 MD5=fee5408634a54e721a93531aba37f8c1
 
 download ${DLINK}
+download ${pDLINK}
 waitUser
 check ${FILE} ${MD5}
 waitUser
@@ -23,7 +24,7 @@ cd $BUILD_DIR/$PROGRAM
 {
 sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" \
      setup.py &&
-patch -Np1 -i $SOURCES_DIR/Python-2.6.4-bdb_4.8-1.patch
+patch -Np1 -i $SOURCES_DIR/$pFILE
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser

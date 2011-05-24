@@ -8,7 +8,7 @@ source $SCRIPTS_DIR/include/functions
 NAME=XML-Parser
 PROGRAM=XML-Parser-2.40
 FILE=XML-Parser-2.40.tar.gz
-EXT=bzip
+EXT=gzip
 DLINK=http://www.cpan.org/authors/id/C/CH/CHORNY/${FILE}
 
 download ${DLINK}

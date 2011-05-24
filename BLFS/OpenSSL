@@ -1,0 +1,66 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+
+NAME=openssl
+PROGRAM=openssl-1.0.0d
+FILE=openssl-1.0.0d.tar.gz
+EXT=gzip
+DLINK=http://www.openssl.org/source/${FILE}
+pFILE=Python-2.6.4-bdb_4.8-1.patch
+pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
+bFILE=BLFS-ca-bundle-3.12.9.0.tar.bz2
+bDLINK=http://anduin.linuxfromscratch.org/files/BLFS/${bFILE}
+bMD5=83493398428df943364aa41c609f51f7
+MD5=40b6ea380cc8a5bf9734c2f8bf7e701e
+
+download ${DLINK}
+download ${bDLINK}
+download ${pDLINK}
+waitUser
+check ${FILE} ${MD5}
+check ${bFILE} ${bMD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+patch -Np1 -i $SOURCES_DIR/$pFILE
+tar -vxf $SOURCES_DIR/$bFILE
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./config --prefix=/usr         \
+         --openssldir=/etc/ssl \
+         shared                \
+         zlib-dynamic
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+make MANDIR=/usr/share/man install || exit 1
+cp -v -r certs /etc/ssl  
+install -v -d -m755 /usr/share/doc/openssl-1.0.0d
+cp      -v -r       doc/{HOWTO,README,*.{txt,html,gif}} \
+                    /usr/share/doc/openssl-1.0.0d
+
+for pem in /etc/ssl/certs/*.pem
+do
+   cat $pem
+   echo ""
+done > /etc/ssl/ca-bundle.crt
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

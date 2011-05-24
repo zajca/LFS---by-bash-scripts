@@ -21,7 +21,7 @@ unpack ${EXT}
 cd $BUILD_DIR/$PROGRAM
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-/configure $XORG_CONFIG --with-xkb-rules-symlink=xorg
+./configure $XORG_CONFIG --with-xkb-rules-symlink=xorg
 	StartMake
 	waitUser
 	make || exit 1

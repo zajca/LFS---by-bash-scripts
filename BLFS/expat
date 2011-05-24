@@ -8,13 +8,14 @@ source $SCRIPTS_DIR/include/functions
 NAME=expat
 PROGRAM=expat-2.0.1
 FILE=expat-2.0.1.tar.gz
-EXT=bzip
+EXT=gzip
 DLINK=http://downloads.sourceforge.net/expat/${FILE}
 pFILE=expat-2.0.1-fixes-3.patch
 pDLINK=http://www.linuxfromscratch.org/patches/blfs/svn/${pFILE}
 MD5=ee8b492592568805593f81f8cdf2a04c
 
 download ${DLINK}
+download ${pDLINK}
 waitUser
 check ${FILE} ${MD5}
 waitUser
