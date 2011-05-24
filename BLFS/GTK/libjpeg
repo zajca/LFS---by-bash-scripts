@@ -1,0 +1,44 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+
+NAME=jpegsrc
+PROGRAM=jpeg-8b
+FILE=jpegsrc.v8b.tar.gz
+EXT=gzip
+DLINK=http://www.ijg.org/files/${FILE}
+MD5=e022acbc5b36cd2cb70785f5b575661e
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

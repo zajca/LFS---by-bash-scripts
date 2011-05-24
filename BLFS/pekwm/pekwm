@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+
+NAME=pekwm
+PROGRAM=pekwm-0.1.13-rc1
+FILE=pekwm-0.1.13-rc1.tar.bz2
+EXT=bzip
+DLINK=http://www.pekwm.org/projects/pekwm/files/${FILE}
+
+download ${DLINK}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --disable-xinerama --disable-xrandr --disable-image-jpeg
+	StartMake
+	waitUser
+	make || exit 1
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

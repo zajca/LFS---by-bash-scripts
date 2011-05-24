@@ -1,0 +1,45 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+source $SCRIPTS_DIR/BLFS/tint/ATK
+source $SCRIPTS_DIR/BLFS/tint/tiff
+source $SCRIPTS_DIR/BLFS/tint/jbigkit
+
+NAME=gtk+
+PROGRAM=gtk+-2.20.1
+FILE=gtk+-2.20.1.tar.bz2
+EXT=bzip
+DLINK=http://ftp.gnome.org/pub/gnome/sources/gtk+/2.20/${FILE}
+MD5=53e6f3a93bd22934878fc4a4a34c68aa
+
+download ${DLINK}
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr --sysconfdir=/etc
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

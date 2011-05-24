@@ -3,16 +3,17 @@
 source /scripts/BLFS/variables
 
 source $SCRIPTS_DIR/include/functions
-source $SCRIPTS_DIR/BLFS/tint/glib2
-source $SCRIPTS_DIR/BLFS/tint/pango
+source $SCRIPTS_DIR/BLFS/tint/freeglut
 
-NAME=tint2
-PROGRAM=tint2-0.10
-FILE=tint2-0.10.tar.gz
+NAME=tiff
+PROGRAM=tiff-3.9.4
+FILE=tiff-3.9.4.tar.gz
 EXT=gzip
-DLINK=http://tint2.googlecode.com/files/${FILE}
+DLINK=http://download.osgeo.org/libtiff/${FILE}
+MD5=2006c1bdd12644dbf02956955175afd6
 
 download ${DLINK}
+check ${FILE} ${MD5}
 waitUser
 unpack ${EXT}
 
@@ -21,7 +22,7 @@ cd $BUILD_DIR/$PROGRAM
 
 	echo "$G $PROGRAM/configure   $DEF"
 	waitUser
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --prefix=/usr
 	StartMake
 	waitUser
 	make || exit 1
