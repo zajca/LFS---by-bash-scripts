@@ -1,0 +1,50 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+
+
+NAME=pcre
+PROGRAM=pcre-8.10
+FILE=pcre-8.10.tar.bz2
+EXT=bzip
+DLINK=http://downloads.sourceforge.net/pcre/${FILE}
+MD5=780867a700e9d4e4b9cb47aa5453e4b2
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr \
+            --docdir=/usr/share/doc/pcre-8.10 \
+            --enable-utf8 \
+            --enable-unicode-properties \
+            --enable-pcregrep-libz \
+            --enable-pcregrep-libbz2
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+mv -v /usr/lib/libpcre.so.* /lib/
+ln -v -sf ../../lib/libpcre.so.0 /usr/lib/libpcre.so
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

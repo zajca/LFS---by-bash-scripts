@@ -1,0 +1,42 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+source $SCRIPTS_DIR/BLFS/tint/glib2
+source $SCRIPTS_DIR/BLFS/tint/pango
+
+NAME=tint2
+PROGRAM=tint2-0.10
+FILE=tint2-0.10.tar.gz
+EXT=gzip
+DLINK=http://tint2.googlecode.com/files/${FILE}
+
+download ${DLINK}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr --sysconfdir=/etc
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT

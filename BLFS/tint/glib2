@@ -1,0 +1,45 @@
+#!/bin/bash
+
+source /scripts/BLFS/variables
+
+source $SCRIPTS_DIR/include/functions
+source $SCRIPTS_DIR/BLFS/tint/PCRE
+
+NAME=glib
+PROGRAM=glib-2.24.2
+FILE=glib-2.24.2.tar.bz2
+EXT=bzip
+DLINK=http://ftp.gnome.org/pub/gnome/sources/glib/2.24/${FILE}
+MD5=8a6e45d7840460ed84288ebfd75782d4
+
+download ${DLINK}
+waitUser
+check ${FILE} ${MD5}
+waitUser
+unpack ${EXT}
+
+cd $BUILD_DIR/$PROGRAM
+{
+
+	echo "$G $PROGRAM/configure   $DEF"
+	waitUser
+./configure --prefix=/usr \
+            --with-pcre=system
+	StartMake
+	waitUser
+	make || exit 1
+
+	StartMakeInstall
+	waitUser
+	make install || exit 1
+chmod -v 755 /usr/bin/gtester-report
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi  	 
+
+RMsource
+
+cd $ROOT
