@@ -34,26 +34,8 @@ cd $BUILD_DIR/$PROGRAM
       SYSCONFDIR=/etc/dhcpcd install
 
 sed -i "s;/var/lib/dhcpcd-;/var/lib/dhcpcd/dhcpcd-;g" \
-       dhcpcd-hooks/50-dhcpcd-compat &&
+       dhcpcd-hooks/50-dhcpcd-compat
 install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
-
-make install-service-dhcpcd
-
-install -v -d /etc/sysconfig/network-devices/ifconfig.eth0 &&
-cat > /etc/sysconfig/network-devices/ifconfig.eth0/dhcpcd << "EOF"
-ONBOOT="yes"
-SERVICE="dhcpcd"
-DHCP_START=""
-DHCP_STOP="-k"
-
-# Set PRINTIP="yes" to have the script print
-# the DHCP assigned IP address
-PRINTIP="no"
-
-# Set PRINTALL="yes" to print the DHCP assigned values for
-# IP, SM, DG, and 1st NS. This requires PRINTIP="yes".
-PRINTALL="no"
-EOF
 
 cat > /etc/dhclient.conf << "EOF"
 # dhclient.conf
@@ -75,6 +57,43 @@ if [ $PIPESTATUS -ne 0 ]
 		exit 1
 fi  	 
 
+RMsource
+
+NAME=blfs-bootscripts
+PROGRAM=blfs-bootscripts-20100825
+FILE=blfs-bootscripts-20100825.tar.bz2
+EXT=bzip
+DLINK=http://www.linuxfromscratch.org/blfs/downloads/svn/${FILE}
+
+download ${DLINK}
+waitUser
+unpack ${EXT}
+cd $BUILD_DIR/$PROGRAM
+{
+make install-service-dhcpcd || exit 1
+
+install -v -d /etc/sysconfig/network-devices/ifconfig.eth0
+cat > /etc/sysconfig/network-devices/ifconfig.eth0/dhcpcd << "EOF"
+ONBOOT="yes"
+SERVICE="dhcpcd"
+DHCP_START=""
+DHCP_STOP="-k"
+
+# Set PRINTIP="yes" to have the script print
+# the DHCP assigned IP address
+PRINTIP="no"
+
+# Set PRINTALL="yes" to print the DHCP assigned values for
+# IP, SM, DG, and 1st NS. This requires PRINTIP="yes".
+PRINTALL="no"
+EOF
+
+} 2>&1 | tee $BUILD_DIR/LOG_$PROGRAM.log
+if [ $PIPESTATUS -ne 0 ]
+	then
+		echo -e "$L_FAIL_BUIL"
+		exit 1
+fi 
 RMsource
 
 cd $ROOT
