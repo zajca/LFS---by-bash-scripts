@@ -7,12 +7,16 @@ source $SCRIPTS_DIR/include/chroot_prepare
 source $SCRIPTS_DIR/include/ver
 source $SCRIPTS_DIR/include/l10n-EN
 
-####### Start builds of packages #######
+# Start builds of pkgs
 
 if [ -e $SCRIPTS_DIR/bashCH6Complete ];
+
+# error catching 
 	then
-		echo "$G Making simlinks and folders was alredy done $DEF"
+		echo "$G Making simlinks and folders was already done $DEF"
 		echo "$R If not remove file $SCRIPTS_DIR/bashCH6Complete $DEF"
+		
+# Build Pkgs		
 	else
 		source $SCRIPTS_DIR/chap6/linux
 		source $SCRIPTS_DIR/chap6/man-pages
@@ -39,6 +43,7 @@ if [ -e $SCRIPTS_DIR/bashCH6Complete ];
 		source $SCRIPTS_DIR/chap6/readline
 		source $SCRIPTS_DIR/chap6/bash
 fi
+# build remainder of pkgs
 source $SCRIPTS_DIR/chap6/libtool
 source $SCRIPTS_DIR/chap6/gdbm
 source $SCRIPTS_DIR/chap6/inetutils
